@@ -1,0 +1,153 @@
+/* Reset & Base Styles */
+.metals-page-container {
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(to right, #f7f9fc, #e0f7fa);
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.metals-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #0d3b66;
+  text-shadow: 1px 1px 2px #ffffff;
+}
+
+/* Grid Layout */
+.metals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Metal Card */
+.metal-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 128, 0, 0.15);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 18px rgba(0, 128, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 128, 0, 0.2);
+}
+
+.metal-card h2 {
+  font-size: 1.8rem;
+  color: #006400;
+  margin-bottom: 0.5rem;
+}
+
+.metal-card p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.metal-card button {
+  background-color: #32cd32;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.metal-card button:hover {
+  background-color: #228b22;
+}
+
+/* Modal */
+.buy-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.buy-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.buy-modal-content h2 {
+  margin-bottom: 1rem;
+  color: #0d3b66;
+}
+
+.buy-modal-content input {
+  width: 80%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-buttons button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #32cd32;
+  color: white;
+  transition: background 0.2s ease;
+}
+
+.modal-buttons button:hover {
+  background-color: #228b22;
+}
+
+.modal-buttons button:last-child {
+  background-color: #e63946;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .metals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metal-card {
+    padding: 1rem;
+  }
+
+  .buy-modal-content input {
+    width: 100%;
+  }
+}

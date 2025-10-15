@@ -1,0 +1,17 @@
+/* Layout.css */
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #eef1f5;
+}
+
+.dashboard-main {
+  margin-left: 240px; /* Match sidebar width */
+  padding: 20px;
+  box-sizing: border-box;
+  width: calc(100% - 240px); /* Prevent overflow */
+  overflow-y: auto;
+}

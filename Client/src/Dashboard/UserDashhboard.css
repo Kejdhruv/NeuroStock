@@ -1,0 +1,149 @@
+/* 1. WRAPPER */
+.userdash-wrapper {
+  padding: 50px;
+  font-family: 'Poppins', sans-serif;
+  background: #eef1f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* 2. TITLE */
+.userdash-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+/* 3. GRID: 2x2 Layout */
+.userdash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+  margin-bottom: 50px;
+}
+
+/* 4. CARD BASE STYLE */
+.userdash-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  padding: 25px;
+  color: #ffffff;
+  height: 200px;
+  max-width: 80%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.userdash-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* 5. CARD-SPECIFIC BACKGROUNDS (Fintech Style) */
+.holdings-card {
+   background: linear-gradient(135deg, #141e30, #243b55);  /* Blue-cyan */
+}
+.buyings-card {
+  background: linear-gradient(155deg, #065d20, #ffffff); /* Fintech green */
+}
+.sellings-card {
+  background: linear-gradient(145deg, #d01919e2, #dcbfb8); /* Coral red */
+}
+.performance-card {
+  background: linear-gradient(135deg, #141e30, #243b55); /* Deep techy blue */
+}
+
+/* 6. ICON STYLING */
+.userdash-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+/* Colored Icons */
+.holdings-card .userdash-icon {
+  color: #2b7ce6;
+  font-size: 55px;
+}
+.buyings-card .userdash-icon {
+  color: #ffe30f;
+   font-size: 55px;
+}
+.sellings-card .userdash-icon {
+     font-size: 55px;
+  color: #ffffff;
+}
+.performance-card .userdash-icon {
+  color: #c0c6ff;
+}
+
+/* 7. TEXT INSIDE CARDS */
+.userdash-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #ffffff;
+  font-weight: 600;
+}
+.userdash-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #e6e6e6;
+}
+
+/* 8. RECENT ACTIVITY SECTION */
+.userdash-recent h2 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.userdash-activity-list {
+  list-style: none;
+  padding: 0;
+}
+
+/* 9. ACTIVITY ITEMS */
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+  padding: 14px 20px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.activity-item.BOUGHT {
+  border-left: 5px solid #28c76f;
+}
+.activity-item.SOLD {
+  border-left: 5px solid #ea5455;
+}
+
+/* 10. ACTIVITY TEXT COLUMNS */
+.activity-type {
+  width: 80px;
+  font-weight: bold;
+}
+.activity-stock {
+  flex: 1;
+}
+.activity-qty,
+.activity-price,
+.activity-time {
+  white-space: nowrap;
+  margin-left: 15px;
+}

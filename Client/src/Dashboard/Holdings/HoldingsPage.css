@@ -1,0 +1,209 @@
+.holdings-container {
+  padding: 2rem 3rem;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+ 
+}
+
+/* Wallet Button */
+.holdings-wallet-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.holdings-wallet-header button {
+  background-color: #23a55a;;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.holdings-wallet-header button:hover {
+  background-color: #15723c; 
+   transform: scale(1.01);
+}
+
+/* Page Title */
+.holdings-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  color: #1a2d47;
+}
+
+.holdings-icon {
+  font-size: 2.3rem;
+  color: #6ca3f0;
+}
+
+/* Table Head */
+.holdings-table-header,
+.holdings-row {
+  display: grid;
+  grid-template-columns: 64px 1.6fr 1fr 1fr 1.2fr 1.3fr 1.3fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.holdings-table-header {
+  font-weight: 700;
+  background-color: #3463b4c3;
+  padding: 1rem;
+  border-radius: 12px;
+  color: #223b5f;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Each Row */
+.holdings-row {
+  background: linear-gradient(135deg, #f1f5fa, #d9e6f5);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(36, 59, 85, 0.15);
+  border: 1px solid rgba(100, 130, 180, 0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.holdings-row:hover {
+  transform: scale(1.01);
+  background: linear-gradient(135deg, #e4edf8, #cfdff0);
+}
+
+.holdings-stock-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+}
+
+.holdings-stock-name {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.holdings-stock-symbol {
+  font-size: 0.92rem;
+  color: #4a6078;
+}
+
+.holdings-meta {
+  font-weight: 500;
+  color: #1e2d4a;
+}
+
+.holdings-buying-id {
+  font-size: 0.85rem;
+  color: #425d7e;
+  font-style: italic;
+  word-break: break-word;
+}
+
+.holdings-timestamp {
+  font-size: 0.85rem;
+  color: #4b6075;
+}
+
+.holdings-sell-button {
+  background-color: #e53935;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.holdings-sell-button:hover {
+  background-color: #b71c1c;
+}
+
+/* Modal */
+.holdings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(20, 30, 48, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.holdings-modal-content {
+  background: #ffffff;
+  color: #1c1c1c;
+  padding: 2rem;
+  border-radius: 14px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.holdings-modal-content h2 {
+  margin-bottom: 1rem;
+  color: #1f3c60;
+}
+
+.holdings-modal-content p {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.holdings-modal-content input {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.6rem 0 1.2rem;
+  border-radius: 8px;
+  border: 1px solid #bccde3;
+  font-size: 1rem;
+  background: #f4f7fb;
+  color: #1a1a1a;
+}
+
+.holdings-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.holdings-modal-buttons button {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.holdings-modal-buttons button:first-child {
+  background-color: #243b55;
+  color: white;
+}
+
+.holdings-modal-buttons button:last-child {
+  background-color: #dbe8f8;
+  color: #1c1c1c;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}

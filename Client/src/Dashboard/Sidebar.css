@@ -1,0 +1,127 @@
+/* Aesthetic Fintech Sidebar */
+
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #111827, #1f2937);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  left: 0;
+  top: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.user-profile:hover {
+  transform: translateY(-5px);
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #00aaff;
+  margin-bottom: 12px;
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.5);
+}
+
+.user-profile h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 4px 0;
+  color: #e5e7eb;
+}
+
+.user-profile h2 {
+  font-size: 12px;
+  font-weight: 400;
+  color: #9ca3af;
+  margin: 0;
+  text-align: center;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  align-items: center;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: #cbd5e1;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 10px;
+  width: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.nav-menu a:hover {
+  background-color: rgba(0, 170, 255, 0.15);
+  color: #00ccff;
+  transform: scale(1.05);
+}
+
+.nav-menu .active {
+  background-color: #00aaff;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+  border-radius: 10px;
+} 
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #00aaff;
+  margin-bottom: 12px;
+  object-fit: cover;
+  box-shadow: 0 0 12px rgba(0, 170, 255, 0.5);
+  animation: float 2s ease-in-out infinite; /* 👈 this line adds the idle floating */
+}
+.email{
+  color: #878787;
+}
+
+.logout-btn {
+  margin-top: 2rem;
+  padding: 0.6rem 1rem;
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background-color: #b71c1c;
+}

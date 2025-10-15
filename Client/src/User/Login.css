@@ -1,0 +1,132 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html, #root {
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.background-image {
+  background: url('https://www.lloydslistintelligence.com/-/media/Informa-Shop-Window/Lloydslist/2024/trade-img2.jfif?extension=webp&w=1000') no-repeat center center/cover;
+  filter: blur(10px);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: 0;
+}
+
+.left-side,
+.right-side {
+  width: 50%;
+  height: 100%;
+  z-index: 1;
+  position: relative;
+}
+
+.left-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  width: 100%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.left-overlay h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.left-overlay p {
+  font-size: 1.3rem;
+  max-width: 400px;
+  font-style: italic;
+}
+
+.right-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(13, 68, 97, 0.395);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-box {
+  background: rgba(3, 41, 70, 0.08);
+  padding: 40px 30px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 380px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+}
+
+.form-box h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.form-box input {
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 1rem;
+}
+
+.form-box input::placeholder {
+  color: #ccc;
+}
+
+.form-box button {
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s ease;
+}
+
+.Login-btn:hover {
+  background-color: #0056b3;
+}
+.Login-btn{
+    background-color: #5dabff;
+}
+.toggle-btn {
+  background: none;
+  color: #ccc;
+  text-align: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.toggle-btn:hover{
+    color: #0b9812;
+}

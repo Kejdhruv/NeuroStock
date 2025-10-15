@@ -1,0 +1,116 @@
+.buy-history-container {
+  padding: 2rem 3rem;
+
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #1c1c1c;
+}
+
+.buy-history-header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  color: #184e2f;
+}
+
+.buy-icon {
+  font-size: 2.3rem;
+  color: #23a55a;
+}
+
+/* Header Row */
+.buy-history-header,
+.buy-history-row {
+  display: grid;
+  grid-template-columns: 64px 1.6fr 1fr 1fr 1.3fr 2fr 1.4fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.buy-history-header {
+  font-weight: 700;
+  background-color: #e8f5e9;
+  padding: 1rem;
+  border-radius: 12px;
+  color: #2c4e38;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Row Card */
+.buy-history-row {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(50, 150, 100, 0.1);
+  border: 1px solid #d3f4d5;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.buy-history-row:hover {
+  background: rgba(230, 255, 240, 0.8);
+  transform: scale(1.01);
+}
+
+.buy-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+}
+
+.buy-name {
+  font-weight: 500;
+}
+
+.buy-symbol {
+  font-size: 0.92rem;
+  color: #444;
+}
+
+.buy-meta {
+  font-weight: 500;
+  color: #222;
+}
+
+.buying-id {
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  font-style: italic;
+  word-break: break-word;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.etherscan-link-row {
+  grid-column: 1 / -1; /* Full width below the grid row */
+  text-align: right;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.etherscan-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13.5px;
+  color: #23a55a;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.etherscan-link:hover {
+  color: #1c7c47;
+  text-decoration: underline;
+}
