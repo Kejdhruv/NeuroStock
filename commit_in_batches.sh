@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Get all changed/untracked files
-files=( $(git status -s | awk '{print $2}') )
+# Get list of staged files
+files=( $(git diff --cached --name-only) )
 
-# How many files to commit at once
 batch_size=1000
 total=${#files[@]}
 start=0
@@ -13,21 +12,25 @@ while [ $start -lt $total ]; do
   if [ $end -gt $total ]; then
     end=$total
   fi
-  
+
   batch=("${files[@]:start:end-start}")
-  
-  echo "Adding files $start to $((end - 1))..."
+
+  # Unstage everything first to handle next batch cleanly
+  git reset
+
+  # Stage this batch again
   git add "${batch[@]}"
-  
-  echo "Committing batch..."
+
+  # Commit the batch
   git commit -m "Partial commit: files $start to $((end - 1))"
   
-  echo "Pushing to remote..."
+  # Push if you want
   git push
-  
+
   start=$end
 done
 
-echo "✅ All files committed and pushed in batches."
+echo "✅ All staged files committed in batches."
+
 
 
