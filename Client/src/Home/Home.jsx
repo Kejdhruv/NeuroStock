@@ -85,7 +85,7 @@ const Home = () => {
     </div>
 
     <div className="home-secondary-buttons">
-                         <Link to="/News" className="home-btn-primary">Market News</Link>
+                         <Link to="/MarketNews" className="home-btn-primary">Market News</Link>
                       <Link to="/Stocks" className="home-btn-secondary">Stocks</Link>
     </div>
   </div>
