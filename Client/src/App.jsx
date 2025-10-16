@@ -11,6 +11,7 @@ import HoldingsPage from './Dashboard/Holdings/HoldingsPage';
 import BoughtHistoryPage from './Dashboard/History/BoughtHistoryPage';
 import SellHistoryPage from './Dashboard/Selling/SellHistoryPage';
 import MainLayout from './User/MainLayout'; // new layout for pages with navbar
+import MarketNews from './News/MarketNews';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/Stocks" element={<StockCard />} />
         <Route path="/Stock/:ticker" element={<StocksPage />} />
         <Route path="/Metals" element={<MetalsPage />} />
+         <Route path="/MarketNews" element={<MarketNews/>} />
   </Route> 
         {/* Dashboard with sidebar and navbar */}
         <Route path="/Dashboard/:userid" element={<Layout />}>

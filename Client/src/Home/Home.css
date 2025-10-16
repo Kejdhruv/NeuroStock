@@ -79,7 +79,7 @@
   }
 } 
 .home-hero-buttons { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-.home-hero-right { flex: 1; display: flex; justify-content: center; }
+.home-hero-right { flex: 1; display: flex; justify-content: center; margin-top: 30px ; }
 .home-hero-image {
   width: 80%;
   border-radius: 0;
