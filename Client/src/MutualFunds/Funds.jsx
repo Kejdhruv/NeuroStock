@@ -27,7 +27,7 @@ function Funds() {
   }, []);
 
   const handleClick = (scheme_code) => {
-    navigate(`/Fund/${scheme_code}`);
+    navigate(`/MutualFunds/${scheme_code}`);
   };
 
   if (funds.length === 0) return (

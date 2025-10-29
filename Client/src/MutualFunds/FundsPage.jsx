@@ -1,339 +1,388 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// MutualFundsPage.jsx
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
-} from 'recharts';
-import './StocksPage.css';
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import "./FundsPage.css"; // adapt from your StocksPage.css or theme
 import { ethers } from "ethers";
-import StocksABI from '../abi/StocksABI.json';
-import { toast } from 'react-hot-toast';
-import StockLoader from '../Dashboard/StockLoader';
+import MutualABI from "../abi/GoldABI.json"; // placeholder ABI filename
+import { toast } from "react-hot-toast";
+import StockLoader from "../Dashboard/StockLoader";
 
-const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
+const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_FUNDS_ADDRESS;
 
-function StocksPage() {
-  const { ticker } = useParams();
-  const [profile, setProfile] = useState(null);
-  const [quote, setQuote] = useState(null);
-  const [metrics, setMetrics] = useState(null);
-  const [recommendations, setRecommendations] = useState([]);
-  const [candleData, setCandleData] = useState([]);
-  const [ethPriceUSD, setEthPriceUSD] = useState(null);
+function FundsPage() {
+  const { schemeCode } = useParams(); // route param (optional)
+  const [meta, setMeta] = useState(null);
+  const [navSeries, setNavSeries] = useState([]); // array of { date, nav: number }
+  const [ethPriceINR, setEthPriceINR] = useState(null);
   const [account, setAccount] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [useremail, setuseremail] = useState("");
-  const [userId, setUserId] = useState("");
+  const [inrAmount, setInrAmount] = useState("");
+  const [units, setUnits] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [useremail, setUseremail] = useState("");
+  const [counter, setCounter] = useState(0);
+
+  // load user info from localStorage
   useEffect(() => {
     const storedId = localStorage.getItem("userId");
     if (storedId) setUserId(storedId);
-    const email = localStorage.getItem("userEmail"); 
-    if (email) setuseremail(email); 
+    const email = localStorage.getItem("userEmail");
+    if (email) setUseremail(email || "");
   }, []);
 
- useEffect(() => {
-  const fetchUserData = async () => {
-    if (!userId) return;
-
-    try {
-      const res = await fetch(`http://localhost:3001/Profile/${userId}`);
-      const data = await res.json();
-      if (data[0]?.email) setuseremail(data[0].email);
-    } catch (err) {
-      console.error("Failed to fetch email:", err);
-    }
-  };
-
-  fetchUserData();
- }, [userId]); // ✅ Correct
-  
-  const [counter, setCounter] = useState(0);  // initial value
-
-useEffect(() => {
-  const fetchCounter = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/Counter/buyingId");
-      const data = await response.json();
-
-     
-        setCounter(data[0].value);  // ✅ set the counter
-     
-    } catch (error) {
-      toast.error("Failed to fetch counter.");
-      console.error("Counter fetch error:", error);
-    }
-  };
-
-  fetchCounter();  // ✅ Called as async function
-}, []);
-  
+  // fetch user email from backend if userId exists
   useEffect(() => {
-  console.log("Counter updated:", counter);
-}, [counter]); 
+    if (!userId) return;
+    (async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/Profile/${userId}`);
+        const data = await res.json();
+        if (data[0]?.email) setUseremail(data[0].email);
+      } catch (err) {
+        console.error("Failed to fetch profile email", err);
+      }
+    })();
+  }, [userId]);
+
+  // fetch counter
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("http://localhost:3001/Counter/buyingId");
+        const d = await res.json();
+        if (d && d[0] && typeof d[0].value !== "undefined") setCounter(d[0].value);
+      } catch (err) {
+        console.error("Failed to fetch counter", err);
+      }
+    })();
+  }, []);
+
+  // fetch mutual fund JSON (dummy endpoint); replace endpoint as needed
+ useEffect(() => {
+  const code = schemeCode || "118945"; // fallback to sample code
+
+  const fetchFund = async () => {
+    setLoading(true); // 🟢 mark as loading before fetch starts
+    try {
+      const res = await fetch(`https://api.mfapi.in/mf/${code}`);
+      const json = await res.json();
+
+      const m = json.meta || json?.Meta || null;
+      const raw = json.data || [];
+
+      const series = raw
+        .map((r) => ({
+          date: r.date,
+          nav: Number(parseFloat(r.nav || r.NAV || 0)),
+        }))
+        .sort((a, b) => {
+          const [ad, am, ay] = a.date.split("-").map(Number);
+          const [bd, bm, by] = b.date.split("-").map(Number);
+          return new Date(ay, am - 1, ad) - new Date(by, bm - 1, bd);
+        });
+
+      setMeta(m);
+      setNavSeries(series);
+    } catch (err) {
+      console.error("Failed to fetch mutual fund data:", err);
+      toast.error("Could not fetch fund data");
+    } finally {
+      setLoading(false); // 🟢 ensures loading ends always
+    }
+  };
+
+  fetchFund();
+}, [schemeCode]);
+
+  const getEthInINR = async () => {
+    try {
+      const res = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr"
+      );
+      const data = await res.json();
+      setEthPriceINR(data.ethereum.inr);
+    } catch (err) {
+      console.error("Failed to fetch ETH price (INR)", err);
+    }
+  };
+
+  useEffect(() => {
+    getEthInINR();
+  }, []);
+
+
   const connectWallet = async () => {
     if (!window.ethereum) {
-      alert("MetaMask not detected!");
+      toast.error("MetaMask not detected");
       return;
     }
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const connectedAccount = accounts[0];
-      setAccount(connectedAccount);
-      alert("Connected: " + connectedAccount);
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      setAccount(accounts[0]);
+      toast.success("Wallet connected");
     } catch (err) {
-      console.error("Wallet connect failed:", err);
+      console.error("Wallet connect error:", err);
+      toast.error("Wallet connection failed");
     }
   };
 
-  const getETHPriceUSD = async () => {
-    try {
-      const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
-      const data = await res.json();
-      setEthPriceUSD(data.ethereum.usd);
-    } catch (err) {
-      console.error("Failed to fetch ETH price:", err);
-    }
-  };
-
-  const handleBuyClick = () => {
-    setModalOpen(true);
-  };
-
-  const buyStock = async () => {
-
-  if (!window.ethereum) {
-    alert("Please install MetaMask");
-    return;
-  }
-
-  if (!account) await connectWallet();
-
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, StocksABI, signer);
-
-    const stockPriceUSD = quote.c;
-    const stockPriceETH = stockPriceUSD / ethPriceUSD;
-    const priceInWei = ethers.parseUnits(stockPriceETH.toString(), 18);
-
-    const totalCostWei = (priceInWei * BigInt(quantity) * BigInt(102)) / BigInt(100);
-
-    const tx = await contract.buying(
-      profile.name,
-      BigInt(quantity),
-      priceInWei,
-      counter , 
-      { value: totalCostWei }
-    );
-
-    console.log("Transaction submitted. Hash:", tx.hash); 
-     setModalOpen(false);
-    setLoading(true);
-    const receipt = await tx.wait();
-    console.log("Transaction confirmed. Receipt:", receipt);
-
-    const BoughtData = {
-      Userid: userId,
-      Email: useremail,
-      Stockname: profile.name,
-      Stocksymbol: profile.ticker,
-      Boughtat: quote.c,
-      Quantity: quantity ,
-      timestamp: new Date().toISOString(),
-      Transactionid: tx.hash,
-      buyingid: counter,
-      stockimage: profile.logo,
-      accountid : account
-    };
-
-    const res = await fetch('http://localhost:3001/Holdings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(BoughtData),
-    });
-    const res2 = await fetch('http://localhost:3001/Buying', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(BoughtData),
-    });
-
-    const data = await res.json(); 
-    const data2 = await res2.json();
-
-    if (res.ok && res2.ok) {
-      toast.success(`Stock purchased! TX Hash: ${tx.hash}`);
-      setLoading(false);
-    } else {
-      toast.error(data.message || 'Error while saving data');
-      toast.error(data2.message || 'Error while saving data');
-    }
-
-    // Increment counter
-    await fetch("http://localhost:3001/Counter/buyingId", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ value: counter + 1 })
-    });
-
-  } catch (err) {
-    console.error("Buy stock error:", err);
-    alert("Transaction failed");
-  }
-};
+  // compute units whenever INR amount or NAV changes
   useEffect(() => {
-    const FINNHUB_KEY = import.meta.env.VITE_2ND_FINHUBB_KEY;
-    const POLYGON_KEY = import.meta.env.VITE_3RD_POLYGON_KEY;
+    if (!inrAmount || inrAmount === "" || navSeries.length === 0) {
+      setUnits(0);
+      return;
+    }
+    const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
+    const parsed = Number(inrAmount);
+    if (isNaN(parsed) || parsed <= 0 || latestNav <= 0) {
+      setUnits(0);
+      return;
+    }
+    const computedUnits = parsed / latestNav;
+    setUnits(computedUnits);
+  }, [inrAmount, navSeries]);
 
-    const fetchStockData = async () => {
-      try {
-        const [profileRes, quoteRes, metricRes, recommendationRes] = await Promise.all([
-          fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${ticker}&token=${FINNHUB_KEY}`),
-          fetch(`https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${FINNHUB_KEY}`),
-          fetch(`https://finnhub.io/api/v1/stock/metric?symbol=${ticker}&metric=all&token=${FINNHUB_KEY}`),
-          fetch(`https://finnhub.io/api/v1/stock/recommendation?symbol=${ticker}&token=${FINNHUB_KEY}`)
-        ]);
-
-        setProfile(await profileRes.json());
-        setQuote(await quoteRes.json());
-        const metricData = await metricRes.json();
-        setMetrics(metricData?.metric || {});
-        setRecommendations(await recommendationRes.json() || []);
-        await getETHPriceUSD();
-      } catch (error) {
-        console.error('Error fetching stock data:', error);
+  // buys: send transaction to contract and record to backend
+  const buyMutualFund = async () => {
+    if (!window.ethereum) {
+      toast.error("Install MetaMask");
+      return;
+    }
+    if (!account) {
+      await connectWallet();
+      if (!account) {
+        toast.error("Wallet required");
+        return;
       }
-    };
+    }
 
+    const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
+    if (!latestNav || latestNav <= 0) {
+      toast.error("Invalid NAV");
+      return;
+    }
 
-  if (!profile || !quote || !metrics || !ethPriceUSD) return <div class="loader-container">
-  <div class="emoji-loader">
-    <span>💹</span>
-    <span>➡️</span>
-    <span>💰</span>
-    <span>➡️</span>
-    <span>📈</span>
-  </div>
-</div>
+    const inr = Number(inrAmount);
+    if (!inr || inr <= 0) {
+      toast.error("Enter a valid INR amount");
+      return;
+    }
 
+    if (!ethPriceINR) {
+      toast.error("ETH price not available");
+      return;
+    }
 
-  const minPrice = Math.min(...candleData.map((d) => d.low || d.close));
-  const maxPrice = Math.max(...candleData.map((d) => d.high || d.close));
-  const stockPriceUSD = quote.c.toFixed(2);
-  const stockPriceETH = (stockPriceUSD / ethPriceUSD).toFixed(6);
+    try {
+      setLoading(true);
 
-  const renderCandle = (props) => {
-    const { x, width, payload, y, height } = props;
-    const color = payload.close >= payload.open ? "#2ecc71" : "#e74c3c";
-    const priceToY = (price) => y + height - ((price - minPrice) / (maxPrice - minPrice)) * height;
-    const top = priceToY(Math.max(payload.open, payload.close));
-    const bottom = priceToY(Math.min(payload.open, payload.close));
-    const wickHigh = priceToY(payload.high);
-    const wickLow = priceToY(payload.low);
-    const centerX = x + width / 2;
+      // approximate ETH amount required (INR -> ETH)
+      // ethNeeded = inr / ethPriceINR
+      const ethNeeded = inr / ethPriceINR; // decimal
+      // convert ETH decimal to Wei
+      const valueWei = ethers.parseUnits(ethNeeded.toString(), 18); // BigInt
 
-    return (
-      <g>
-        <line x1={centerX} x2={centerX} y1={wickHigh} y2={wickLow} stroke={color} strokeWidth="2" />
-        <rect
-          x={centerX - width / 4}
-          y={top}
-          width={width / 2}
-          height={bottom - top || 1}
-          fill={color}
-        />
-      </g>
-    );
+      // create provider and signer
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, MutualABI, signer);
+
+      // Call the contract method; adjust args based on your contract ABI
+      // I use: buyMutualFund(schemeCodeOrName, unitsInRayOrScaled, buyingId, { value: valueWei })
+      // Because units are fractional, many contracts expect scaled integer units - adapt as needed.
+      const unitsScaled = BigInt(Math.floor(units * 1e6)); // example scaling (1e6) - change to your contract's scale
+      const schemeName = meta?.scheme_name || meta?.scheme_name || `Scheme-${schemeCode || "unknown"}`;
+
+      // Example contract call - replace with your real method and arguments
+      const tx = await contract.buyMutualFund(
+        schemeName,
+        unitsScaled,
+        BigInt(counter),
+        { value: valueWei }
+      );
+
+      console.log("Tx submitted:", tx.hash);
+      toast.success("Transaction submitted");
+
+      const receipt = await tx.wait();
+      console.log("Tx confirmed", receipt);
+
+      // Prepare data to post to backend
+      const BoughtData = {
+        Userid: userId || "guest",
+        Email: useremail || "",
+        FundName: meta?.scheme_name || "",
+        SchemeCode: meta?.scheme_code || schemeCode || "",
+        NAV: latestNav,
+        INRAmount: inr,
+        Units: units,
+        timestamp: new Date().toISOString(),
+        Transactionid: tx.hash,
+        buyingid: counter,
+        accountid: account || "",
+      };
+
+      // post to holdings and buying endpoints (dummy)
+      const res1 = await fetch("http://localhost:3001/FundsHoldings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(BoughtData),
+      });
+      const res2 = await fetch("http://localhost:3001/FundsBuying", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(BoughtData),
+      });
+
+      if (res1.ok && res2.ok) {
+        toast.success("Purchase recorded");
+      } else {
+        const j1 = await res1.json().catch(() => ({}));
+        const j2 = await res2.json().catch(() => ({}));
+        console.warn("Save responses", j1, j2);
+        toast.error("Failed to persist purchase to backend");
+      }
+
+      await fetch("http://localhost:3001/Counter/buyingId", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: counter + 1 }),
+      });
+
+      setCounter((c) => c + 1);
+      setModalOpen(false);
+    } catch (err) {
+      console.error("Buy error:", err);
+      toast.error("Transaction failed");
+    } finally {
+      setLoading(false);
+    }
   };
-  return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">Stock Dashboard</div>
 
-      {/* Left Column */}
-      <div className="chart-left">
-        <ResponsiveContainer width="100%" height={380}>
-          <BarChart data={recommendations} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="period" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="strongBuy" fill="#2e8b57" />
-            <Bar dataKey="buy" fill="#0b1e3f" />
-            <Bar dataKey="hold" fill="#ffa500" />
-            <Bar dataKey="sell" fill="#ff4500" />
-            <Bar dataKey="strongSell" fill="#b22222" />
-          </BarChart>
-        </ResponsiveContainer>
+  // rendering helpers
+  const latestNav = navSeries.length ? navSeries[navSeries.length - 1].nav : null;
+  const navDisplay = latestNav ? latestNav.toFixed(5) : "N/A";
 
-        {/* Metrics BELOW histogram */}
-        {metrics && (
-          <div className="metrics-card">
-            <h3>Key Metrics</h3>
-            <ul>
-              <li><strong>P/E Ratio:</strong> {metrics.peBasicExclExtraTTM || 'N/A'}</li>
-              <li><strong>52 Week High:</strong> $ {metrics['52WeekHigh'] || 'N/A'} on { `(${metrics['52WeekHighDate']})`}</li>
-                          <li><strong>52 Week Low:</strong> $ {metrics['52WeekLow'] || 'N/A'} on { `(${metrics['52WeekLowDate']})`}</li>
-                          <li><strong>13 Week Price Return Daily </strong> $ {metrics['13WeekPriceReturnDaily'] || 'N/A'} </li>
-                          <li><strong>26 Week Price Return Daily </strong> $ {metrics['26WeekPriceReturnDaily'] || 'N/A'}</li>
-                           <li><strong>52 Week Price Return Daily </strong> $ {metrics['52WeekPriceReturnDaily'] || 'N/A'}</li>
-            </ul>
-          </div>
-        )}
+  if (!meta || navSeries.length === 0) {
+    return (
+      <div className="loader-container">
+        <div className="emoji-loader">
+          <span>💼</span>
+          <span>➡️</span>
+          <span>📈</span>
+          <span>➡️</span>
+          <span>💳</span>
+        </div>
       </div>
+    );
+  }
 
-      {/* Right Column */}
-      <div className="right-section">
-        <div className="profile-card">
-          <div className="profile-left">
-            <img src={profile.logo} alt={profile.name} className="profile-logo" />
-            <div className="profile-info">
-              <div className="profile-title">{profile.name} ({profile.ticker})</div>
-              <div className="profile-text"><strong>Exchange:</strong> {profile.exchange || "NA"}</div>
-              <div className="profile-text"><strong>Industry:</strong> {profile.finnhubIndustry || "NA"}</div>
-              <div className="profile-text"><strong>Country:</strong> {profile.country || "NA"}</div>
-              <div className="profile-text"><strong>IPO Date:</strong> {profile.ipo || "NA"}</div>
-                  <div className="profile-text"><strong>Share Outstanding:</strong> {profile.shareOutstanding || "NA"}</div>
-              <div className="profile-text"><strong>Market Cap:</strong> {metrics.marketCapitalization || "NA"} B</div>
-            <div className="profile-text">
-  <strong>Website:</strong>{" "}
-  {profile.weburl ? (
-    <a href={profile.weburl} target="_blank" rel="noopener noreferrer" className="profile-link">
-      {profile.weburl}
-    </a>
-  ) : (
-    "NA"
-  )}
-</div>
+  return (
+    <div className="mutual-dashboard">
+
+      <div className="mutual-body">
+        <div className="left-col">
+          <div className="nav-card">
+            <div className="nav-top">
+              <div>
+                <h3>Latest NAV</h3>
+                <div className="nav-value">₹ {navDisplay}</div>
+                <div className="nav-date">
+                  {navSeries[navSeries.length - 1].date}
+                </div>
+              </div>
+
+              <div className="buy-controls">
+                <button onClick={connectWallet} className="connect-btn">
+                  {account ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
+                </button>
+                <button onClick={() => setModalOpen(true)} className="buy-btn">
+                  Buy
+                </button>
+              </div>
+            </div>
+
+            <div className="chart-visual">
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={navSeries}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                  <YAxis domain={["auto", "auto"]} />
+                  <Tooltip formatter={(val) => `₹ ${val}`} />
+                  <Legend />
+                  <Line type="monotone" dataKey="nav" dot={false} stroke="#0b1e3f" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </div>
-          <div className="quote-card-inside">
-            <div className="section-title">Stock Price</div>
+
+          {/* list recent NAVs */}
+          <div className="recent-navs">
+            <h4>Recent NAVs</h4>
             <ul>
-              <li className="quote-text"><strong>Current:</strong> ${quote.c} (~ {stockPriceETH} ETH)</li>
-              <li className="quote-text"><strong>Open:</strong> ${quote.o}</li>
-               <li className="quote-text"><strong>Previous Close:</strong> ${quote.pc}</li>
-              <li className="quote-text"><strong>High:</strong> ${quote.h}</li>
-              <li className="quote-text"><strong>Low:</strong> ${quote.l}</li>
-            
+              {navSeries.slice(-5).reverse().map((n) => (
+                <li key={n.date}>
+                  <span>{n.date}</span>
+                  <span>₹ {n.nav.toFixed(5)}</span>
+                </li>
+              ))}
             </ul>
-            <button className="buy-stock-button" onClick={handleBuyClick}>Buy Stock</button>
-            <button className="buy-stock-button" onClick={connectWallet}>Connect Wallet</button>
           </div>
         </div>
 
-        {/* Candlestick Chart */}
-        <div className="candlestick-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={candleData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-              <YAxis domain={[minPrice * 0.98, maxPrice * 1.02]} />
-              <Tooltip />
-              <Bar dataKey="close" fill="#0b1e3f" shape={renderCandle} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="right-col">
+          <div className="fund-info-card">
+            <h3>Fund Details</h3>
+            <ul>
+              <li><strong>Fund House:</strong> {meta.fund_house}</li>
+              <li><strong>Scheme Type:</strong> {meta.scheme_type}</li>
+              <li><strong>Category:</strong> {meta.scheme_category}</li>
+              <li><strong>ISIN (Growth):</strong> {meta.isin_growth || "N/A"}</li>
+              <li><strong>ISIN (Div Reinv.):</strong> {meta.isin_div_reinvestment || "N/A"}</li>
+            </ul>
+          </div>
+
+          <div className="calculator-card">
+            <h3>Buy Calculator</h3>
+            <label>
+              Enter INR amount:
+              <input
+                type="number"
+                min="1"
+                value={inrAmount}
+                onChange={(e) => setInrAmount(e.target.value)}
+                placeholder="e.g. 10000"
+              />
+            </label>
+
+            <div className="calc-rows">
+              <div><strong>Latest NAV:</strong> ₹ {navDisplay}</div>
+              <div><strong>Estimated Units:</strong> {units ? units.toFixed(5) : "0.00000"}</div>
+              <div><strong>ETH needed (approx):</strong> {ethPriceINR ? (Number(inrAmount) / ethPriceINR).toFixed(6) : "N/A"}</div>
+            </div>
+
+            <div className="calc-buttons">
+              <button onClick={() => {
+                if (!inrAmount || Number(inrAmount) <= 0) {
+                  toast.error("Enter amount");
+                  return;
+                }
+                setModalOpen(true);
+              }} className="proceed-btn">Proceed to Buy</button>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -341,33 +390,23 @@ useEffect(() => {
       {modalOpen && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Buy {ticker}</h2>
-            <p>Price: ${stockPriceUSD} (~ {stockPriceETH} ETH)</p>
-            <label>
-              Quantity:
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
-            </label>
-            <p><strong>Total:</strong> {(stockPriceETH * quantity).toFixed(6)} ETH</p>
+            <h2>Confirm Purchase</h2>
+            <p><strong>Fund:</strong> {meta.scheme_name}</p>
+            <p><strong>INR Amount:</strong> ₹ {Number(inrAmount).toFixed(2)}</p>
+            <p><strong>Estimated Units:</strong> {units ? units.toFixed(6) : "0.000000"}</p>
+            <p><strong>ETH to send (approx):</strong> {ethPriceINR ? (Number(inrAmount) / ethPriceINR).toFixed(6) : "N/A"}</p>
+
             <div className="modal-buttons">
-              <button onClick={buyStock} className="confirm-btn">Confirm Buy</button>
+              <button onClick={buyMutualFund} className="confirm-btn">Confirm & Send</button>
               <button onClick={() => setModalOpen(false)} className="cancel-btn">Cancel</button>
             </div>
           </div>
         </div>
-      )} 
-         {loading && <StockLoader />} 
+      )}
 
-
-
-    </div> 
-
-
+      {loading && <StockLoader />}
+    </div>
   );
 }
 
-export default StocksPage;
+export default FundsPage;

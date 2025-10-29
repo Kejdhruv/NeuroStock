@@ -13,6 +13,7 @@ import SellHistoryPage from './Dashboard/Selling/SellHistoryPage';
 import MainLayout from './User/MainLayout'; 
 import MarketNews from './News/MarketNews';
 import Funds from './MutualFunds/Funds';
+import FundsPage from './MutualFunds/FundsPage';
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
         <Route path="/Stock/:ticker" element={<StocksPage />} />
         <Route path="/Metals" element={<MetalsPage />} />
         <Route path="/MarketNews" element={<MarketNews />} />
-          <Route path="/MutualFunds" element={<Funds/>} />
+        <Route path="/MutualFunds" element={<Funds />} />
+         <Route path="/MutualFunds/:ticker" element={<FundsPage/>} />
   </Route> 
         {/* Dashboard with sidebar and navbar */}
         <Route path="/Dashboard/:userid" element={<Layout />}>
