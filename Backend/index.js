@@ -16,12 +16,14 @@ import dbConnect13 from "./Stocks/UpdatingHoldings.js";
 import dbConnect14 from "./Stocks/DeletingHoldings.js";
 import dbConnect15 from "./Counter/counter2.js";
 import dbConnect16 from "./Counter/CounterUpdate2.js";
-import dbConnect17 from "./Gold/GoldBought.js";
-import dbConnect18 from "./Gold/GoldHoldings.js";
-import dbConnect19 from "./Gold/GoldSold.js";
-import dbConnect21 from "./Gold/DeleteGoldHoldings.js";
-import dbConnect22 from "./Gold/SellingGold.js";
-import dbConnect23 from "./Gold/GoldBuying.js";
+import FundsHoldings from "./MutualFunds/FundsHoldings.js";
+import UpdatingFunds from "./MutualFunds/UpdatingFunds.js";
+import DeletingFundHoldings from "./MutualFunds/DeletingFundHoldings.js";
+import FundsBought from "./MutualFunds/FundsBought.js";
+import FundsBuying from "./MutualFunds/FundsBuying.js";
+import SoldingFunds from "./MutualFunds/SoldingFunds.js";
+import SoldFunds from "./MutualFunds/SoldFunds.js";
+import PostingFundsHoldings from "./MutualFunds/PostingFundHoldings.js";
 
 const app = express();
 const PORT = 3001;
@@ -311,10 +313,128 @@ app.put('/Counter/sellingId', async (req, res) => {
 }); 
 
 
+/* Mutual Funds */ 
+
+app.post('/FundsHoldings', async (req, res) => {
+  try {
+    const data = req.body;
+    const holding = Array.isArray(data) ? data : [data];
+    const result = await PostingFundsHoldings(holding);  
+    res.status(200).json({
+      message: 'Stocks Added',
+      insertedCount: result.insertedCount,
+      insertedIds: result.insertedIds
+    });
+  } catch (err) {
+    console.error('Error adding Stock:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.put('/MutualHoldings/:_id', async (req, res) => {
+  const { Quantity } = req.body;
+  const { _id } = req.params;
+
+  if (typeof Quantity !== 'number') {
+    return res.status(400).json({ message: 'Quantity must be a number' });
+  }
+
+  try {
+    const result = await UpdatingFunds(_id, Quantity);
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ message: 'Holding not found' });
+    }
+
+    res.status(200).json({
+      message: 'Quantity updated successfully',
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount
+    });
+  } catch (err) {
+    console.error("Error updating holding:", err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}); 
+app.delete('/MutualHoldings/:_id', async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const result = await DeletingFundHoldings(_id);
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+    res.status(200).json({ message: 'Item deleted' });
+  } catch (err) {
+    console.error('Error deleting item:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}); 
 
 
+app.get('/Profile/FundsBoughts/:Userid', async (req, res) => {
+   try {
+    const { Userid } = req.params;
+    const data = await FundsBought(Userid);
+    res.send(data); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to fetch sold stocks" });
+  }
+}) 
 
+app.post('/FundsBuying', async (req, res) => {
+  try {
+    const data = req.body;
 
+    const boughts = Array.isArray(data) ? data : [data];
+  
+    const result = await FundsBuying(boughts);
+    res.status(200).json({
+      message: 'Stocks Added',
+      insertedCount: result.insertedCount,
+      insertedIds: result.insertedIds
+    });
+  } catch (err){
+     console.error('Error adding Stock', err);
+        res.status(500).send('Internal Server Error');
+  }
+}) 
 
+app.post('/SoldFunds', async (req, res) => {
+  try {
+    const data = req.body;
+  
+    const StockSold = Array.isArray(data) ? data : [data];
+ const result = await SoldingFunds(StockSold);
+    res.status(200).json({
+      message: 'Stock Sold',
+      insertedCount: result.insertedCount,
+      insertedIds: result.insertedIds 
+    });
+  } catch (err) {
+    console.error('Error adding user', err);
+        res.status(500).send('Internal Server Error');
+  }
+})
 
+app.get('/Profile/SoldFunds/:Userid', async (req, res) => {
+   try {
+    const { Userid } = req.params;
+    const data = await SoldFunds(Userid);
+    res.send(data); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to fetch sold stocks" });
+  }
+}) 
 
+app.get('/Profile/FundsHoldings/:Userid', async (req, res) => {
+  try {
+    const { Userid } = req.params;
+    const data = await FundsHoldings(Userid);
+    res.send(data); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to fetch Holdings" });
+  }
+}) 
