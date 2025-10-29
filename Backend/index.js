@@ -309,126 +309,12 @@ app.put('/Counter/sellingId', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }); 
-app.get('/Profile/GoldBought/:Userid', async (req, res) => {
-  try {
-    const { Userid } = req.params;
-    const data = await dbConnect17(Userid);
-    res.send(data); 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: "Failed to fetch Holdings" });
-  }
-}) 
 
-app.get('/Profile/GoldHoldings/:Userid', async (req, res) => {
-  try {
-    const { Userid } = req.params;
-    const data = await dbConnect18(Userid);
-    res.send(data); 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: "Failed to fetch Holdings" });
-  }
-}) 
 
-app.get('/Profile/GoldSold/:Userid', async (req, res) => {
-   try {
-    const { Userid } = req.params;
-    const data = await dbConnect19(Userid);
-    res.send(data); 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: "Failed to fetch sold stocks" });
-  }
-}) 
 
-app.put('/GoldHoldings/:_id', async (req, res) => {
-  const { Weight } = req.body;
-  const { _id } = req.params;
 
-  if (typeof Quantity !== 'number') {
-    return res.status(400).json({ message: 'Quantity must be a number' });
-  }
 
-  try {
-    const result = await dbConnect20(_id, Weight);
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ message: 'Holding not found' });
-    }
 
-    res.status(200).json({
-      message: 'Quantity updated successfully',
-      matchedCount: result.matchedCount,
-      modifiedCount: result.modifiedCount
-    });
-  } catch (err) {
-    console.error("Error updating holding:", err);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-}); 
 
-app.delete('/GoldHoldings/:_id', async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const result = await dbConnect21(_id);
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Item not found' });
-    }
-    res.status(200).json({ message: 'Item deleted' });
-  } catch (err) {
-    console.error('Error deleting item:', err);
-    res.status(500).send('Internal Server Error');
-  }
-}); 
 
-app.post('/GoldSold', async (req, res) => {
-  try {
-    const data = req.body;
-  
-    const GoldSold= Array.isArray(data) ? data : [data];
- const result = await dbConnect22(GoldSold);
-    res.status(200).json({
-      message: 'Stock Sold',
-      insertedCount: result.insertedCount,
-      insertedIds: result.insertedIds 
-    });
-  } catch (err) {
-    console.error('Error adding user', err);
-        res.status(500).send('Internal Server Error');
-  }
-})
-
-app.post('/GoldBought', async (req, res) => {
-  try {
-    const data = req.body;
-  
-    const GoldBought = Array.isArray(data) ? data : [data];
- const result = await dbConnect23(GoldBought);
-    res.status(200).json({
-      message: 'Stock Sold',
-      insertedCount: result.insertedCount,
-      insertedIds: result.insertedIds 
-    });
-  } catch (err) {
-    console.error('Error adding user', err);
-        res.status(500).send('Internal Server Error');
-  }
-})
-
-app.post('/GoldHolding', async (req, res) => {
-  try {
-    const data = req.body;
-  
-    const GoldBought = Array.isArray(data) ? data : [data];
- const result = await dbConnect24(GoldBought);
-    res.status(200).json({
-      message: 'Stock Sold',
-      insertedCount: result.insertedCount,
-      insertedIds: result.insertedIds 
-    });
-  } catch (err) {
-    console.error('Error adding user', err);
-        res.status(500).send('Internal Server Error');
-  }
-})

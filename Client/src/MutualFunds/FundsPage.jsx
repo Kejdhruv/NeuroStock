@@ -206,35 +206,6 @@ useEffect(() => {
       }
     };
 
-    const fetchCandleData = async () => {
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 60);
-        const fromDate = thirtyDaysAgo.toISOString().split('T')[0];
-
-        const res = await fetch(
-          `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${fromDate}/${today}?adjusted=true&sort=asc&limit=30&apiKey=${POLYGON_KEY}`
-        );
-        const data = await res.json();
-        if (data && data.results) {
-          const transformedData = data.results.map((item) => ({
-            date: new Date(item.t).toLocaleDateString(),
-            open: item.o,
-            high: item.h,
-            low: item.l,
-            close: item.c,
-          }));
-          setCandleData(transformedData);
-        }
-      } catch (error) {
-        console.error('Error fetching candle data:', error);
-      }
-    };
-
-    fetchStockData();
-    fetchCandleData();
-  }, [ticker]);
 
   if (!profile || !quote || !metrics || !ethPriceUSD) return <div class="loader-container">
   <div class="emoji-loader">
