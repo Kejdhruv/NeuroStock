@@ -5,13 +5,14 @@ import Home from './Home/Home';
 import StockCard from './Stocks/Stocks';
 import StocksPage from './Stocks/StocksPage';
 import MetalsPage from './Metals/MetalsPage';
-import Layout from './User/Layout'; // dashboard layout with sidebar
+import Layout from './User/Layout';
 import UserDashhboard from './Dashboard/UserDashhboard'; 
 import HoldingsPage from './Dashboard/Holdings/HoldingsPage';
 import BoughtHistoryPage from './Dashboard/History/BoughtHistoryPage';
 import SellHistoryPage from './Dashboard/Selling/SellHistoryPage';
-import MainLayout from './User/MainLayout'; // new layout for pages with navbar
+import MainLayout from './User/MainLayout'; 
 import MarketNews from './News/MarketNews';
+import Funds from './MutualFunds/Funds';
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
         <Route path="/Stocks" element={<StockCard />} />
         <Route path="/Stock/:ticker" element={<StocksPage />} />
         <Route path="/Metals" element={<MetalsPage />} />
-         <Route path="/MarketNews" element={<MarketNews/>} />
+        <Route path="/MarketNews" element={<MarketNews />} />
+          <Route path="/MutualFunds" element={<Funds/>} />
   </Route> 
         {/* Dashboard with sidebar and navbar */}
         <Route path="/Dashboard/:userid" element={<Layout />}>

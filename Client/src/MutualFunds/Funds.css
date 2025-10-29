@@ -1,0 +1,126 @@
+.fund-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* exactly 3 cards per row */
+  gap: 30px;
+  padding: 100px 40px 40px 40px; /* Top padding accounts for navbar */
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+
+
+.fund-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.fund-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.fund-card h2 {
+  font-size: 1.2rem;
+  margin: 10px 0 5px;
+  text-align: center;
+  color: #0b1e3f;
+}
+
+
+.fund-details {
+  margin: 10px 0;
+  padding: 10px;
+  background: #f8f9fc;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.fund-details p {
+  margin: 6px 0;
+}
+
+.fund-details strong {
+  color: #0b1e3f;
+}
+
+
+.fund-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.fund-card button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #0b1e3f;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.fund-card button:hover {
+  background: #13357a;
+  transform: scale(1.05);
+}
+
+
+.loader-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f9f9f9;
+  padding-top: 100px; 
+  box-sizing: border-box;
+}
+
+
+.emoji-loader {
+  display: flex;
+  font-size: 2.5rem;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.emoji-loader span {
+  opacity: 0;
+  animation: fadeInOut 1.5s infinite;
+}
+
+.emoji-loader span:nth-child(1) { animation-delay: 0s; }
+.emoji-loader span:nth-child(2) { animation-delay: 0.3s; }
+.emoji-loader span:nth-child(3) { animation-delay: 0.6s; }
+.emoji-loader span:nth-child(4) { animation-delay: 0.9s; }
+.emoji-loader span:nth-child(5) { animation-delay: 1.2s; }
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+@media (max-width: 1024px) {
+  .fund-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .fund-container {
+    grid-template-columns: 1fr;
+  }
+}
