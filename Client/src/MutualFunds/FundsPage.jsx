@@ -32,7 +32,7 @@ function FundsPage() {
   const [userId, setUserId] = useState("");
   const [useremail, setUseremail] = useState("");
   const [counter, setCounter] = useState(0);
-
+    console.log(schemeCode);
   // load user info from localStorage
   useEffect(() => {
     const storedId = localStorage.getItem("userId");
@@ -70,7 +70,7 @@ function FundsPage() {
 
   // fetch mutual fund JSON (dummy endpoint); replace endpoint as needed
  useEffect(() => {
-  const code = schemeCode || "118945"; // fallback to sample code
+  const code = schemeCode ; // fallback to sample code
 
   const fetchFund = async () => {
     setLoading(true); // 🟢 mark as loading before fetch starts
@@ -100,10 +100,12 @@ function FundsPage() {
     } finally {
       setLoading(false); // 🟢 ensures loading ends always
     }
-  };
+     }; 
+     
 
   fetchFund();
-}, [schemeCode]);
+ }, [schemeCode]); 
+     console.log(schemeCode);
 
   const getEthInINR = async () => {
     try {

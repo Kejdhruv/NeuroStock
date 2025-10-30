@@ -29,7 +29,7 @@ function App() {
         <Route path="/Metals" element={<MetalsPage />} />
         <Route path="/MarketNews" element={<MarketNews />} />
         <Route path="/MutualFunds" element={<Funds />} />
-         <Route path="/MutualFunds/:ticker" element={<FundsPage/>} />
+         <Route path="/MutualFunds/:schemeCode" element={<FundsPage/>} />
   </Route> 
         {/* Dashboard with sidebar and navbar */}
         <Route path="/Dashboard/:userid" element={<Layout />}>
