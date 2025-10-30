@@ -4,7 +4,6 @@ import AuthPage from './User/Login';
 import Home from './Home/Home';
 import StockCard from './Stocks/Stocks';
 import StocksPage from './Stocks/StocksPage';
-import MetalsPage from './Metals/MetalsPage';
 import Layout from './User/Layout';
 import UserDashhboard from './Dashboard/UserDashhboard'; 
 import HoldingsPage from './Dashboard/Holdings/HoldingsPage';
@@ -26,7 +25,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Stocks" element={<StockCard />} />
         <Route path="/Stock/:ticker" element={<StocksPage />} />
-        <Route path="/Metals" element={<MetalsPage />} />
         <Route path="/MarketNews" element={<MarketNews />} />
         <Route path="/MutualFunds" element={<Funds />} />
          <Route path="/MutualFunds/:schemeCode" element={<FundsPage/>} />
