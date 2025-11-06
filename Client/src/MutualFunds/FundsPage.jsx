@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import "./FundsPage.css"; // adapt from your StocksPage.css or theme
 import { ethers } from "ethers";
-import MutualABI from "../abi/GoldABI.json"; // placeholder ABI filename
+import MutualFundsABI from "../abi/MutualFundsABI.json"; // placeholder ABI filename
 import { toast } from "react-hot-toast";
 import StockLoader from "../Dashboard/StockLoader";
 
@@ -156,121 +156,121 @@ function FundsPage() {
   }, [inrAmount, navSeries]);
 
   // buys: send transaction to contract and record to backend
-  const buyMutualFund = async () => {
-    if (!window.ethereum) {
-      toast.error("Install MetaMask");
-      return;
-    }
+ const buyMutualFund = async () => {
+  if (!window.ethereum) {
+    toast.error("Install MetaMask");
+    return;
+  }
+
+  if (!account) {
+    await connectWallet();
     if (!account) {
-      await connectWallet();
-      if (!account) {
-        toast.error("Wallet required");
-        return;
-      }
-    }
-
-    const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
-    if (!latestNav || latestNav <= 0) {
-      toast.error("Invalid NAV");
+      toast.error("Wallet required");
       return;
     }
+  }
 
-    const inr = Number(inrAmount);
-    if (!inr || inr <= 0) {
-      toast.error("Enter a valid INR amount");
-      return;
-    }
+  const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
+  if (!latestNav || latestNav <= 0) {
+    toast.error("Invalid NAV");
+    return;
+  }
 
-    if (!ethPriceINR) {
-      toast.error("ETH price not available");
-      return;
-    }
+  const inr = Number(inrAmount);
+  if (!inr || inr <= 0) {
+    toast.error("Enter a valid INR amount");
+    return;
+  }
 
-    try {
-      setLoading(true);
+  if (!ethPriceINR) {
+    toast.error("ETH price not available");
+    return;
+  }
 
-      // approximate ETH amount required (INR -> ETH)
-      // ethNeeded = inr / ethPriceINR
-      const ethNeeded = inr / ethPriceINR; // decimal
-      // convert ETH decimal to Wei
-      const valueWei = ethers.parseUnits(ethNeeded.toString(), 18); // BigInt
+  try {
+    setLoading(true);
 
-      // create provider and signer
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, MutualABI, signer);
+    // Convert INR → ETH
+    const ethNeeded = inr / ethPriceINR;
+    const valueWei = ethers.parseUnits(ethNeeded.toFixed(18), "ether");
 
-      // Call the contract method; adjust args based on your contract ABI
-      // I use: buyMutualFund(schemeCodeOrName, unitsInRayOrScaled, buyingId, { value: valueWei })
-      // Because units are fractional, many contracts expect scaled integer units - adapt as needed.
-      const unitsScaled = BigInt(Math.floor(units * 1e6)); // example scaling (1e6) - change to your contract's scale
-      const schemeName = meta?.scheme_name || meta?.scheme_name || `Scheme-${schemeCode || "unknown"}`;
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, MutualFundsABI, signer);
 
-      // Example contract call - replace with your real method and arguments
-      const tx = await contract.buyMutualFund(
-        schemeName,
-        unitsScaled,
-        BigInt(counter),
-        { value: valueWei }
-      );
+    // Prepare arguments
+    const schemeName = meta?.scheme_name || `Scheme-${schemeCode || "unknown"}`;
+    const unitsScaled = BigInt(Math.floor(units * 1e6)); // scaled units for precision
+    const pricePerUnit = ethers.parseUnits(latestNav.toFixed(6), "ether");
 
-      console.log("Tx submitted:", tx.hash);
-      toast.success("Transaction submitted");
+    console.log("Preparing tx:", {
+      schemeName,
+      unitsScaled,
+      pricePerUnit,
+      counter,
+      valueWei: valueWei.toString(),
+    });
 
-      const receipt = await tx.wait();
-      console.log("Tx confirmed", receipt);
+    // Call the buying() function
+    const tx = await contract.buying(
+      schemeName,      // string _fundname
+      unitsScaled,     // uint256 _fundquantity
+      pricePerUnit,    // uint256 _price
+      BigInt(counter), // uint256 _buyingID
+      valueWei,        // uint256 _amount
+      { value: valueWei }
+    );
 
-      // Prepare data to post to backend
-      const BoughtData = {
-        Userid: userId || "guest",
-        Email: useremail || "",
-        FundName: meta?.scheme_name || "",
-        SchemeCode: meta?.scheme_code || schemeCode || "",
-        NAV: latestNav,
-        INRAmount: inr,
-        Units: units,
-        timestamp: new Date().toISOString(),
-        Transactionid: tx.hash,
-        buyingid: counter,
-        accountid: account || "",
-      };
+    console.log("Tx sent:", tx.hash);
+    toast.success("Transaction submitted");
 
-      // post to holdings and buying endpoints (dummy)
-      const res1 = await fetch("http://localhost:3001/FundsHoldings", {
+    const receipt = await tx.wait();
+    console.log("Tx confirmed:", receipt);
+    toast.success("Transaction confirmed!");
+
+    // Record purchase in backend
+    const BoughtData = {
+      Userid: userId || "guest",
+      Email: useremail || "",
+      FundName: meta?.scheme_name || "",
+      SchemeCode: meta?.scheme_code || schemeCode || "",
+      NAV: latestNav,
+      INRAmount: inr,
+      Units: units,
+      timestamp: new Date().toISOString(),
+      Transactionid: tx.hash,
+      buyingid: counter,
+      accountid: account || "",
+    };
+
+    await Promise.all([
+      fetch("http://localhost:3001/FundsHoldings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(BoughtData),
-      });
-      const res2 = await fetch("http://localhost:3001/FundsBuying", {
+      }),
+      fetch("http://localhost:3001/FundsBuying", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(BoughtData),
-      });
-
-      if (res1.ok && res2.ok) {
-        toast.success("Purchase recorded");
-      } else {
-        const j1 = await res1.json().catch(() => ({}));
-        const j2 = await res2.json().catch(() => ({}));
-        console.warn("Save responses", j1, j2);
-        toast.error("Failed to persist purchase to backend");
-      }
-
-      await fetch("http://localhost:3001/Counter/buyingId", {
+      }),
+      fetch("http://localhost:3001/Counter/buyingId", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value: counter + 1 }),
-      });
+      }),
+    ]);
 
-      setCounter((c) => c + 1);
-      setModalOpen(false);
-    } catch (err) {
-      console.error("Buy error:", err);
-      toast.error("Transaction failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setCounter((c) => c + 1);
+    setModalOpen(false);
+    toast.success("Purchase recorded successfully!");
+  } catch (err) {
+    console.error("Buy error:", err);
+    toast.error("Transaction failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // rendering helpers
   const latestNav = navSeries.length ? navSeries[navSeries.length - 1].nav : null;

@@ -1,8 +1,46 @@
- [
+[
     {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "buyingId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "userId",
+          "type": "address"
+        }
+      ],
+      "name": "FundBought",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "sellingId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "userId",
+          "type": "address"
+        }
+      ],
+      "name": "FundSold",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -43,44 +81,6 @@
       "type": "event"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "buyingId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "userId",
-          "type": "address"
-        }
-      ],
-      "name": "GoldBought",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "sellingId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "userId",
-          "type": "address"
-        }
-      ],
-      "name": "GoldSold",
-      "type": "event"
-    },
-    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -102,22 +102,27 @@
         },
         {
           "internalType": "string",
-          "name": "carrat",
+          "name": "mutualfundname",
           "type": "string"
         },
         {
           "internalType": "uint256",
-          "name": "weight",
+          "name": "amount",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "priceperg",
+          "name": "boughtat",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
           "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountdeposited",
           "type": "uint256"
         }
       ],
@@ -146,22 +151,27 @@
         },
         {
           "internalType": "string",
-          "name": "carrat",
+          "name": "mutualfundname",
           "type": "string"
         },
         {
           "internalType": "uint256",
-          "name": "weight",
+          "name": "amount",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "priceperg",
+          "name": "boughtat",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
           "name": "timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountdeposited",
           "type": "uint256"
         }
       ],
@@ -195,17 +205,17 @@
         },
         {
           "internalType": "string",
-          "name": "carrat",
+          "name": "mutualfundname",
           "type": "string"
         },
         {
           "internalType": "uint256",
-          "name": "weight",
+          "name": "amount",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "priceperg",
+          "name": "soldat",
           "type": "uint256"
         },
         {
@@ -221,22 +231,27 @@
       "inputs": [
         {
           "internalType": "string",
-          "name": "_carrat",
+          "name": "_fundname",
           "type": "string"
         },
         {
           "internalType": "uint256",
-          "name": "_weight",
+          "name": "_fundquantity",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "_priceperg",
+          "name": "_price",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "_buyingId",
+          "name": "_buyingID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amount",
           "type": "uint256"
         }
       ],
@@ -294,17 +309,17 @@
             },
             {
               "internalType": "string",
-              "name": "carrat",
+              "name": "mutualfundname",
               "type": "string"
             },
             {
               "internalType": "uint256",
-              "name": "weight",
+              "name": "amount",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "priceperg",
+              "name": "soldat",
               "type": "uint256"
             },
             {
@@ -313,7 +328,7 @@
               "type": "uint256"
             }
           ],
-          "internalType": "struct Gold.GoldSoldStruct",
+          "internalType": "struct MutualFunds.FundsSoldStruct",
           "name": "",
           "type": "tuple"
         }
@@ -343,12 +358,12 @@
         },
         {
           "internalType": "uint256",
-          "name": "_weight",
+          "name": "_fundquantity",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "_priceperg",
+          "name": "_price",
           "type": "uint256"
         },
         {
@@ -386,26 +401,31 @@
             },
             {
               "internalType": "string",
-              "name": "carrat",
+              "name": "mutualfundname",
               "type": "string"
             },
             {
               "internalType": "uint256",
-              "name": "weight",
+              "name": "amount",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "priceperg",
+              "name": "boughtat",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
               "name": "timestamp",
               "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountdeposited",
+              "type": "uint256"
             }
           ],
-          "internalType": "struct Gold.GoldBoughtStruct",
+          "internalType": "struct MutualFunds.FundsBoughtStruct",
           "name": "",
           "type": "tuple"
         }
@@ -437,26 +457,31 @@
             },
             {
               "internalType": "string",
-              "name": "carrat",
+              "name": "mutualfundname",
               "type": "string"
             },
             {
               "internalType": "uint256",
-              "name": "weight",
+              "name": "amount",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "priceperg",
+              "name": "boughtat",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
               "name": "timestamp",
               "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountdeposited",
+              "type": "uint256"
             }
           ],
-          "internalType": "struct Gold.GoldBoughtStruct",
+          "internalType": "struct MutualFunds.FundsBoughtStruct",
           "name": "",
           "type": "tuple"
         }
