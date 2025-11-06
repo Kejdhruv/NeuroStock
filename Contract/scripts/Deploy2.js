@@ -1,13 +1,13 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Gold = await hre.ethers.getContractFactory("Gold");
-  console.log("Deploying Gold...");
+  const MutualFunds = await hre.ethers.getContractFactory("MutualFunds");
+  console.log("Deploying Mutual Funds");
 
-  const Goldcontract = await Gold.deploy();
-  await Goldcontract.waitForDeployment();
+  const MutualFundsContract = await MutualFunds.deploy();
+  await MutualFundsContract.waitForDeployment();
 
-  console.log("Gold Contract deployed to:", Goldcontract.target);
+  console.log("Mutual Funds Contract deployed to:", MutualFundsContract.target);
 }
 
 main().catch((error) => {

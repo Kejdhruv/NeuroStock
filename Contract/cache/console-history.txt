@@ -1,0 +1,5 @@
+(await ethers.provider.getBlockNumber())
+ethers.utils.formatEther(await ethers.provider.getBalance("0x2d98d4abe487f1f746c8ef4fc341579944d336060ac78b7c257baf20fa5f3bd7"))
+const { ethers } = require("hardhat");
+ethers.utils.formatEther(await ethers.provider.getBalance("0x2d98d4abe487f1f746c8ef4fc341579944d336060ac78b7c257baf20fa5f3bd7"))
+(await ethers.provider.getBlockNumber())
