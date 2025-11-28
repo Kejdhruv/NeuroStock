@@ -46,7 +46,7 @@ const AuthPage = () => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: isSignUp
-            ? JSON.stringify([formData])
+            ? JSON.stringify(formData)
             : JSON.stringify({ email: formData.email, password: formData.password }),
           credentials: 'include', // keeps cookies working if backend sends any
         }
