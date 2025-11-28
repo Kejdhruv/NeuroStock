@@ -71,10 +71,10 @@ router.post('/Auth/Login', async (req, res) => {
 
     // generate JWT
     const tokenData = {
-      UserId: existingUser._id.toString(),
-      name: existingUser.username,
+      UserId: existingUser._id.toString(), 
+      firstName : existingUser.firstName , 
+      lastName : existingUser.lastName , 
       email: existingUser.email,
-      role: existingUser.role
     };
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "1h" });
 
@@ -123,7 +123,19 @@ router.get('/Auth/Logout', async (req, res) => {
     return res.status(500).json({ error: "Internal Error while Logging Out" });
   }
 });
-export default router;
+
+//User Information 
+router.get("/Auth/Me", (req, res) => {
+  const token = req.cookies?.token;
+  const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+  res.json({ loggedIn: true, user: decoded });
+});
+
+
+
+export default router; 
+
+
 
 
 

@@ -4,7 +4,7 @@ import { FaWallet } from 'react-icons/fa';
 import { ethers } from 'ethers';
 import StocksABI from '../../abi/StocksABI.json';
 import { toast } from 'react-hot-toast';
-import StockLoader from '..//StockLoader';
+import StockLoader from '../../Components/Loaders/StockLoader';
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 const HoldingsPage = () => {
@@ -15,8 +15,6 @@ const HoldingsPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [quote, setQuote] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [userId] = useState(localStorage.getItem("userId"));
-  const [userEmail] = useState(localStorage.getItem("userEmail"))
   const [counter, setCounter] = useState(null);
   const [loading, setLoading] = useState(false); 
   
@@ -41,7 +39,6 @@ const HoldingsPage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return;
 
       try {
         const res = await fetch("http://localhost:3001/Counter/sellingId");
@@ -53,25 +50,24 @@ const HoldingsPage = () => {
     };
 
     fetchUserData();
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!userId) return;
-
-      try {
-        const res = await fetch(`http://localhost:3001/Profile/Holdings/${userId}`);
-        const data = await res.json();
-        const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setHoldings(Array.isArray(sorted) ? sorted : []);
-      } catch (error) {
-        console.error("Error fetching holdings:", error);
-        setHoldings([]);
-      }
-    };
-
-    fetchData();
-  }, [userId]);
+   const fetchData = async () => {
+     try {
+       const res = await fetch("http://localhost:3001/Profile/Holdings", { credentials: "include" });
+       const data = await res.json();
+       const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+       setHoldings(Array.isArray(sorted) ? sorted : []);
+     } catch (error) {
+       console.error("Error fetching selling history:", error);
+       setHoldings([]);
+     }
+   };
+ 
+   fetchData();
+ }, []);
+ 
 
   const handleSellClick = async (stock) => {
     const FINNHUB_KEY = 'd23h2h9r01qm6rotacv0d23h2h9r01qm6rotacvg';
@@ -134,8 +130,6 @@ const deleteHolding = async (stockId) => {
       await tx.wait();
 
       const SellingData = {
-        Userid: userId,
-        Email: userEmail,
         Stockname: selectedStock.Stockname,
         Stocksymbol: selectedStock.Stocksymbol,
         Soldat: quote.c,
@@ -179,7 +173,7 @@ if (newQuantity > 0) {
       
 
       // Refresh holdings
-      const updated = await fetch(`http://localhost:3001/Profile/Holdings/${userId}`);
+      const updated = await fetch("http://localhost:3001/Profile/Holdings", { credentials: "include" });
       const updatedData = await updated.json();
       setHoldings(updatedData);
 

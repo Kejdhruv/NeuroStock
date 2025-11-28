@@ -4,11 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const AuthPage = () => {
   const navigate = useNavigate();
-
-
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -39,46 +36,35 @@ const AuthPage = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validateForm()) return;
+    e.preventDefault();
+    if (!validateForm()) return;
 
-  try {
-    if (isSignUp) {
-  const res = await fetch('http://localhost:3001/Users', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify([formData]), // ✅ send as array
-  });
-  const data = await res.json();
-  if (res.ok) {
-    toast.success('Sign up successful!');
-    localStorage.setItem('userId', data.userId);
-    setTimeout(() => navigate(`/auth`), 3000);
-  } else {
-    toast.error(data.message || 'Sign up failed');
-  }
-}else {
-      const res = await fetch('http://localhost:3001/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, password: formData.password }),
-      });
+    try {
+      const res = await fetch(
+        isSignUp ? 'http://localhost:3001/Auth/Signup' : 'http://localhost:3001/Auth/Login',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: isSignUp
+            ? JSON.stringify([formData])
+            : JSON.stringify({ email: formData.email, password: formData.password }),
+          credentials: 'include', // keeps cookies working if backend sends any
+        }
+      );
+
       const data = await res.json();
 
       if (res.ok) {
-          toast.success('Login successful!');
-       localStorage.setItem('userId', data.userId);
-localStorage.setItem('userEmail', formData.email);  
-          console.log(data.userId); 
-        setTimeout(() => navigate(`/Dashboard/${data.userId}`), 1500);
+        toast.success(isSignUp ? 'Sign up successful!' : 'Login successful!');
+        setTimeout(() => navigate(`/Dashboard`), 1500);
       } else {
-        toast.error(data.message || 'Invalid credentials');
+        toast.error(data.message || (isSignUp ? 'Sign up failed' : 'Invalid credentials'));
       }
+
+    } catch (err) {
+      toast.error('Something went wrong' , err );
     }
-  } catch (err) {
-    toast.error('Something went wrong' , err );
-  }
-};
+  };
 
   return (
     <div className="auth-container">
@@ -95,6 +81,7 @@ localStorage.setItem('userEmail', formData.email);
         <div className="right-overlay">
           <form className="form-box" onSubmit={handleSubmit}>
             <h2>{isSignUp ? 'Sign Up' : 'Login'}</h2>
+
             {isSignUp && (
               <>
                 <input
@@ -113,6 +100,7 @@ localStorage.setItem('userEmail', formData.email);
                 />
               </>
             )}
+
             <input
               type="email"
               name="email"
@@ -120,6 +108,7 @@ localStorage.setItem('userEmail', formData.email);
               value={formData.email}
               onChange={handleChange}
             />
+
             <input
               type="password"
               name="password"
@@ -127,7 +116,11 @@ localStorage.setItem('userEmail', formData.email);
               value={formData.password}
               onChange={handleChange}
             />
-            <button type="submit" className='Login-btn'>{isSignUp ? 'Create Account' : 'Login'}</button>
+
+            <button type="submit" className="Login-btn">
+              {isSignUp ? 'Create Account' : 'Login'}
+            </button>
+
             <button type="button" className="toggle-btn" onClick={toggleMode}>
               {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign up"}
             </button>

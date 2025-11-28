@@ -3,26 +3,23 @@ import './SellHistoryPage.css';
 import { FaMoneyBillWave, FaExternalLinkAlt } from 'react-icons/fa';
 
 const SellHistoryPage = () => {
-  const [solds, setsolds] = useState([]);
+  const [solds, setSolds] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const userId = localStorage.getItem("userId"); 
-      if (!userId) return;
+  const fetchData = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/Profile/SoldStocks", { credentials: "include" });
+      const data = await res.json();
+      const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setSolds(Array.isArray(sorted) ? sorted : []);
+    } catch (error) {
+      console.error("Error fetching selling history:", error);
+      setSolds([]);
+    }
+  };
 
-      try {
-        const res = await fetch(`http://localhost:3001/Profile/SoldStocks/${userId}`);
-        const data = await res.json();
-        const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setsolds(Array.isArray(sorted) ? sorted : []);
-      } catch (error) {
-        console.error("Error fetching selling history:", error);
-        setsolds([]);
-      }
-    };
-
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
 
   return (
     <div className="sell-history-container">

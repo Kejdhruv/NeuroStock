@@ -5,9 +5,9 @@ import {
 } from 'recharts';
 import './StocksPage.css';
 import { ethers } from "ethers";
-import StocksABI from '../abi/StocksABI.json';
+import StocksABI from '../../abi/StocksABI.json';
 import { toast } from 'react-hot-toast';
-import StockLoader from '../Dashboard/StockLoader';
+import StockLoader from '../../Components/Loaders/StockLoader';
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
@@ -22,32 +22,7 @@ function StocksPage() {
   const [account, setAccount] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [useremail, setuseremail] = useState("");
-  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const storedId = localStorage.getItem("userId");
-    if (storedId) setUserId(storedId);
-    const email = localStorage.getItem("userEmail"); 
-    if (email) setuseremail(email); 
-  }, []);
-
- useEffect(() => {
-  const fetchUserData = async () => {
-    if (!userId) return;
-
-    try {
-      const res = await fetch(`http://localhost:3001/Profile/${userId}`);
-      const data = await res.json();
-      if (data[0]?.email) setuseremail(data[0].email);
-    } catch (err) {
-      console.error("Failed to fetch email:", err);
-    }
-  };
-
-  fetchUserData();
- }, [userId]); // ✅ Correct
-  
   const [counter, setCounter] = useState(0);  // initial value
 
 useEffect(() => {
@@ -55,8 +30,6 @@ useEffect(() => {
     try {
       const response = await fetch("http://localhost:3001/Counter/buyingId");
       const data = await response.json();
-
-     
         setCounter(data[0].value);  // ✅ set the counter
      
     } catch (error) {
@@ -135,8 +108,6 @@ useEffect(() => {
     console.log("Transaction confirmed. Receipt:", receipt);
 
     const BoughtData = {
-      Userid: userId,
-      Email: useremail,
       Stockname: profile.name,
       Stocksymbol: profile.ticker,
       Boughtat: quote.c,
@@ -152,22 +123,16 @@ useEffect(() => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(BoughtData),
-    });
-    const res2 = await fetch('http://localhost:3001/Buying', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(BoughtData),
+      credentials : "include" 
     });
 
     const data = await res.json(); 
-    const data2 = await res2.json();
 
-    if (res.ok && res2.ok) {
+    if (res.ok) {
       toast.success(`Stock purchased! TX Hash: ${tx.hash}`);
       setLoading(false);
     } else {
       toast.error(data.message || 'Error while saving data');
-      toast.error(data2.message || 'Error while saving data');
     }
 
     // Increment counter

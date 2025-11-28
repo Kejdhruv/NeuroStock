@@ -1,6 +1,6 @@
 import React from "react";
 import "./StockLoader.css";
-import ethLogo from "../assets/ethereum-eth-logo.png"; // Use a transparent Ethereum logo
+import ethLogo from "../../assets/ethereum-eth-logo.png"; // Use a transparent Ethereum logo
 
 const StockLoader = () => {
   return (

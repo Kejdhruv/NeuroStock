@@ -6,23 +6,20 @@ const BoughtHistoryPage = () => {
   const [boughts, setBoughts] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const userId = localStorage.getItem("userId");
-      if (!userId) return;
-
-      try {
-        const res = await fetch(`http://localhost:3001/Profile/Boughts/${userId}`);
-        const data = await res.json();
-        const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setBoughts(Array.isArray(sorted) ? sorted : []);
-      } catch (error) {
-        console.error("Error fetching buying history:", error);
-        setBoughts([]);
-      }
-    };
-
-    fetchData();
-  }, []);
+   const fetchData = async () => {
+     try {
+       const res = await fetch("http://localhost:3001/Profile/Boughts", { credentials: "include" });
+       const data = await res.json();
+       const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+       setBoughts(Array.isArray(sorted) ? sorted : []);
+     } catch (error) {
+       console.error("Error fetching selling history:", error);
+       setBoughts([]);
+     }
+   };
+ 
+   fetchData();
+ }, []);
 
   return (
     <div className="buy-history-container">

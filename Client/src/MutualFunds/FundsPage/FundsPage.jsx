@@ -13,47 +13,25 @@ import {
 } from "recharts";
 import "./FundsPage.css"; // adapt from your StocksPage.css or theme
 import { ethers } from "ethers";
-import MutualFundsABI from "../abi/MutualFundsABI.json"; // placeholder ABI filename
+import MutualFundsABI from "../../abi/MutualFundsABI.json"; // placeholder ABI filename
 import { toast } from "react-hot-toast";
-import StockLoader from "../Dashboard/StockLoader";
+import StockLoader from "../../Components/Loaders/StockLoader";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_FUNDS_ADDRESS;
 
 function FundsPage() {
-  const { schemeCode } = useParams(); // route param (optional)
+  const { schemeCode } = useParams(); 
   const [meta, setMeta] = useState(null);
-  const [navSeries, setNavSeries] = useState([]); // array of { date, nav: number }
+  const [navSeries, setNavSeries] = useState([]); 
   const [ethPriceINR, setEthPriceINR] = useState(null);
   const [account, setAccount] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [inrAmount, setInrAmount] = useState("");
   const [units, setUnits] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState("");
-  const [useremail, setUseremail] = useState("");
   const [counter, setCounter] = useState(0);
     console.log(schemeCode);
-  // load user info from localStorage
-  useEffect(() => {
-    const storedId = localStorage.getItem("userId");
-    if (storedId) setUserId(storedId);
-    const email = localStorage.getItem("userEmail");
-    if (email) setUseremail(email || "");
-  }, []);
 
-  // fetch user email from backend if userId exists
-  useEffect(() => {
-    if (!userId) return;
-    (async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/Profile/${userId}`);
-        const data = await res.json();
-        if (data[0]?.email) setUseremail(data[0].email);
-      } catch (err) {
-        console.error("Failed to fetch profile email", err);
-      }
-    })();
-  }, [userId]);
 
   // fetch counter
   useEffect(() => {
@@ -230,8 +208,6 @@ function FundsPage() {
 
     // Record purchase in backend
     const BoughtData = {
-      Userid: userId || "guest",
-      Email: useremail || "",
       FundName: meta?.scheme_name || "",
       SchemeCode: meta?.scheme_code || schemeCode || "",
       NAV: latestNav,
@@ -248,11 +224,7 @@ function FundsPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(BoughtData),
-      }),
-      fetch("http://localhost:3001/FundsBuying", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(BoughtData),
+        credentials: "include" , 
       }),
       fetch("http://localhost:3001/Counter/buyingId", {
         method: "PUT",
