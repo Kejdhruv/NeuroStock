@@ -11,14 +11,14 @@ const router = express.Router();
 // Posting Stocks 
 router.post("/Holdings", authMiddleware, async (req, res) => {
   try {
-    const { id: userId, email } = req.user;
+   const { Userid, Email } = req.user;  
 
 
     const bodyData = req.body;
     const holding = Array.isArray(bodyData) ? bodyData : [bodyData];
     holding.forEach(item => {
-      item.userId = userId;
-        item.email = email;
+      item.Userid = Userid;
+        item.Email = Email;
            item.BoughtAt = new Date().toISOString();
     });
 
@@ -44,15 +44,15 @@ router.post("/Holdings", authMiddleware, async (req, res) => {
 
 router.post("/StocksSold", authMiddleware, async (req, res) => {
   try {
-    const { id: userId,  email } = req.user;
+    const { Userid, Email } = req.user;  
 
     const bodyData = req.body;
     const StockSold = Array.isArray(bodyData) ? bodyData : [bodyData];
 
     // Append user details to each sold stock object
     StockSold.forEach(item => {
-      item.userId = userId;
-      item.email = email;
+      item.Userid = Userid;
+      item.Email = Email;
       item.soldAt = new Date().toISOString();
     });
 
@@ -75,15 +75,15 @@ router.post("/StocksSold", authMiddleware, async (req, res) => {
 
 router.post("/FundsHoldings", authMiddleware, async (req, res) => {
   try {
-    const { id: userId,  email } = req.user;
+     const { Userid, Email } = req.user;  
 
     const bodyData = req.body;
     const holding = Array.isArray(bodyData) ? bodyData : [bodyData];
 
     // Append user details to each funds holding entry
     holding.forEach(item => {
-      item.userId = userId;
-      item.email = email;
+      item.Userid = Userid;
+      item.Email = Email;
       item.addedAt = new Date().toISOString();
     });
 
@@ -105,15 +105,15 @@ router.post("/FundsHoldings", authMiddleware, async (req, res) => {
 
 router.post("/SoldFunds", authMiddleware, async (req, res) => {
   try {
-    const { id: userId,  email } = req.user;
+     const { Userid, Email } = req.user;  
 
     const bodyData = req.body;
     const holding = Array.isArray(bodyData) ? bodyData : [bodyData];
 
     // Append user details to each funds holding entry
     holding.forEach(item => {
-      item.userId = userId;
-      item.email = email;
+      item.Userid = Userid;
+      item.Email = Email;
       item.addedAt = new Date().toISOString();
     });
 

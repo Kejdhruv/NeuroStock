@@ -11,8 +11,8 @@ const router = express.Router();
 // Getting All The User Holdings , Boughts , Solds 
 router.get('/Profile/Holdings',authMiddleware, async (req, res) => {
   try {
-     const { UserId } = req.user; 
-    const data = await HoldingsByuser(UserId);
+     const { Userid } = req.user; 
+    const data = await HoldingsByuser(Userid);
     res.send(data);
   } catch (err) {
     console.error(err);
@@ -22,8 +22,8 @@ router.get('/Profile/Holdings',authMiddleware, async (req, res) => {
 
 router.get('/Profile/SoldStocks',authMiddleware, async (req, res) => {
    try {
-     const { UserId } = req.user; 
-    const data = await SoldStocksByUser(UserId);
+     const { Userid } = req.user; 
+    const data = await SoldStocksByUser(Userid);
     res.send(data); 
   } catch (err) {
     console.error(err);
@@ -33,8 +33,8 @@ router.get('/Profile/SoldStocks',authMiddleware, async (req, res) => {
  
 router.get('/Profile/Boughts',authMiddleware, async (req, res) => {
    try {
-     const { UserId } = req.user; 
-    const data = await BoughtByUser(UserId);
+     const { Userid } = req.user; 
+    const data = await BoughtByUser(Userid);
     res.send(data); 
   } catch (err) {
     console.error(err);
@@ -44,8 +44,8 @@ router.get('/Profile/Boughts',authMiddleware, async (req, res) => {
 
 router.get('/Profile/FundsBoughts',authMiddleware, async (req, res) => {
    try {
-      const { UserId } = req.user; 
-    const data = await FundsBought(UserId);
+      const { Userid } = req.user; 
+    const data = await FundsBought(Userid);
     res.send(data); 
   } catch (err) {
     console.error(err);
@@ -55,8 +55,8 @@ router.get('/Profile/FundsBoughts',authMiddleware, async (req, res) => {
 
 router.get('/Profile/SoldFunds',authMiddleware, async (req, res) => {
    try {
-    const { UserId } = req.user; 
-    const data = await SoldFunds(UserId);
+    const { Userid } = req.user; 
+    const data = await SoldFunds(Userid);
     res.send(data); 
   } catch (err) {
     console.error(err);
@@ -66,8 +66,8 @@ router.get('/Profile/SoldFunds',authMiddleware, async (req, res) => {
 
 router.get('/Profile/FundsHoldings',authMiddleware, async (req, res) => {
   try {
-     const { UserId } = req.user; 
-    const data = await FundsHoldings(UserId);
+     const { Userid } = req.user; 
+    const data = await FundsHoldings(Userid);
     res.send(data); 
   } catch (err) {
     console.error(err);

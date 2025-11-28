@@ -68,14 +68,14 @@ router.post('/Auth/Login', async (req, res) => {
     if (!validPassword) {
       return res.status(401).json({ message: "Incorrect Password" });
     }
-
+     
     // generate JWT
     const tokenData = {
-      UserId: existingUser._id.toString(), 
+      Userid: existingUser._id.toString(), 
       firstName : existingUser.firstName , 
       lastName : existingUser.lastName , 
-      email: existingUser.email,
-    };
+      Email: existingUser.email,
+    }; 
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "1h" });
 
     // set JWT in httpOnly cookie
@@ -92,10 +92,10 @@ router.post('/Auth/Login', async (req, res) => {
       message: "Login Successful",
       success: true,
       user: {
-        userId: existingUser._id,
-        username: existingUser.username,
-        email: existingUser.email,
-        role:existingUser.role , 
+        Userid: existingUser._id,
+       firstName : existingUser.firstName , 
+       lastName : existingUser.lastName , 
+        Email: existingUser.email,
       },
     });
   } catch (err) {
