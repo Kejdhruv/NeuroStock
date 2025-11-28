@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./UserDashhboard.css";
 import { FaChartLine, FaWallet, FaShoppingCart, FaMoneyBillWave } from "react-icons/fa";
 
-const API_HOLD = "http://localhost:3001/Portfolio/Holdings";
-const API_BUY  = "http://localhost:3001/Portfolio/Boughts";
-const API_SELL = "http://localhost:3001/Portfolio/SoldStocks";
+const API_HOLD = "http://localhost:3001/Profile/Holdings";
+const API_BUY  = "http://localhost:3001/Profile/Boughts";
+const API_SELL = "http://localhost:3001/Profile/SoldStocks";
 
 const UserDashboard = () => {
   const [holdings, setHoldings] = useState([]);
@@ -16,47 +16,58 @@ const UserDashboard = () => {
     const fetchData = async () => {
       try {
         const [holdRes, buyRes, sellRes] = await Promise.all([
-          fetch(API_HOLD, { credentials: "include" }).catch(err => {
-            console.error("Holdings fetch failed:", err);
-            return { json: () => [] };
-          }),
-          fetch(API_BUY, { credentials: "include" }).catch(err => {
-            console.error("Boughts fetch failed:", err);
-            return { json: () => [] };
-          }),
-          fetch(API_SELL, { credentials: "include" }).catch(err => {
-            console.error("Sold fetch failed:", err);
-            return { json: () => [] };
-          }),
+          fetch(API_HOLD, { credentials: "include" }),
+          fetch(API_BUY,  { credentials: "include" }),
+          fetch(API_SELL, { credentials: "include" })
         ]);
 
         const holdData = await holdRes.json();
         const buyDataRaw = await buyRes.json();
         const sellDataRaw = await sellRes.json();
 
-        const buyData  = buyDataRaw.map((item) => ({ ...item, type: "BOUGHT" }));
-        const sellData = sellDataRaw.map((item) => ({ ...item, type: "SOLD" }));
+        // ✅ Ensure arrays, else fallback safely
+        const h = Array.isArray(holdData) ? holdData : [];
+        const b = Array.isArray(buyDataRaw) ? buyDataRaw : [];
+        const s = Array.isArray(sellDataRaw) ? sellDataRaw : [];
 
-        setHoldings(Array.isArray(holdData) ? holdData : []);
-        setBoughts(Array.isArray(buyData) ? buyData : []);
-        setSolds(Array.isArray(sellData) ? sellData : []);
+        // ✅ Set correct states (no renamed keys so UI stays same)
+        setHoldings(h);
+        setBoughts(b);
+        setSolds(s);
 
-        const allActivity = [...buyData, ...sellData].sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
-        );
+        // ✅ Merge & sort recent activity safely using correct key
+        const allActivity = [
+          ...b.map(i => ({ ...i, type: "BOUGHT", timestamp: i.timestamp })),
+          ...s.map(i => ({ ...i, type: "SOLD", timestamp: i.timestamp }))
+        ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
         setRecent(allActivity.slice(0, 5));
 
       } catch (err) {
-        console.error("Unexpected data fetch error:", err);
+        console.error("Fetch error:", err);
+        // ✅ Safe fallback if server crashes
+        setHoldings([]);
+        setBoughts([]);
+        setSolds([]);
+        setRecent([]);
       }
     };
 
     fetchData();
   }, []);
 
-  const totalBought = boughts.reduce((acc, item) => acc + (item.Boughtat || 0) * (item.Quantity || 0), 0);
-  const totalInvested = holdings.reduce((acc, item) => acc + (item.Boughtat || 0) * (item.Quantity || 0), 0);
-  const totalSold = solds.reduce((acc, item) => acc + (item.Soldat || 0) * (item.Quantity || 0), 0);
+  // ✅ Fix total calculations using your DB keys exactly
+  const totalInvested = holdings.reduce(
+    (acc, item) => acc + (Number(item.Boughtat || 0) * Number(item.Quantity || 0)), 0
+  );
+
+  const totalBought = boughts.reduce(
+    (acc, item) => acc + (Number(item.Boughtat || 0) * Number(item.Quantity || 0)), 0
+  );
+
+  const totalSold = solds.reduce(
+    (acc, item) => acc + (Number(item.Soldat || 0) * Number(item.Quantity || 0)), 0
+  );
 
   return (
     <div className="userdash-wrapper">
@@ -102,7 +113,7 @@ const UserDashboard = () => {
                 <span className="activity-stock">{item.Stockname}</span>
                 <span className="activity-qty">x{item.Quantity}</span>
                 <span className="activity-price">
-                  ${item.Boughtat ? item.Boughtat : item.Soldat}
+                  ${item.type === "BOUGHT" ? item.Boughtat : item.Soldat}
                 </span>
                 <span className="activity-time">
                   {new Date(item.timestamp).toLocaleString()}
@@ -112,6 +123,7 @@ const UserDashboard = () => {
           )}
         </ul>
       </div>
+
     </div>
   );
 };

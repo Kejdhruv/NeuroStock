@@ -19,7 +19,6 @@ router.post("/Holdings", authMiddleware, async (req, res) => {
     holding.forEach(item => {
       item.Userid = Userid;
         item.Email = Email;
-           item.BoughtAt = new Date().toISOString();
     });
 
     // Perform DB inserts
@@ -53,7 +52,6 @@ router.post("/StocksSold", authMiddleware, async (req, res) => {
     StockSold.forEach(item => {
       item.Userid = Userid;
       item.Email = Email;
-      item.soldAt = new Date().toISOString();
     });
 
     const result = await SoldingStocks(StockSold);
@@ -84,7 +82,6 @@ router.post("/FundsHoldings", authMiddleware, async (req, res) => {
     holding.forEach(item => {
       item.Userid = Userid;
       item.Email = Email;
-      item.addedAt = new Date().toISOString();
     });
 
       const result = await PostingFundsHoldings(holding);
@@ -114,7 +111,6 @@ router.post("/SoldFunds", authMiddleware, async (req, res) => {
     holding.forEach(item => {
       item.Userid = Userid;
       item.Email = Email;
-      item.addedAt = new Date().toISOString();
     });
 
       const result = await SoldingFunds(holding);

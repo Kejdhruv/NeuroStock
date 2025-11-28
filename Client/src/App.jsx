@@ -13,6 +13,7 @@ import HoldingsPage from './Dashboard/Holdings/HoldingsPage';
 import BoughtHistoryPage from './Dashboard/History/BoughtHistoryPage'; 
 import SellHistoryPage from './Dashboard/Selling/SellHistoryPage'; 
 import Home from "./Home/Home"
+import ProtectedRoute from './User/Authenication/ProtectedRoute';
 
 function App() {
   return (
@@ -24,13 +25,15 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home/>} />
         <Route path="/Stocks" element={<StockCard/>} />
-        <Route path="/Stock/:ticker" element={<StocksPage />} />
+        <Route path="/Stock/:ticker" element={<ProtectedRoute><StocksPage /></ProtectedRoute>} />
         <Route path="/MarketNews" element={<MarketNews/>} />
         <Route path="/MutualFunds" element={<Funds />} />
-         <Route path="/MutualFunds/:schemeCode" element={<FundsPage/>} />
+         <Route path="/MutualFunds/:schemeCode" element={ <ProtectedRoute> <FundsPage/> </ProtectedRoute>} />
   </Route> 
         {/* Dashboard with sidebar and navbar */}
-        <Route path="/Dashboard" element={<Layout />}>
+        <Route path="/Dashboard" element={  <ProtectedRoute>
+        <Layout /> {/* existing layout with navbar/sidebar intact */}
+      </ProtectedRoute>}>
           <Route index element={<UserDashboard />} />
           <Route path="holdings" element={<HoldingsPage/>} />
           <Route path="buy-history" element={<BoughtHistoryPage/>} />
