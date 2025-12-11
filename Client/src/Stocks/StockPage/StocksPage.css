@@ -27,7 +27,7 @@
 .metrics-card {
   background: linear-gradient(145deg, #ffffff, #f9f9f9);
   padding: 15px 20px;
-  margin-top: 55px;
+  margin-top: 20px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   transition: transform 0.2s ease;
@@ -71,7 +71,7 @@
 
 /* Profile Card */
 .profile-card {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   gap: 15px;
@@ -167,81 +167,6 @@
   transform: scale(1.05);
 }
 
-/* News Carousel */
-.news-carousel {
-  margin-top: 10px;
-  position: relative;
-  width: 100%;
-  height: 150px; 
-  margin-left: 5px;
-  z-index: 1;
-  padding-top: 20px;
-}
-
-.news-slider {
-  display: flex;
-  gap: 15px;
-  position: absolute;
-  left: 0;
-  top: 25px;
-  animation: slideNews 30s linear infinite;
-}
-
-.news-card {
-  flex: 0 0 300px;
-  height: 140px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  padding: 8px;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* News Image */
-.news-image {
-  width: 100%;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-bottom: 4px;
-}
-
-.news-source {
-  font-size: 0.90rem;
-  font-weight: bold;
-  color: #0b1e3f;
-  margin-bottom: 2px;
-}
-
-/* News Summary */
-.news-summary {
-  font-size: 0.7rem;
-  color: #444;
-  line-height: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.news-link {
-  font-size: 0.7rem;
-  color: #2e8b57;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.news-link:hover {
-  text-decoration: underline;
-}
-
-/* Infinite Sliding Animation */
-@keyframes slideNews {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
 
 /* Candlestick Chart Container */
 .candlestick-container {
@@ -381,4 +306,40 @@
   0% { opacity: 0; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
   100% { opacity: 0; transform: scale(0.8); }
+}
+
+.prediction-panel .chart-card { background: #fff; border-radius: 8px; padding: 10px; box-shadow: 0 6px 20px rgba(12,20,30,0.06); }
+.metrics-card.full-width {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 6px 20px rgba(12,20,30,0.06);
+}
+
+/* Make the metrics list horizontal */
+.metrics-card.full-width ul {
+  display: flex;
+  flex-wrap: wrap;      /* wrap on smaller screens */
+  gap: 18px;            /* spacing between items */
+  list-style: none;     /* remove bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.metrics-card.full-width li {
+  font-size: 14px;
+  white-space: nowrap;  /* prevent breaking key:value onto two lines */
+}
+
+.mini-spinner {
+  width: 16px;
+  height: 16px;
+  border: 3px solid #ccc;
+  border-top-color: #0b1e3f;
+  border-radius: 50%;
+  animation: mini-spin 0.8s linear infinite;
+}
+
+@keyframes mini-spin {
+  to { transform: rotate(360deg); }
 }

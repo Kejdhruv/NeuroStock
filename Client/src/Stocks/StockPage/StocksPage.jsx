@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  LineChart, Line
 } from 'recharts';
 import './StocksPage.css';
 import { ethers } from "ethers";
@@ -24,26 +25,56 @@ function StocksPage() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [counter, setCounter] = useState(0);  // initial value
+  const [mlData, setMlData] = useState(null);
+  const [mlLoading, setMlLoading] = useState(false);
+  const [mlError, setMlError] = useState(null);
 
-useEffect(() => {
-  const fetchCounter = async () => {
-    try {
-      const response = await fetch("http://localhost:3001/Counter/buyingId");
-      const data = await response.json();
-        setCounter(data[0].value);  // ✅ set the counter
-     
-    } catch (error) {
-      toast.error("Failed to fetch counter.");
-      console.error("Counter fetch error:", error);
-    }
+  // --- small helper: turn mlData into series for the right-hand chart
+  const buildPredictionSeries = () => {
+    if (!mlData || !mlData.next_10_real_predictions) return [];
+    return mlData.next_10_real_predictions.map((p, i) => ({
+      date: `T+${i + 1}`,
+      price: Number(p)
+    }));
   };
 
-  fetchCounter();  // ✅ Called as async function
-}, []);
-  
+  // --- small internal PredictionChart using your existing Recharts imports
+  const PredictionChart = ({ data }) => {
+    if (!data || data.length === 0) {
+      return <div style={{ padding: 18 }}>No predictions yet</div>;
+    }
+    return (
+      <ResponsiveContainer width="100%" height={380}>
+        <LineChart data={data} margin={{ top: 10, right: 16, left: 0, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" />
+          <YAxis domain={['dataMin', 'dataMax']} />
+          <Tooltip />
+          <Line type="monotone" dataKey="price" stroke="#0b1e3f" strokeWidth={2} dot={{ r: 3 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  };
+
   useEffect(() => {
-  console.log("Counter updated:", counter);
-}, [counter]); 
+    const fetchCounter = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/Counter/buyingId");
+        const data = await response.json();
+        setCounter(data[0].value);  // ✅ set the counter
+      } catch (error) {
+        toast.error("Failed to fetch counter.");
+        console.error("Counter fetch error:", error);
+      }
+    };
+
+    fetchCounter();  // ✅ Called as async function
+  }, []);
+
+  useEffect(() => {
+    console.log("Counter updated:", counter);
+  }, [counter]);
+
   const connectWallet = async () => {
     if (!window.ethereum) {
       alert("MetaMask not detected!");
@@ -74,79 +105,79 @@ useEffect(() => {
   };
 
   const buyStock = async () => {
-
-  if (!window.ethereum) {
-    alert("Please install MetaMask");
-    return;
-  }
-
-  if (!account) await connectWallet();
-
-  try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, StocksABI, signer);
-
-    const stockPriceUSD = quote.c;
-    const stockPriceETH = stockPriceUSD / ethPriceUSD;
-    const priceInWei = ethers.parseUnits(stockPriceETH.toString(), 18);
-
-    const totalCostWei = (priceInWei * BigInt(quantity) * BigInt(102)) / BigInt(100);
-
-    const tx = await contract.buying(
-      profile.name,
-      BigInt(quantity),
-      priceInWei,
-      counter , 
-      { value: totalCostWei }
-    );
-
-    console.log("Transaction submitted. Hash:", tx.hash); 
-     setModalOpen(false);
-    setLoading(true);
-    const receipt = await tx.wait();
-    console.log("Transaction confirmed. Receipt:", receipt);
-
-    const BoughtData = {
-      Stockname: profile.name,
-      Stocksymbol: profile.ticker,
-      Boughtat: quote.c,
-      Quantity: quantity ,
-      timestamp: new Date().toISOString(),
-      Transactionid: tx.hash,
-      buyingid: counter,
-      stockimage: profile.logo,
-      accountid : account
-    };
-
-    const res = await fetch('http://localhost:3001/Holdings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(BoughtData),
-      credentials : "include" 
-    });
-
-    const data = await res.json(); 
-
-    if (res.ok) {
-      toast.success(`Stock purchased! TX Hash: ${tx.hash}`);
-      setLoading(false);
-    } else {
-      toast.error(data.message || 'Error while saving data');
+    if (!window.ethereum) {
+      alert("Please install MetaMask");
+      return;
     }
 
-    // Increment counter
-    await fetch("http://localhost:3001/Counter/buyingId", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ value: counter + 1 })
-    });
+    if (!account) await connectWallet();
 
-  } catch (err) {
-    console.error("Buy stock error:", err);
-    alert("Transaction failed");
-  }
-};
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, StocksABI, signer);
+
+      const stockPriceUSD = quote.c;
+      const stockPriceETH = stockPriceUSD / ethPriceUSD;
+      const priceInWei = ethers.parseUnits(stockPriceETH.toString(), 18);
+
+      const totalCostWei = (priceInWei * BigInt(quantity) * BigInt(102)) / BigInt(100);
+
+      const tx = await contract.buying(
+        profile.name,
+        BigInt(quantity),
+        priceInWei,
+        counter,
+        { value: totalCostWei }
+      );
+
+      console.log("Transaction submitted. Hash:", tx.hash);
+      setModalOpen(false);
+      setLoading(true);
+      const receipt = await tx.wait();
+      console.log("Transaction confirmed. Receipt:", receipt);
+
+      const BoughtData = {
+        Stockname: profile.name,
+        Stocksymbol: profile.ticker,
+        Boughtat: quote.c,
+        Quantity: quantity,
+        timestamp: new Date().toISOString(),
+        Transactionid: tx.hash,
+        buyingid: counter,
+        stockimage: profile.logo,
+        accountid: account
+      };
+
+      const res = await fetch('http://localhost:3001/Holdings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(BoughtData),
+        credentials: "include"
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(`Stock purchased! TX Hash: ${tx.hash}`);
+        setLoading(false);
+      } else {
+        toast.error(data.message || 'Error while saving data');
+      }
+
+      // Increment counter
+      await fetch("http://localhost:3001/Counter/buyingId", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: counter + 1 })
+      });
+
+    } catch (err) {
+      console.error("Buy stock error:", err);
+      alert("Transaction failed");
+    }
+  };
+
   useEffect(() => {
     const FINNHUB_KEY = import.meta.env.VITE_2ND_FINHUBB_KEY;
     const POLYGON_KEY = import.meta.env.VITE_3RD_POLYGON_KEY;
@@ -171,51 +202,135 @@ useEffect(() => {
       }
     };
 
-   const fetchCandleData = async () => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
+    const fetchCandleData = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
 
-    // Go back 150 days to ensure at least 100 trading days
-    const hundredDaysAgo = new Date();
-    hundredDaysAgo.setDate(hundredDaysAgo.getDate() - 150);
-    const fromDate = hundredDaysAgo.toISOString().split('T')[0];
+        // Go back 150 days to ensure at least 100 trading days
+        const hundredDaysAgo = new Date();
+        hundredDaysAgo.setDate(hundredDaysAgo.getDate() - 150);
+        const fromDate = hundredDaysAgo.toISOString().split('T')[0];
 
-    const res = await fetch(
-      `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${fromDate}/${today}?adjusted=true&sort=asc&limit=100&apiKey=${POLYGON_KEY}`
-    );
+        const res = await fetch(
+          `https://api.polygon.io/v2/aggs/ticker/${ticker}/range/1/day/${fromDate}/${today}?adjusted=true&sort=asc&limit=100&apiKey=${POLYGON_KEY}`
+        );
 
-    const data = await res.json();
-    if (data && data.results) {
-      const transformedData = data.results.map((item) => ({
-        date: new Date(item.t).toLocaleDateString(),
-        open: item.o,
-        high: item.h,
-        low: item.l,
-        close: item.c,
-      }));
-      setCandleData(transformedData);
-    }
-  } catch (error) {
-    console.error("Error fetching candle data:", error);
-  }
-};
+        const data = await res.json();
+        if (data && data.results) {
+          const transformedData = data.results.map((item, i) => ({
+            // include idx if you want clickable-candle features later
+            idx: i,
+            date: new Date(item.t).toLocaleDateString(),
+            open: item.o,
+            high: item.h,
+            low: item.l,
+            close: item.c,
+          }));
+
+          // set state first
+          setCandleData(transformedData);
+
+          // only call PredictionModule AFTER candleData is ready
+          if (transformedData.length >= 100) {
+            // pass the transformedData directly to PredictionModule to avoid race
+            await PredictionModule(transformedData);
+          } else {
+            // pad & still call (optional) — here we warn
+            console.warn("Not enough rows for ML (need 100). Have:", transformedData.length);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching candle data:", error);
+      }
+    };
+
+    // Accept an optional data param to avoid reading stale candleData from state
+    const PredictionModule = async (data = null) => {
+      try {
+        setMlError(null);
+        setMlLoading(true);
+
+        // prefer passed data; otherwise use candleData from state
+        const source = Array.isArray(data) ? data : candleData;
+
+        // normalize and ensure numeric fields
+        const normalized = source.map(d => ({
+          date: d.date,
+          open: Number(d.open),
+          high: Number(d.high),
+          low: Number(d.low),
+          close: Number(d.close),
+        }));
+
+        // take last 100 rows
+        let timeseries = normalized.slice(-100);
+
+        // if less than 100, pad by repeating the first row (so backend accepts)
+        if (timeseries.length < 100) {
+          const needed = 100 - timeseries.length;
+          const padItem = timeseries.length > 0 ? timeseries[0] : {
+            date: new Date().toLocaleDateString(),
+            open: 0, high: 0, low: 0, close: 0
+          };
+          const padArray = Array.from({ length: needed }, () => ({ ...padItem }));
+          timeseries = [...padArray, ...timeseries];
+        }
+
+        console.log("Sending timeseries length:", timeseries.length); // should be 100
+
+        const resp = await fetch("http://localhost:8000/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ timeseries }),
+          credentials: "include"
+        });
+
+        if (!resp.ok) {
+          const text = await resp.text();
+          throw new Error(`Backend error ${resp.status}: ${text}`);
+        }
+
+        const json = await resp.json();
+        console.log("ML Prediction:", json);
+        setMlData(json);
+        return json;
+      } catch (error) {
+        console.error("ML Prediction failed:", error);
+        toast.error("ML Prediction failed: " + (error.message || error));
+        setMlData(null);
+        setMlError(error.message || String(error));
+        return null;
+      } finally {
+        setMlLoading(false);
+      }
+    };
 
     fetchStockData();
     fetchCandleData();
-  }, [ticker]);
+    // PredictionModule is called inside fetchCandleData after setCandleData
+  }, [ticker]); 
 
-  console.log(candleData); 
-
-  if (!profile || !quote || !metrics || !ethPriceUSD) return <div class="loader-container">
-  <div class="emoji-loader">
-    <span>💹</span>
-    <span>➡️</span>
-    <span>💰</span>
-    <span>➡️</span>
-    <span>📈</span>
+  const MiniLoader = () => (
+  <div style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px"
+  }}>
+    <div className="mini-spinner"></div>
+    <span style={{ fontSize: "12px", fontWeight: 600 }}>Predicting the Stock Trend </span>
   </div>
-</div>
+); 
 
+  if (!profile || !quote || !metrics || !ethPriceUSD) return <div className="loader-container">
+    <div className="emoji-loader">
+      <span>💹</span>
+      <span>➡️</span>
+      <span>💰</span>
+      <span>➡️</span>
+      <span>📈</span>
+    </div>
+  </div>;
 
   const minPrice = Math.min(...candleData.map((d) => d.low || d.close));
   const maxPrice = Math.max(...candleData.map((d) => d.high || d.close));
@@ -245,13 +360,13 @@ useEffect(() => {
       </g>
     );
   };
+
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">Stock Dashboard</div>
 
       {/* Left Column */}
       <div className="chart-left">
-        <ResponsiveContainer width="100%" height={380}>
+        <ResponsiveContainer width="100%" height={350}>
           <BarChart data={recommendations} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="period" />
@@ -266,20 +381,39 @@ useEffect(() => {
           </BarChart>
         </ResponsiveContainer>
 
-        {/* Metrics BELOW histogram */}
-        {metrics && (
-          <div className="metrics-card">
-            <h3>Key Metrics</h3>
-            <ul>
-              <li><strong>P/E Ratio:</strong> {metrics.peBasicExclExtraTTM || 'N/A'}</li>
-              <li><strong>52 Week High:</strong> $ {metrics['52WeekHigh'] || 'N/A'} on { `(${metrics['52WeekHighDate']})`}</li>
-                          <li><strong>52 Week Low:</strong> $ {metrics['52WeekLow'] || 'N/A'} on { `(${metrics['52WeekLowDate']})`}</li>
-                          <li><strong>13 Week Price Return Daily </strong> $ {metrics['13WeekPriceReturnDaily'] || 'N/A'} </li>
-                          <li><strong>26 Week Price Return Daily </strong> $ {metrics['26WeekPriceReturnDaily'] || 'N/A'}</li>
-                           <li><strong>52 Week Price Return Daily </strong> $ {metrics['52WeekPriceReturnDaily'] || 'N/A'}</li>
-            </ul>
-          </div>
-        )}
+        {/* --- REPLACED: Prediction chart takes the place of the old metrics card --- */}
+       <div className="prediction-panel" 
+     style={{ marginTop: 8, maxHeight: 50 }}>
+
+  <div className="chart-card" 
+       style={{ padding: "6px 10px", minHeight: 50 }}>
+
+    <div className="chart-title" 
+         style={{ padding: "6px 10px" , fontSize: 20, fontWeight: 700 , marginBottom: 8 }}>
+      Stock Prediction (next 3 days)
+    </div>
+
+    <div style={{ position: 'relative', minHeight: 40 }}>
+      {mlLoading && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'rgba(255,255,255,0.5)',
+          zIndex: 5,
+          borderRadius: 6
+        }}>
+          <MiniLoader small />
+        </div>
+      )}
+
+      {!mlLoading && <PredictionChart data={buildPredictionSeries()} />}
+    </div>
+
+  </div>
+</div>
       </div>
 
       {/* Right Column */}
@@ -293,18 +427,18 @@ useEffect(() => {
               <div className="profile-text"><strong>Industry:</strong> {profile.finnhubIndustry || "NA"}</div>
               <div className="profile-text"><strong>Country:</strong> {profile.country || "NA"}</div>
               <div className="profile-text"><strong>IPO Date:</strong> {profile.ipo || "NA"}</div>
-                  <div className="profile-text"><strong>Share Outstanding:</strong> {profile.shareOutstanding || "NA"}</div>
+              <div className="profile-text"><strong>Share Outstanding:</strong> {profile.shareOutstanding || "NA"}</div>
               <div className="profile-text"><strong>Market Cap:</strong> {metrics.marketCapitalization || "NA"} B</div>
-            <div className="profile-text">
-  <strong>Website:</strong>{" "}
-  {profile.weburl ? (
-    <a href={profile.weburl} target="_blank" rel="noopener noreferrer" className="profile-link">
-      {profile.weburl}
-    </a>
-  ) : (
-    "NA"
-  )}
-</div>
+              <div className="profile-text">
+                <strong>Website:</strong>{" "}
+                {profile.weburl ? (
+                  <a href={profile.weburl} target="_blank" rel="noopener noreferrer" className="profile-link">
+                    {profile.weburl}
+                  </a>
+                ) : (
+                  "NA"
+                )}
+              </div>
             </div>
           </div>
           <div className="quote-card-inside">
@@ -312,10 +446,9 @@ useEffect(() => {
             <ul>
               <li className="quote-text"><strong>Current:</strong> ${quote.c} (~ {stockPriceETH} ETH)</li>
               <li className="quote-text"><strong>Open:</strong> ${quote.o}</li>
-               <li className="quote-text"><strong>Previous Close:</strong> ${quote.pc}</li>
+              <li className="quote-text"><strong>Previous Close:</strong> ${quote.pc}</li>
               <li className="quote-text"><strong>High:</strong> ${quote.h}</li>
               <li className="quote-text"><strong>Low:</strong> ${quote.l}</li>
-            
             </ul>
             <button className="buy-stock-button" onClick={handleBuyClick}>Buy Stock</button>
             <button className="buy-stock-button" onClick={connectWallet}>Connect Wallet</button>
@@ -334,7 +467,26 @@ useEffect(() => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
+          <div className="metrics-row" style={{ marginTop: 1 }}>
+        {metrics && (
+          <div className="metrics-card full-width">
+            <h3>Key Metrics</h3>
+            <ul>
+              <li><strong>P/E Ratio:</strong> {metrics.peBasicExclExtraTTM || 'N/A'}</li>
+              <li><strong>52 Week High:</strong> $ {metrics['52WeekHigh'] || 'N/A'} on { `(${metrics['52WeekHighDate']})`}</li>
+              <li><strong>52 Week Low:</strong> $ {metrics['52WeekLow'] || 'N/A'} on { `(${metrics['52WeekLowDate']})`}</li>
+              <li><strong>13 Week Price Return Daily </strong> $ {metrics['13WeekPriceReturnDaily'] || 'N/A'}</li>
+              <li><strong>26 Week Price Return Daily </strong> $ {metrics['26WeekPriceReturnDaily'] || 'N/A'}</li>
+              <li><strong>52 Week Price Return Daily </strong> $ {metrics['52WeekPriceReturnDaily'] || 'N/A'}</li>
+            </ul>
+          </div>
+        )}
       </div>
+      </div>
+
+      {/* --- MOVED: metrics now span full width below the charts --- */}
+  
 
       {/* Buy Modal */}
       {modalOpen && (
@@ -358,14 +510,10 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      )} 
-         {loading && <StockLoader />} 
+      )}
+      {loading && <StockLoader />}
 
-
-
-    </div> 
-
-
+    </div>
   );
 }
 
