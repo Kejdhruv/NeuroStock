@@ -6,7 +6,7 @@ const MarketNews = () => {
    const API_KEY = import.meta.env.VITE_3RD_POLYGON_KEY; 
   useEffect(() => {
     fetch(
-       `https://api.polygon.io/v2/reference/news?published_utc.gte=2025-10-16T00:00:00Z&order=asc&limit=20&sort=published_utc&apiKey=${API_KEY}`
+       `https://api.polygon.io/v2/reference/news?published_utc.gte=2025-12-12T00:00:00Z&order=asc&limit=20&sort=published_utc&apiKey=${API_KEY}`
     )
       .then((res) => res.json())
       .then((data) => setNews(data.results))
