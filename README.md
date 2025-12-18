@@ -4,7 +4,26 @@ NeuroStock is a full-stack blockchain-based virtual trading platform that simula
 
 Each user has a secure, personalized portfolio to track holdings, transactions, and performance — all backed by JWT authentication, MongoDB, and Solidity smart contracts deployed on the Sepolia Ethereum Testnet.
 
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 03 32" src="https://github.com/user-attachments/assets/7add7280-154e-43d7-8905-8aadb96dd8b0" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 07 43" src="https://github.com/user-attachments/assets/65a357b4-5781-4194-88b6-d2f89e9dae15" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 04 10" src="https://github.com/user-attachments/assets/d03242ea-0aeb-47e8-b8cc-0f109ef235d6" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 03 53" src="https://github.com/user-attachments/assets/89828ae1-dd9c-434d-8ed2-2d2dca9816d3" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 07 09" src="https://github.com/user-attachments/assets/85ed2ae7-1794-4e6e-a0a3-961388405a0a" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 07 20" src="https://github.com/user-attachments/assets/2a5161bb-8a5c-4122-902d-932aaf53aca7" />
+ <img width="480" height="480" alt="Screenshot 2025-12-18 at 12 04 23" src="https://github.com/user-attachments/assets/35e2a165-2e51-4264-9351-5aa5759fdcca" />
+ <img width="480" height="480" alt="Screenshot 2025-12-18 at 12 04 37" src="https://github.com/user-attachments/assets/1c3bebba-0307-49a7-8a6b-59b6406dcc5b" />
+ <img width="480" height="480" alt="Screenshot 2025-12-18 at 12 04 51" src="https://github.com/user-attachments/assets/d21df640-4446-419a-91f5-7d49799eb72c" />
+<img width="480" height="480" alt="Screenshot 2025-12-18 at 12 07 58" src="https://github.com/user-attachments/assets/02a2f188-78d0-4dec-aae6-f7153da9dc82" />
+
+ 
+
+
+
+
+
+
 ---
+
 
 ## 🚀 Core Features
 
