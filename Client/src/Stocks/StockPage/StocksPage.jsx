@@ -278,7 +278,7 @@ function StocksPage() {
 
         console.log("Sending timeseries length:", timeseries.length); // should be 100
 
-        const resp = await fetch("http://localhost:8000/predict", {
+        const resp = await fetch("http://localhost:8001/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ timeseries }),
