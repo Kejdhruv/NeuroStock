@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './Stocks.css'; // Import the CSS
+import NeuroFooter from '../Components/Footer/footer';
 
 function StockCard() {
   const [stocks, setStocks] = useState([]);
@@ -42,7 +43,8 @@ function StockCard() {
   </div>
 </div>
 
- return (
+  return (
+   <>
   <div className="stock-container">
     {stocks.map((stock, index) => (
       <div key={index} className="stock-card">
@@ -68,7 +70,9 @@ function StockCard() {
         </div>
       </div>
     ))}
-  </div>
+    
+   </div>
+    <NeuroFooter/> </>
 );
 }
 
