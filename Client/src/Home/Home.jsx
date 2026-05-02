@@ -1,23 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./Home.css";
-import SideImage3 from "../assets/undraw_metrics_5v8d.svg";
 import PhoneMarket from "../assets/image.png";
 import PhoneChart from "../assets/image2.png";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  useEffect(() => {
-    const cards = document.querySelectorAll(".home-feature-card, .home-secondary");
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("fade-in");
-        }
-      });
-    }, { threshold: 0.3 });
-    cards.forEach(card => observer.observe(card));
-  }, []);
-
   return (
     <div className="home-wrapper">
       <section className="home-hero">
@@ -34,7 +21,7 @@ const Home = () => {
 
           <div className="home-hero-buttons">
             <Link to="/auth" className="home-btn-primary">
-              Download App
+              Start your Future Right Now
             </Link>
           </div>
 
@@ -67,60 +54,111 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Feature Cards */}
-      <section className="home-features">
-        <div className="home-feature-card">
-          <div className="home-feature-title">Real-Time Market Simulation</div>
-          <div className="home-feature-text">
-            Practice trading cryptocurrencies like Bitcoin and Ethereum with virtual funds...
-          </div>
+      <section className="home-investments">
+        <h2 className="home-investments-title">
+          Get the Most Out
+          <span>of Your Investments</span>
+        </h2>
+
+        <div className="home-investment-cards">
+          <article className="home-investment-card home-investment-card-accounts">
+            <div className="home-card-content">
+              <h3>Convert ETH to Stocks</h3>
+              <p>Use live ETH value to simulate stock buying power instantly</p>
+              <Link to="/Dashboard" className="home-read-more">
+                Read More <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="home-card-art home-card-art-accounts" aria-hidden="true">
+              <span className="home-art-black"></span>
+              <span className="home-art-blue"></span>
+              <svg viewBox="0 0 120 90">
+                <path d="M31 56 C57 24 101 29 93 58 C86 83 42 77 45 45 C47 23 70 12 84 24" />
+                <path d="M31 56 L20 43" />
+              </svg>
+            </div>
+          </article>
+
+          <article className="home-investment-card home-investment-card-analytics">
+            <div className="home-card-content">
+              <h3>Stocks Simulator and Predictions</h3>
+              <p>Practice trades, review price predictions, and test strategies safely</p>
+              <Link to="/Stocks" className="home-read-more">
+                Read More <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div className="home-card-art home-card-art-analytics" aria-hidden="true">
+              <span className="home-arc home-arc-blue"></span>
+              <span className="home-arc home-arc-red"></span>
+              <span className="home-arc home-arc-black"></span>
+              <svg viewBox="0 0 170 120">
+                <path d="M21 75 C38 94 48 41 67 66 C83 88 89 31 108 46 C124 59 133 32 146 25" />
+                <path d="M135 23 L146 25 L145 38" />
+              </svg>
+            </div>
+          </article>
         </div>
-        <div className="home-feature-card">
-          <div className="home-feature-title">Virtual Portfolio Tracking</div>
-          <div className="home-feature-text">
-            Track your virtual portfolio's performance in real-time. Use detailed analytics...
+
+        <div className="home-advantages">
+          <div className="home-advantages-intro">
+            <h2>Advantages</h2>
+            <p>
+              Learn how markets move, test stock strategies with ETH, and build
+              confidence before putting real capital at risk
+            </p>
           </div>
-        </div>
-        <div className="home-feature-card">
-          <div className="home-feature-title">Your Financial Intelligence Hub</div>
-          <div className="home-feature-text">
-            Access live news on bank transactions, gold, and mutual funds. Our AI-based modeling...
+
+          <div className="home-advantages-grid">
+            <article className="home-advantage-item">
+              <div className="home-advantage-icon">↗</div>
+              <div>
+                <h3>Live ETH Price</h3>
+                <p>
+                  Your simulator balance follows live ETH pricing, so every
+                  stock move starts from real market value
+                </p>
+                <Link to="/Auth">Open an Account</Link>
+              </div>
+            </article>
+
+            <article className="home-advantage-item">
+              <div className="home-advantage-icon">?</div>
+              <div>
+                <h3>No Extra Brokerage</h3>
+                <p>
+                  Convert ETH into simulated stock positions without extra
+                  brokerage charges or hidden fees
+                </p>
+                <Link to="/Stocks">Explore Stocks</Link>
+              </div>
+            </article>
+
+            <article className="home-advantage-item">
+              <div className="home-advantage-icon">◎</div>
+              <div>
+                <h3>Portfolio Tracking</h3>
+                <p>
+                  Watch holdings, simulated gains, trade history, and portfolio
+                  performance in one clean dashboard
+                </p>
+                <Link to="/Dashboard">View Portfolio</Link>
+              </div>
+            </article>
+
+            <article className="home-advantage-item">
+              <div className="home-advantage-icon">✓</div>
+              <div>
+                <h3>One Click Buy and Sell</h3>
+                <p>
+                  Buy or sell simulated stocks quickly through a verified, safe
+                  structure built for learning
+                </p>
+                <Link to="/Stocks">Start Now</Link>
+              </div>
+            </article>
           </div>
         </div>
       </section>
-
-      {/* Secondary Section */}
-    <section className="home-secondary">
-  <div className="home-secondary-left">
-    <img src={SideImage3} alt="Analytics" className="home-secondary-image" />
-  </div>
-
-  <div className="home-secondary-right">
-    <div className="home-secondary-title">
-      Integrating Crypto into Your Financial Plan
-    </div>
-    <div className="home-secondary-text">
-      Integrate crypto as the high-risk portion of your portfolio. Allocate a small percentage...
-    </div>
-
-    <div className="home-secondary-buttons">
-                         <Link to="/MarketNews" className="home-btn-primary">Market News</Link>
-                      <Link to="/Stocks" className="home-btn-secondary">Stocks</Link>
-    </div>
-  </div>
-</section>
-      {/* Footer */}
-      <footer className="home-footer">
-        <div className="home-footer-links">
-          <span>About</span>
-          <span>Contact</span>
-          <span>FAQ</span>
-          <span>Terms</span>
-          <span>Privacy</span>
-        </div>
-        <div className="home-footer-text">© 2025 Neurostock. All rights reserved.</div>
-      </footer>
-
     </div>
   );
 };

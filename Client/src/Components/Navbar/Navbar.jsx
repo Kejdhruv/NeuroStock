@@ -20,7 +20,7 @@ const Navbar = () => {
 
       <div className="home-nav-actions">
         <Link to="/Auth" className="home-nav-login">Log In</Link>
-        <Link to="/Auth" className="home-nav-download">Download App</Link>
+        <Link to="/Auth" className="home-nav-download">Explore</Link>
       </div>
     </nav>
   );

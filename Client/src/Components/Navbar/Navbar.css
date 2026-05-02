@@ -1,8 +1,4 @@
 .home-navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
   display: grid;
   grid-template-columns: minmax(170px, 1fr) auto minmax(260px, 1fr);
   align-items: center;
