@@ -362,161 +362,192 @@ function StocksPage() {
     );
   };
 
-  return (
+return (
     <>
-    <div className="dashboard-container">
+      <div className="dashboard-container">
 
-      {/* Left Column */}
-      <div className="chart-left">
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={recommendations} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="period" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="strongBuy" fill="#2e8b57" />
-            <Bar dataKey="buy" fill="#0b1e3f" />
-            <Bar dataKey="hold" fill="#ffa500" />
-            <Bar dataKey="sell" fill="#ff4500" />
-            <Bar dataKey="strongSell" fill="#b22222" />
-          </BarChart>
-        </ResponsiveContainer>
+        {/* ── LEFT COLUMN ─────────────────────────────── */}
+        <div className="chart-left">
 
-        {/* --- REPLACED: Prediction chart takes the place of the old metrics card --- */}
-       <div className="prediction-panel" 
-     style={{ marginTop: 8, maxHeight: 50 }}>
+          {/* Analyst Recommendations Bar Chart */}
+          <div className="dash-card">
+            <div className="dash-card__header">
+              <span className="dash-card__title">Analyst Recommendations</span>
+            </div>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={recommendations} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                <XAxis dataKey="period" tick={{ fontSize: 11, fill: "#8a94a0" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: "#8a94a0" }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{ borderRadius: 10, border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", fontSize: 12 }}
+                />
+                <Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
+                <Bar dataKey="strongBuy" fill="#2e8b57" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="buy"       fill="#0b1e3f" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="hold"      fill="#f59e0b" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="sell"      fill="#f97316" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="strongSell" fill="#dc2626" radius={[3, 3, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-  <div className="chart-card" 
-       style={{ padding: "6px 10px", minHeight: 50 }}>
+          {/* Prediction Panel */}
+          <div className="dash-card prediction-panel">
+            <div className="dash-card__header">
+              <span className="dash-card__title">Stock Prediction — Next 3 Days</span>
+            </div>
+            <div className="prediction-body">
+              {mlLoading && (
+                <div className="prediction-loading">
+                  <MiniLoader small />
+                </div>
+              )}
+              {!mlLoading && <PredictionChart data={buildPredictionSeries()} />}
+            </div>
+          </div>
 
-    <div className="chart-title" 
-         style={{ padding: "6px 10px" , fontSize: 20, fontWeight: 700 , marginBottom: 8 }}>
-      Stock Prediction (next 3 days)
-    </div>
-
-    <div style={{ position: 'relative', minHeight: 40 }}>
-      {mlLoading && (
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255,255,255,0.5)',
-          zIndex: 5,
-          borderRadius: 6
-        }}>
-          <MiniLoader small />
         </div>
-      )}
 
-      {!mlLoading && <PredictionChart data={buildPredictionSeries()} />}
-    </div>
+        {/* ── RIGHT COLUMN ────────────────────────────── */}
+        <div className="right-section">
 
-  </div>
-</div>
-      </div>
-
-      {/* Right Column */}
-      <div className="right-section">
-        <div className="profile-card">
-          <div className="profile-left">
-            <img src={profile.logo} alt={profile.name} className="profile-logo" />
-            <div className="profile-info">
-              <div className="profile-title">{profile.name} ({profile.ticker})</div>
-              <div className="profile-text"><strong>Exchange:</strong> {profile.exchange || "NA"}</div>
-              <div className="profile-text"><strong>Industry:</strong> {profile.finnhubIndustry || "NA"}</div>
-              <div className="profile-text"><strong>Country:</strong> {profile.country || "NA"}</div>
-              <div className="profile-text"><strong>IPO Date:</strong> {profile.ipo || "NA"}</div>
-              <div className="profile-text"><strong>Share Outstanding:</strong> {profile.shareOutstanding || "NA"}</div>
-              <div className="profile-text"><strong>Market Cap:</strong> {metrics.marketCapitalization || "NA"} B</div>
-              <div className="profile-text">
-                <strong>Website:</strong>{" "}
-                {profile.weburl ? (
-                  <a href={profile.weburl} target="_blank" rel="noopener noreferrer" className="profile-link">
-                    {profile.weburl}
-                  </a>
-                ) : (
-                  "NA"
+          {/* Profile + Quote Card */}
+          <div className="dash-card profile-card">
+            <div className="profile-left">
+              <img src={profile.logo} alt={profile.name} className="profile-logo" />
+              <div className="profile-info">
+                <div className="profile-title">
+                  {profile.name}
+                  <span className="profile-ticker">({profile.ticker})</span>
+                </div>
+                <div className="profile-grid">
+                  <div className="profile-text"><strong>Exchange :</strong>{profile.exchange || "NA"}</div>
+                  <div className="profile-text"><strong>Industry :</strong>{profile.finnhubIndustry || "NA"}</div>
+                  <div className="profile-text"><strong>Country :</strong>{profile.country || "NA"}</div>
+                  <div className="profile-text"><strong>IPO Date :</strong>{profile.ipo || "NA"}</div>
+                  <div className="profile-text"><strong>Shares Out :</strong>{profile.shareOutstanding || "NA"}</div>
+                  <div className="profile-text"><strong>Market Cap :</strong>{metrics.marketCapitalization || "NA"} B</div>
+                </div>
+                {profile.weburl && (
+                  <div className="profile-text profile-text--web">
+                    <strong>Website : </strong>
+                    <a href={profile.weburl} target="_blank" rel="noopener noreferrer" className="profile-link">
+                      {profile.weburl}
+                    </a>
+                  </div>
                 )}
               </div>
             </div>
-          </div>
-          <div className="quote-card-inside">
-            <div className="section-title">Stock Price</div>
-            <ul>
-              <li className="quote-text"><strong>Current:</strong> ${quote.c} (~ {stockPriceETH} ETH)</li>
-              <li className="quote-text"><strong>Open:</strong> ${quote.o}</li>
-              <li className="quote-text"><strong>Previous Close:</strong> ${quote.pc}</li>
-              <li className="quote-text"><strong>High:</strong> ${quote.h}</li>
-              <li className="quote-text"><strong>Low:</strong> ${quote.l}</li>
-            </ul>
-            <button className="buy-stock-button" onClick={handleBuyClick}>Buy Stock</button>
-            <button className="buy-stock-button" onClick={connectWallet}>Connect Wallet</button>
-          </div>
-        </div>
 
-        {/* Candlestick Chart */}
-        <div className="candlestick-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={candleData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-              <YAxis domain={[minPrice * 0.98, maxPrice * 1.02]} />
-              <Tooltip />
-              <Bar dataKey="close" fill="#0b1e3f" shape={renderCandle} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-          <div className="metrics-row" style={{ marginTop: 1 }}>
-        {metrics && (
-          <div className="metrics-card full-width">
-            <h3>Key Metrics</h3>
-            <ul>
-              <li><strong>P/E Ratio:</strong> {metrics.peBasicExclExtraTTM || 'N/A'}</li>
-              <li><strong>52 Week High:</strong> $ {metrics['52WeekHigh'] || 'N/A'} on { `(${metrics['52WeekHighDate']})`}</li>
-              <li><strong>52 Week Low:</strong> $ {metrics['52WeekLow'] || 'N/A'} on { `(${metrics['52WeekLowDate']})`}</li>
-              <li><strong>13 Week Price Return Daily </strong> $ {metrics['13WeekPriceReturnDaily'] || 'N/A'}</li>
-              <li><strong>26 Week Price Return Daily </strong> $ {metrics['26WeekPriceReturnDaily'] || 'N/A'}</li>
-              <li><strong>52 Week Price Return Daily </strong> $ {metrics['52WeekPriceReturnDaily'] || 'N/A'}</li>
-            </ul>
-          </div>
-        )}
-      </div>
-      </div>
-
-      {/* --- MOVED: metrics now span full width below the charts --- */}
-  
-
-      {/* Buy Modal */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Buy {ticker}</h2>
-            <p>Price: ${stockPriceUSD} (~ {stockPriceETH} ETH)</p>
-            <label>
-              Quantity:
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
-            </label>
-            <p><strong>Total:</strong> {(stockPriceETH * quantity).toFixed(6)} ETH</p>
-            <div className="modal-buttons">
-              <button onClick={buyStock} className="confirm-btn">Confirm Buy</button>
-              <button onClick={() => setModalOpen(false)} className="cancel-btn">Cancel</button>
+            <div className="quote-card-inside">
+              <div className="quote-header">Stock Price</div>
+              <div className="quote-current">${quote.c}</div>
+              <div className="quote-eth">≈ {stockPriceETH} ETH</div>
+              <div className="quote-divider" />
+              <div className="quote-row"><span>Open</span>        <span>${quote.o}</span></div>
+              <div className="quote-row"><span>Prev Close</span>  <span>${quote.pc}</span></div>
+              <div className="quote-row quote-row--high"><span>High</span><span>${quote.h}</span></div>
+              <div className="quote-row quote-row--low"><span>Low</span>  <span>${quote.l}</span></div>
+              <div className="quote-actions">
+                <button className="btn-buy"    onClick={handleBuyClick}>Buy Stock</button>
+                <button className="btn-wallet" onClick={connectWallet}>Connect Wallet</button>
+              </div>
             </div>
           </div>
+
+          {/* Candlestick Chart */}
+          <div className="dash-card candlestick-container">
+            <div className="dash-card__header">
+              <span className="dash-card__title">Price History</span>
+            </div>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={candleData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#8a94a0" }} axisLine={false} tickLine={false} />
+                <YAxis domain={[minPrice * 0.98, maxPrice * 1.02]} tick={{ fontSize: 10, fill: "#8a94a0" }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{ borderRadius: 10, border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", fontSize: 12 }}
+                />
+                <Bar dataKey="close" fill="#0b1e3f" shape={renderCandle} radius={[3, 3, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
         </div>
-      )}
-      {loading && <StockLoader />}
+
+        {/* ── FULL-WIDTH METRICS ROW ───────────────────── */}
+        {metrics && (
+          <div className="metrics-full dash-card">
+            <div className="dash-card__header">
+              <span className="dash-card__title">Key Metrics</span>
+            </div>
+            <div className="metrics-grid">
+              <div className="metric-tile">
+                <div className="metric-tile__label">P/E Ratio</div>
+                <div className="metric-tile__value">{metrics.peBasicExclExtraTTM || "N/A"}</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile__label">52W High</div>
+                <div className="metric-tile__value metric-tile__value--up">
+                  ${metrics["52WeekHigh"] || "N/A"}
+                </div>
+                <div className="metric-tile__sub">{metrics["52WeekHighDate"] || ""}</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile__label">52W Low</div>
+                <div className="metric-tile__value metric-tile__value--down">
+                  ${metrics["52WeekLow"] || "N/A"}
+                </div>
+                <div className="metric-tile__sub">{metrics["52WeekLowDate"] || ""}</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile__label">13W Return</div>
+                <div className="metric-tile__value">{metrics["13WeekPriceReturnDaily"] || "N/A"}</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile__label">26W Return</div>
+                <div className="metric-tile__value">{metrics["26WeekPriceReturnDaily"] || "N/A"}</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile__label">52W Return</div>
+                <div className="metric-tile__value">{metrics["52WeekPriceReturnDaily"] || "N/A"}</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── BUY MODAL ───────────────────────────────── */}
+        {modalOpen && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h2>Buy {ticker}</h2>
+              <p>Price: ${stockPriceUSD} (≈ {stockPriceETH} ETH)</p>
+              <label>
+                Quantity
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                />
+              </label>
+              <p className="modal-total">
+                Total: <strong>{(stockPriceETH * quantity).toFixed(6)} ETH</strong>
+              </p>
+              <div className="modal-buttons">
+                <button onClick={buyStock}               className="confirm-btn">Confirm Buy</button>
+                <button onClick={() => setModalOpen(false)} className="cancel-btn">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {loading && <StockLoader />}
 
       </div>
-     <NeuroFooter/></>
+      <NeuroFooter />
+    </>
   );
 }
 
