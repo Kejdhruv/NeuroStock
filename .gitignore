@@ -1,0 +1,5 @@
+
+# Backend environment files
+Backend/.env
+Backend/.env.*
+!Backend/.env.example
