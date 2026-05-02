@@ -62,6 +62,7 @@
 
 .home-hero {
   position: relative;
+  z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
   align-items: center;
@@ -207,6 +208,7 @@
 }
 
 .home-phone {
+  z-index: 50;
   position: absolute;
   width: clamp(230px, 20.8vw, 365px);
   height: auto;
@@ -216,7 +218,7 @@
 }
 
 .home-phone-market {
-  z-index: 4;
+  z-index: 50;
   right: 33%;
   bottom: 7%;
   transform-origin: 100% 100%;
@@ -225,7 +227,7 @@
 }
 
 .home-phone-chart {
-  z-index: 3;
+  z-index: 50;
   right: 10%;
   bottom: 12%;
   width: clamp(220px, 19.8vw, 348px);
@@ -235,6 +237,8 @@
 }
 
 .home-investments {
+  position: relative;
+  z-index: 1;
   width: 80%;
   margin: 0 auto;
   padding: 15vh 0 4rem;
@@ -714,4 +718,17 @@
   .home-advantage-item:last-child {
     border-bottom: 0;
   }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(80px) scale(0.96);
+  filter: blur(6px);
+  transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }

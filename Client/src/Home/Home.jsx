@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Home.css";
 import PhoneMarket from "../assets/image.png";
 import PhoneChart from "../assets/image2.png";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  useEffect(() => {
+    const elements = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="home-wrapper">
-      <section className="home-hero">
+      <section className="home-hero reveal">
         <div className="home-hero-left">
           <h1 className="home-hero-title">
             {"Invest for the Future".split("").map((char, i) => (
@@ -60,14 +79,14 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="home-investments">
+      <section className="home-investments reveal">
         <h2 className="home-investments-title">
           Get the Most Out
           <span>of Your Investments</span>
         </h2>
 
-        <div className="home-investment-cards">
-          <article className="home-investment-card home-investment-card-accounts">
+        <div className="home-investment-cards reveal">
+          <article className="home-investment-card home-investment-card-accounts reveal">
             <div className="home-card-content">
               <h3>Convert ETH to Stocks</h3>
               <p>Use live ETH value to simulate stock buying power instantly</p>
@@ -85,7 +104,7 @@ const Home = () => {
             </div>
           </article>
 
-          <article className="home-investment-card home-investment-card-analytics">
+          <article className="home-investment-card home-investment-card-analytics reveal">
             <div className="home-card-content">
               <h3>Stocks Simulator and Predictions</h3>
               <p>Practice trades, review price predictions, and test strategies safely</p>
@@ -105,7 +124,7 @@ const Home = () => {
           </article>
         </div>
 
-        <div className="home-advantages">
+        <div className="home-advantages reveal">
           <div className="home-advantages-intro">
             <h2>Advantages</h2>
             <p>
@@ -115,7 +134,7 @@ const Home = () => {
           </div>
 
           <div className="home-advantages-grid">
-            <article className="home-advantage-item">
+            <article className="home-advantage-item reveal">
               <div className="home-advantage-icon">↗</div>
               <div>
                 <h3>Live ETH Price</h3>
@@ -127,7 +146,7 @@ const Home = () => {
               </div>
             </article>
 
-            <article className="home-advantage-item">
+            <article className="home-advantage-item reveal">
               <div className="home-advantage-icon">?</div>
               <div>
                 <h3>No Extra Brokerage</h3>
@@ -139,7 +158,7 @@ const Home = () => {
               </div>
             </article>
 
-            <article className="home-advantage-item">
+            <article className="home-advantage-item reveal">
               <div className="home-advantage-icon">◎</div>
               <div>
                 <h3>Portfolio Tracking</h3>
@@ -151,7 +170,7 @@ const Home = () => {
               </div>
             </article>
 
-            <article className="home-advantage-item">
+            <article className="home-advantage-item reveal">
               <div className="home-advantage-icon">✓</div>
               <div>
                 <h3>Metamask</h3>
