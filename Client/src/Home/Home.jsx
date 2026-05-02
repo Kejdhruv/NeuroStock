@@ -197,75 +197,75 @@ const Home = () => {
       </section>
 
       {/* New Section 1 */}
-    {/* Section 1 — Banner */}
-<section className="home-extra-section reveal">
-  <div className="home-extra-container banner-layout">
-    <div className="home-extra-banner">
-      <div className="home-banner-wave">
-        <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
-          <path d="M2 30 Q10 10 20 20 Q30 30 40 15 Q50 2 58 10" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-        </svg>
-      </div>
-      <h2>Keep Your Finger on the Investment Market Pulse</h2>
-  <button className="home-download-btn">
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 32 32"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    {/* Main Face/Ears */}
-    <path d="M30 4.2L18.4 12.8L21.3 7.3L30 4.2Z" fill="#E2761B"/>
-    <path d="M2 4.2L13.6 12.8L10.7 7.3L2 4.2Z" fill="#E4761B"/>
-    
-    {/* Bottom Cheeks */}
-    <path d="M25.7 23.4L22.6 28.2L29.3 30L31.2 23.5L25.7 23.4Z" fill="#E4761B"/>
-    <path d="M0.8 23.5L2.7 30L9.4 28.2L6.3 23.4L0.8 23.5Z" fill="#E4761B"/>
-    
-    {/* Inner Face Panels */}
-    <path d="M9.4 28.2L14.3 25.1L10.3 22.4L9.4 28.2Z" fill="#D7C1B3"/>
-    <path d="M22.6 28.2L17.7 25.1L21.7 22.4L22.6 28.2Z" fill="#D7C1B3"/>
-    
-    {/* Snout/Mouth Area */}
-    <path d="M10.3 22.4L14.3 25.1L16 22.5L17.7 25.1L21.7 22.4L16 20.2L10.3 22.4Z" fill="#233447"/>
-    
-    {/* Eyes/Upper Cheeks */}
-    <path d="M26.2 14.5L22.4 12.2L22.2 19.3L29 18.9L26.2 14.5Z" fill="#E4761B"/>
-    <path d="M5.8 14.5L9.6 12.2L9.8 19.3L3 18.9L5.8 14.5Z" fill="#E4761B"/>
-    
-    {/* Center Forehead */}
-    <path d="M16 12.5L13.6 12.8L16 20.2L18.4 12.8L16 12.5Z" fill="#E4761B"/>
-  </svg>
-  Connect MetaMask
-</button>
-    </div>
+      {/* Section 1 — Banner */}
+      <section className="home-extra-section reveal">
+        <div className="home-extra-container banner-layout">
+          <div className="home-extra-banner">
+            <div className="home-banner-wave">
+              <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                <path d="M2 30 Q10 10 20 20 Q30 30 40 15 Q50 2 58 10" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </svg>
+            </div>
+            <h2>Keep Your Finger on the Investment Market Pulse</h2>
+            <button className="home-download-btn">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 32 32"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Main Face/Ears */}
+                <path d="M30 4.2L18.4 12.8L21.3 7.3L30 4.2Z" fill="#E2761B" />
+                <path d="M2 4.2L13.6 12.8L10.7 7.3L2 4.2Z" fill="#E4761B" />
 
-    <div className="home-extra-stack">
-      <img src={PhoneExtra} alt="phone" className="home-extra-phone" />
-    </div>
-  </div>
-</section>
+                {/* Bottom Cheeks */}
+                <path d="M25.7 23.4L22.6 28.2L29.3 30L31.2 23.5L25.7 23.4Z" fill="#E4761B" />
+                <path d="M0.8 23.5L2.7 30L9.4 28.2L6.3 23.4L0.8 23.5Z" fill="#E4761B" />
 
-{/* Section 2 — Trade in Real Time */}
-<section className="home-extra-section reveal">
-  <div className="home-extra-container">
-    <div className="home-extra-left">
-      <div className="home-mini-card-wrap">
-        <div className="home-mini-card-accent"></div>
-        <img src={CardImage} alt="mini chart" className="home-mini-card-img" />
-      </div>
-    </div>
+                {/* Inner Face Panels */}
+                <path d="M9.4 28.2L14.3 25.1L10.3 22.4L9.4 28.2Z" fill="#D7C1B3" />
+                <path d="M22.6 28.2L17.7 25.1L21.7 22.4L22.6 28.2Z" fill="#D7C1B3" />
 
-    <div className="home-extra-text">
-      <h2>Trade in Real Time</h2>
-      <p>
-        No more waiting. Your orders are executed immediately, the price of your
-        securities is updated every second and NeuroStock always has the most
-        relevant information.
-      </p>
-    </div>
-  </div>
-</section>
+                {/* Snout/Mouth Area */}
+                <path d="M10.3 22.4L14.3 25.1L16 22.5L17.7 25.1L21.7 22.4L16 20.2L10.3 22.4Z" fill="#233447" />
+
+                {/* Eyes/Upper Cheeks */}
+                <path d="M26.2 14.5L22.4 12.2L22.2 19.3L29 18.9L26.2 14.5Z" fill="#E4761B" />
+                <path d="M5.8 14.5L9.6 12.2L9.8 19.3L3 18.9L5.8 14.5Z" fill="#E4761B" />
+
+                {/* Center Forehead */}
+                <path d="M16 12.5L13.6 12.8L16 20.2L18.4 12.8L16 12.5Z" fill="#E4761B" />
+              </svg>
+              Connect MetaMask
+            </button>
+          </div>
+
+          <div className="home-extra-stack">
+            <img src={PhoneExtra} alt="phone" className="home-extra-phone" />
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2 — Trade in Real Time */}
+      <section className="home-extra-section reveal">
+        <div className="home-extra-container">
+          <div className="home-extra-left">
+            <div className="home-mini-card-wrap">
+              <div className="home-mini-card-accent"></div>
+              <img src={CardImage} alt="mini chart" className="home-mini-card-img" />
+            </div>
+          </div>
+
+          <div className="home-extra-text">
+            <h2>Trade in Real Time</h2>
+            <p>
+              No more waiting. Your orders are executed immediately, the price of your
+              securities is updated every second and NeuroStock always has the most
+              relevant information.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
