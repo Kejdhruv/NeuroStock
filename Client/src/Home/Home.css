@@ -932,3 +932,9 @@
     text-align: left;
   }
 }
+
+.home-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

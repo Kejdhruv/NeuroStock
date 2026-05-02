@@ -207,10 +207,37 @@ const Home = () => {
         </svg>
       </div>
       <h2>Keep Your Finger on the Investment Market Pulse</h2>
-      <button className="home-download-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-        Download App
-      </button>
+  <button className="home-download-btn">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 32 32"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {/* Main Face/Ears */}
+    <path d="M30 4.2L18.4 12.8L21.3 7.3L30 4.2Z" fill="#E2761B"/>
+    <path d="M2 4.2L13.6 12.8L10.7 7.3L2 4.2Z" fill="#E4761B"/>
+    
+    {/* Bottom Cheeks */}
+    <path d="M25.7 23.4L22.6 28.2L29.3 30L31.2 23.5L25.7 23.4Z" fill="#E4761B"/>
+    <path d="M0.8 23.5L2.7 30L9.4 28.2L6.3 23.4L0.8 23.5Z" fill="#E4761B"/>
+    
+    {/* Inner Face Panels */}
+    <path d="M9.4 28.2L14.3 25.1L10.3 22.4L9.4 28.2Z" fill="#D7C1B3"/>
+    <path d="M22.6 28.2L17.7 25.1L21.7 22.4L22.6 28.2Z" fill="#D7C1B3"/>
+    
+    {/* Snout/Mouth Area */}
+    <path d="M10.3 22.4L14.3 25.1L16 22.5L17.7 25.1L21.7 22.4L16 20.2L10.3 22.4Z" fill="#233447"/>
+    
+    {/* Eyes/Upper Cheeks */}
+    <path d="M26.2 14.5L22.4 12.2L22.2 19.3L29 18.9L26.2 14.5Z" fill="#E4761B"/>
+    <path d="M5.8 14.5L9.6 12.2L9.8 19.3L3 18.9L5.8 14.5Z" fill="#E4761B"/>
+    
+    {/* Center Forehead */}
+    <path d="M16 12.5L13.6 12.8L16 20.2L18.4 12.8L16 12.5Z" fill="#E4761B"/>
+  </svg>
+  Connect MetaMask
+</button>
     </div>
 
     <div className="home-extra-stack">
