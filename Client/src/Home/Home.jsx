@@ -147,14 +147,23 @@ const Home = () => {
 
             <article className="home-advantage-item">
               <div className="home-advantage-icon">✓</div>
-              <div>
-                <h3>One Click Buy and Sell</h3>
-                <p>
-                  Buy or sell simulated stocks quickly through a verified, safe
-                  structure built for learning
-                </p>
-                <Link to="/Stocks">Start Now</Link>
-              </div>
+           <div>
+  <h3>Metamask</h3>
+
+  <p>
+    Buy or sell simulated stocks quickly through a verified, safe
+    structure built for learning using{" "}
+    <b style={{ color: "black" }}>MetaMask Wallets</b>.
+  </p>
+
+  <a
+    href="https://metamask.io/en-GB"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Learn Metamask
+  </a>
+</div>
             </article>
           </div>
         </div>
