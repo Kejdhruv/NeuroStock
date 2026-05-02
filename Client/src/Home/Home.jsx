@@ -5,6 +5,7 @@ import PhoneChart from "../assets/image2.png";
 import PhoneExtra from "../assets/image3.png";
 import CardImage from "../assets/image4.png";
 import { Link } from "react-router-dom";
+import NeuroFooter from "../Components/Footer/footer";
 
 const Home = () => {
   useEffect(() => {
@@ -15,10 +16,15 @@ const Home = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("active");
+          } else {
+            entry.target.classList.remove("active");
           }
         });
       },
-      { threshold: 0.2 }
+      {
+        threshold: 0.15,
+        rootMargin: "0px 0px -10% 0px"
+      }
     );
 
     elements.forEach((el) => observer.observe(el));
@@ -246,7 +252,7 @@ const Home = () => {
         </div>
       </section>
 
-
+      <NeuroFooter/>
     </div>
   );
 };
