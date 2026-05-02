@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import "./Login.Css";
+import DarkMatterGlobe from "../../Components/Login/DarkMatter";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AuthPage = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
+
   const [isSignUp, setIsSignUp] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
   });
 
   const toggleMode = () => {
     setIsSignUp((prev) => !prev);
-    setFormData({ firstName: '', lastName: '', email: '', password: '' });
+    setFormData({ firstName: "", lastName: "", email: "", password: "" });
   };
 
   const handleChange = (e) => {
@@ -25,11 +28,11 @@ const AuthPage = () => {
 
   const validateForm = () => {
     if (!formData.email || !formData.password) {
-      toast.error('Email and Password are required!');
+      toast.error("Email and Password are required!");
       return false;
     }
     if (isSignUp && (!formData.firstName || !formData.lastName)) {
-      toast.error('Please fill all sign up fields!');
+      toast.error("Please fill all sign up fields!");
       return false;
     }
     return true;
@@ -39,98 +42,164 @@ const AuthPage = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    setLoading(true);
+
     try {
       const res = await fetch(
-        isSignUp ? 'http://localhost:3001/Auth/Signup' : 'http://localhost:3001/Auth/Login',
+        isSignUp
+          ? "http://localhost:3001/Auth/Signup"
+          : "http://localhost:3001/Auth/Login",
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: isSignUp
             ? JSON.stringify(formData)
-            : JSON.stringify({ email: formData.email, password: formData.password }),
-          credentials: 'include', // keeps cookies working if backend sends any
+            : JSON.stringify({
+                email: formData.email,
+                password: formData.password,
+              }),
+          credentials: "include",
         }
       );
 
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(isSignUp ? 'Sign up successful!' : 'Login successful!');
+        toast.success(isSignUp ? "Sign up successful!" : "Login successful!");
         setTimeout(() => navigate(`/Dashboard`), 1500);
       } else {
-        toast.error(data.message || (isSignUp ? 'Sign up failed' : 'Invalid credentials'));
+        toast.error(data.message || "Authentication failed");
       }
-
     } catch (err) {
-      toast.error('Something went wrong' , err );
+      toast.error("Something went wrong" , err );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="background-image"></div>
+    <div className="login-container">
+      <div className="ambient-glow" />
 
-      <div className="left-side">
-        <div className="left-overlay">
-          <h1>Neurostock</h1>
-          <p>"Invest in knowledge. It pays the best interest."</p>
-        </div>
-      </div>
+      {/* LEFT SIDE (FORM) */}
+      <section className="login-left">
+        <div className="login-box">
+          <header className="login-header">
+            <span className="system-status">SYSTEM ONLINE</span>
+            <h1>{isSignUp ? "CREATE ACCOUNT" : "WELCOME BACK"}</h1>
+            <p>
+              {isSignUp
+                ? "Initialize your NeuroStock account"
+                : "Access your NeuroStock dashboard"}
+            </p>
+          </header>
 
-      <div className="right-side">
-        <div className="right-overlay">
-          <form className="form-box" onSubmit={handleSubmit}>
-            <h2>{isSignUp ? 'Sign Up' : 'Login'}</h2>
-
+          <form onSubmit={handleSubmit} className="login-form">
             {isSignUp && (
               <>
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
+                <div className="input-group">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
               </>
             )}
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <div className="input-group">
+              <label>Identification</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="email@neurostock.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
+            <div className="input-group">
+              <label>Security Key</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-            <button type="submit" className="Login-btn">
-              {isSignUp ? 'Create Account' : 'Login'}
-            </button>
+            <div className="form-actions">
+              <button
+                type="submit"
+                className={`login-button ${loading ? "loading" : ""}`}
+                disabled={loading}
+              >
+                {loading
+                  ? "PROCESSING..."
+                  : isSignUp
+                  ? "CREATE ACCOUNT"
+                  : "AUTHORIZE"}
+              </button>
 
-            <button type="button" className="toggle-btn" onClick={toggleMode}>
-              {isSignUp ? 'Already have an account? Login' : "Don't have an account? Sign up"}
-            </button>
+              <button
+                type="button"
+                className="toggle-btn"
+                onClick={toggleMode}
+              >
+                {isSignUp
+                  ? "Already have an account? Login"
+                  : "Don't have an account? Sign up"}
+              </button>
+            </div>
           </form>
-        </div>
-      </div>
 
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar theme="colored" />
+          <footer className="login-footer">
+            <p>Secured with Blockchain Authentication</p>
+          </footer>
+        </div>
+      </section>
+
+      {/* RIGHT SIDE (VISUAL) */}
+      <section className="login-right">
+        <div className="dark-core-container">
+          <DarkMatterGlobe />
+          <div className="scanline" />
+          <div className="core-text">
+            <div className="badge">NEUROSTOCK v1.0</div>
+            <h2>NEUROSTOCK</h2>
+            <div className="divider" />
+            <p>
+              "Trade smarter.<br /> Invest better."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        theme="colored"
+      />
     </div>
   );
 };
 
-export default AuthPage;
+export default LoginPage;

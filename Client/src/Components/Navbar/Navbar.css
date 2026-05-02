@@ -1,10 +1,15 @@
 .home-navbar {
   display: grid;
+  font-family: 'Inter', sans-serif;
   grid-template-columns: minmax(170px, 1fr) auto minmax(260px, 1fr);
   align-items: center;
   width: 100%;
   padding: 2rem clamp(1.5rem, 2.6vw, 3rem);
   background: #ffffff;
+}
+
+.home-navbar * {
+  font-family: 'Inter', sans-serif;
 }
 
 .home-nav-brand {
@@ -46,6 +51,7 @@
 
 .home-nav-links a {
   color: #24262d;
+  font-family: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
 }
