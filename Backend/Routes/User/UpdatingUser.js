@@ -2,7 +2,7 @@ import express from "express";
 import DeletingHoldings from "../../Database/Stocks/UpdatingStocks/DeletingHoldings.js";
 import DeletingFundHoldings from "../../Database/MutualFunds/UpdatingFunds/DeletingFundHoldings.js";
 import UpdatingHoldings from "../../Database/Stocks/UpdatingStocks/UpdatingHoldings.js";
-import UpdatingFunds from "../../Database/MutualFunds/UpdatingFunds/DeletingFundHoldings.js";
+import UpdatingFunds from "../../Database/MutualFunds/UpdatingFunds/UpdatingFunds.js";
 const router = express.Router();  
 
 

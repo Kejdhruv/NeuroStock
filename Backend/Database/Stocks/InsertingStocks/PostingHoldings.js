@@ -1,17 +1,11 @@
-const { MongoClient } = require("mongodb");
-
-const database = 'STOCKDATA';
-const url = 'mongodb://localhost:27017';
-const client = new MongoClient(url);
+const { getDb } = require("../../db.js");
 
 async function PostingHoldings(holding) {
     try {
         if (!Array.isArray(holding)) {
             throw new Error("Input must be an array");
         }
-        await client.connect();
-      
-        const db = client.db(database);
+        const db = await getDb();
         const collection = db.collection('Holdings');
 
         const result = await collection.insertMany(holding);
@@ -19,9 +13,6 @@ async function PostingHoldings(holding) {
     } catch (err) {
         console.error("Error connecting to MongoDB:", err);
         throw err; 
-    } finally {
-    
-        await client.close();
     }
 }
 

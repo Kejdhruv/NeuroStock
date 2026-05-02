@@ -1,4 +1,3 @@
-// MutualFundsPage.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -11,115 +10,55 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import "./FundsPage.css"; // adapt from your StocksPage.css or theme
-import { ethers } from "ethers";
-import MutualFundsABI from "../../abi/MutualFundsABI.json"; // placeholder ABI filename
+import "./FundsPage.css";
 import { toast } from "react-hot-toast";
 import StockLoader from "../../Components/Loaders/StockLoader";
 
-const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_FUNDS_ADDRESS;
-
 function FundsPage() {
-  const { schemeCode } = useParams(); 
+  const { schemeCode } = useParams();
   const [meta, setMeta] = useState(null);
-  const [navSeries, setNavSeries] = useState([]); 
-  const [ethPriceINR, setEthPriceINR] = useState(null);
-  const [account, setAccount] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [navSeries, setNavSeries] = useState([]);
   const [inrAmount, setInrAmount] = useState("");
+  const [targetNav, setTargetNav] = useState("");
   const [units, setUnits] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [counter, setCounter] = useState(0);
-    console.log(schemeCode);
 
-
-  // fetch counter
   useEffect(() => {
-    (async () => {
+    const fetchFund = async () => {
+      setLoading(true);
       try {
-        const res = await fetch("http://localhost:3001/Counter/buyingId");
-        const d = await res.json();
-        if (d && d[0] && typeof d[0].value !== "undefined") setCounter(d[0].value);
+        const res = await fetch(`https://api.mfapi.in/mf/${schemeCode}`);
+        const json = await res.json();
+
+        const m = json.meta || json?.Meta || null;
+        const raw = json.data || [];
+
+        const series = raw
+          .map((r) => ({
+            date: r.date,
+            nav: Number(parseFloat(r.nav || r.NAV || 0)),
+          }))
+          .sort((a, b) => {
+            const [ad, am, ay] = a.date.split("-").map(Number);
+            const [bd, bm, by] = b.date.split("-").map(Number);
+            return new Date(ay, am - 1, ad) - new Date(by, bm - 1, bd);
+          });
+
+        setMeta(m);
+        setNavSeries(series);
       } catch (err) {
-        console.error("Failed to fetch counter", err);
+        console.error("Failed to fetch mutual fund data:", err);
+        toast.error("Could not fetch fund data");
+      } finally {
+        setLoading(false);
       }
-    })();
-  }, []);
+    };
 
-  // fetch mutual fund JSON (dummy endpoint); replace endpoint as needed
- useEffect(() => {
-  const code = schemeCode ; // fallback to sample code
-
-  const fetchFund = async () => {
-    setLoading(true); // 🟢 mark as loading before fetch starts
-    try {
-      const res = await fetch(`https://api.mfapi.in/mf/${code}`);
-      const json = await res.json();
-
-      const m = json.meta || json?.Meta || null;
-      const raw = json.data || [];
-
-      const series = raw
-        .map((r) => ({
-          date: r.date,
-          nav: Number(parseFloat(r.nav || r.NAV || 0)),
-        }))
-        .sort((a, b) => {
-          const [ad, am, ay] = a.date.split("-").map(Number);
-          const [bd, bm, by] = b.date.split("-").map(Number);
-          return new Date(ay, am - 1, ad) - new Date(by, bm - 1, bd);
-        });
-
-      setMeta(m);
-      setNavSeries(series);
-    } catch (err) {
-      console.error("Failed to fetch mutual fund data:", err);
-      toast.error("Could not fetch fund data");
-    } finally {
-      setLoading(false); // 🟢 ensures loading ends always
-    }
-     }; 
-     
-
-  fetchFund();
- }, [schemeCode]); 
-     console.log(schemeCode);
-
-  const getEthInINR = async () => {
-    try {
-      const res = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr"
-      );
-      const data = await res.json();
-      setEthPriceINR(data.ethereum.inr);
-    } catch (err) {
-      console.error("Failed to fetch ETH price (INR)", err);
-    }
-  };
+    fetchFund();
+  }, [schemeCode]);
 
   useEffect(() => {
-    getEthInINR();
-  }, []);
-
-
-  const connectWallet = async () => {
-    if (!window.ethereum) {
-      toast.error("MetaMask not detected");
-      return;
-    }
-    try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      setAccount(accounts[0]);
-      toast.success("Wallet connected");
-    } catch (err) {
-      console.error("Wallet connect error:", err);
-      toast.error("Wallet connection failed");
-    }
-  };
-
-  // compute units whenever INR amount or NAV changes
-  useEffect(() => {
-    if (!inrAmount || inrAmount === "" || navSeries.length === 0) {
+    if (!inrAmount || navSeries.length === 0) {
       setUnits(0);
       return;
     }
@@ -133,120 +72,16 @@ function FundsPage() {
     setUnits(computedUnits);
   }, [inrAmount, navSeries]);
 
-  // buys: send transaction to contract and record to backend
- const buyMutualFund = async () => {
-  if (!window.ethereum) {
-    toast.error("Install MetaMask");
-    return;
-  }
-
-  if (!account) {
-    await connectWallet();
-    if (!account) {
-      toast.error("Wallet required");
-      return;
-    }
-  }
-
-  const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
-  if (!latestNav || latestNav <= 0) {
-    toast.error("Invalid NAV");
-    return;
-  }
-
-  const inr = Number(inrAmount);
-  if (!inr || inr <= 0) {
-    toast.error("Enter a valid INR amount");
-    return;
-  }
-
-  if (!ethPriceINR) {
-    toast.error("ETH price not available");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    // Convert INR → ETH
-    const ethNeeded = inr / ethPriceINR;
-    const valueWei = ethers.parseUnits(ethNeeded.toFixed(18), "ether");
-
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, MutualFundsABI, signer);
-
-    // Prepare arguments
-    const schemeName = meta?.scheme_name || `Scheme-${schemeCode || "unknown"}`;
-    const unitsScaled = BigInt(Math.floor(units * 1e6)); // scaled units for precision
-    const pricePerUnit = ethers.parseUnits(latestNav.toFixed(6), "ether");
-
-    console.log("Preparing tx:", {
-      schemeName,
-      unitsScaled,
-      pricePerUnit,
-      counter,
-      valueWei: valueWei.toString(),
-    });
-
-    // Call the buying() function
-    const tx = await contract.buying(
-      schemeName,      // string _fundname
-      unitsScaled,     // uint256 _fundquantity
-      pricePerUnit,    // uint256 _price
-      BigInt(counter), // uint256 _buyingID
-      valueWei,        // uint256 _amount
-      { value: valueWei }
-    );
-
-    console.log("Tx sent:", tx.hash);
-    toast.success("Transaction submitted");
-
-    const receipt = await tx.wait();
-    console.log("Tx confirmed:", receipt);
-    toast.success("Transaction confirmed!");
-
-    // Record purchase in backend
-    const BoughtData = {
-      FundName: meta?.scheme_name || "",
-      SchemeCode: meta?.scheme_code || schemeCode || "",
-      NAV: latestNav,
-      INRAmount: inr,
-      Units: units,
-      timestamp: new Date().toISOString(),
-      Transactionid: tx.hash,
-      buyingid: counter,
-      accountid: account || "",
-    };
-
-    await Promise.all([
-      fetch("http://localhost:3001/FundsHoldings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(BoughtData),
-        credentials: "include" , 
-      }),
-      fetch("http://localhost:3001/Counter/buyingId", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value: counter + 1 }),
-      }),
-    ]);
-
-    setCounter((c) => c + 1);
-    setModalOpen(false);
-    toast.success("Purchase recorded successfully!");
-  } catch (err) {
-    console.error("Buy error:", err);
-    toast.error("Transaction failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
-  // rendering helpers
   const latestNav = navSeries.length ? navSeries[navSeries.length - 1].nav : null;
   const navDisplay = latestNav ? latestNav.toFixed(5) : "N/A";
+  const enteredAmount = Number(inrAmount) || 0;
+  const targetNavValue = Number(targetNav) || 0;
+  const estimatedCurrentValue = units && latestNav ? units * latestNav : 0;
+  const projectedValue = units && targetNavValue > 0 ? units * targetNavValue : 0;
+  const projectedReturn =
+    enteredAmount > 0 && projectedValue > 0
+      ? ((projectedValue - enteredAmount) / enteredAmount) * 100
+      : null;
 
   if (!meta || navSeries.length === 0) {
     return (
@@ -277,13 +112,8 @@ function FundsPage() {
                 </div>
               </div>
 
-              <div className="buy-controls">
-                <button onClick={connectWallet} className="connect-btn">
-                  {account ? `Connected: ${account.slice(0, 6)}...${account.slice(-4)}` : "Connect Wallet"}
-                </button>
-                <button onClick={() => setModalOpen(true)} className="buy-btn">
-                  Buy
-                </button>
+              <div className="fund-status">
+                View-only
               </div>
             </div>
 
@@ -328,9 +158,9 @@ function FundsPage() {
           </div>
 
           <div className="calculator-card">
-            <h3>Buy Calculator</h3>
+            <h3>Worth Calculator</h3>
             <label>
-              Enter INR amount:
+              Investment amount:
               <input
                 type="number"
                 min="1"
@@ -339,44 +169,31 @@ function FundsPage() {
                 placeholder="e.g. 10000"
               />
             </label>
+            <label>
+              Future NAV:
+              <input
+                type="number"
+                min="1"
+                value={targetNav}
+                onChange={(e) => setTargetNav(e.target.value)}
+                placeholder={latestNav ? `e.g. ${(latestNav * 1.1).toFixed(2)}` : "e.g. 125.50"}
+              />
+            </label>
 
             <div className="calc-rows">
               <div><strong>Latest NAV:</strong> ₹ {navDisplay}</div>
               <div><strong>Estimated Units:</strong> {units ? units.toFixed(5) : "0.00000"}</div>
-              <div><strong>ETH needed (approx):</strong> {ethPriceINR ? (Number(inrAmount) / ethPriceINR).toFixed(6) : "N/A"}</div>
-            </div>
-
-            <div className="calc-buttons">
-              <button onClick={() => {
-                if (!inrAmount || Number(inrAmount) <= 0) {
-                  toast.error("Enter amount");
-                  return;
-                }
-                setModalOpen(true);
-              }} className="proceed-btn">Proceed to Buy</button>
+              <div><strong>Current Worth:</strong> ₹ {estimatedCurrentValue ? estimatedCurrentValue.toFixed(2) : "0.00"}</div>
+              <div><strong>Projected Worth:</strong> ₹ {projectedValue ? projectedValue.toFixed(2) : "0.00"}</div>
+              <div>
+                <strong>Projected Return:</strong>{" "}
+                {projectedReturn === null ? "N/A" : `${projectedReturn.toFixed(2)}%`}
+              </div>
             </div>
           </div>
 
         </div>
       </div>
-
-      {/* Buy Modal */}
-      {modalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Confirm Purchase</h2>
-            <p><strong>Fund:</strong> {meta.scheme_name}</p>
-            <p><strong>INR Amount:</strong> ₹ {Number(inrAmount).toFixed(2)}</p>
-            <p><strong>Estimated Units:</strong> {units ? units.toFixed(6) : "0.000000"}</p>
-            <p><strong>ETH to send (approx):</strong> {ethPriceINR ? (Number(inrAmount) / ethPriceINR).toFixed(6) : "N/A"}</p>
-
-            <div className="modal-buttons">
-              <button onClick={buyMutualFund} className="confirm-btn">Confirm & Send</button>
-              <button onClick={() => setModalOpen(false)} className="cancel-btn">Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {loading && <StockLoader />}
     </div>

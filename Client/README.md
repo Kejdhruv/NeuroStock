@@ -298,11 +298,9 @@ Responsibilities:
 - fetches fund meta and NAV history from `mfapi.in`
 - sorts NAV data chronologically
 - calculates unit quantity from entered INR amount
-- fetches ETH/INR price from CoinGecko
-- reads the backend `buyingId` counter
-- connects to MetaMask
-- submits mutual fund purchases through the `MutualFunds` contract
-- persists confirmed purchases to the backend
+- shows current estimated worth from the latest NAV
+- estimates projected worth and return from a user-entered future NAV
+- does not submit mutual fund purchases or persist mutual fund buy records
 
 ### Market news
 
@@ -359,7 +357,6 @@ The blockchain-facing pieces of the frontend are implemented primarily in:
 
 - [src/Stocks/StockPage/StocksPage.jsx](/Users/dhruv/Blockchain/NeuroStock/Client/src/Stocks/StockPage/StocksPage.jsx)
 - [src/Dashboard/Holdings/HoldingsPage.jsx](/Users/dhruv/Blockchain/NeuroStock/Client/src/Dashboard/Holdings/HoldingsPage.jsx)
-- [src/MutualFunds/FundsPage/FundsPage.jsx](/Users/dhruv/Blockchain/NeuroStock/Client/src/MutualFunds/FundsPage/FundsPage.jsx)
 
 The app uses:
 
@@ -371,7 +368,6 @@ The app uses:
 ABI files:
 
 - [src/abi/StocksABI.json](/Users/dhruv/Blockchain/NeuroStock/Client/src/abi/StocksABI.json)
-- [src/abi/MutualFundsABI.json](/Users/dhruv/Blockchain/NeuroStock/Client/src/abi/MutualFundsABI.json)
 
 Required wallet expectations:
 
@@ -427,7 +423,6 @@ VITE_1ST_FINHUBB_KEY=your_finnhub_key
 VITE_2ND_FINHUBB_KEY=your_finnhub_key
 VITE_3RD_POLYGON_KEY=your_polygon_key
 VITE_CONTRACT_ADDRESS=deployed_stocks_contract_address
-VITE_CONTRACT_FUNDS_ADDRESS=deployed_mutual_funds_contract_address
 ```
 
 ### Variable reference
@@ -438,7 +433,6 @@ VITE_CONTRACT_FUNDS_ADDRESS=deployed_mutual_funds_contract_address
 | `VITE_2ND_FINHUBB_KEY` | Stock detail quote/profile/metrics/recommendations |
 | `VITE_3RD_POLYGON_KEY` | Stock candle data and market news |
 | `VITE_CONTRACT_ADDRESS` | Stock contract buy/sell interactions |
-| `VITE_CONTRACT_FUNDS_ADDRESS` | Mutual fund contract buy interactions |
 
 ## Local Development Setup
 
@@ -573,7 +567,7 @@ Protected pages will fail or redirect if:
 
 ### 4. Mutual fund dashboard support is partial on the frontend
 
-The mutual fund list and fund detail buy flow exist, and the backend exposes fund history routes, but the primary dashboard navigation is still centered around stock holdings and stock history pages.
+The mutual fund list and fund detail pages are view-only. They show NAV history and worth estimates, while the primary dashboard navigation is still centered around stock holdings and stock history pages.
 
 ### 5. Direct browser calls to third-party APIs
 

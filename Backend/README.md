@@ -438,12 +438,9 @@ Expected body:
 
 ## Database Layer
 
-The backend uses small helper modules under `Backend/Database/` instead of a service class or ORM abstraction. Each helper:
+The backend uses a shared MongoDB connection module at `Backend/Database/db.js`. The server connects once during startup, and the helper modules under `Backend/Database/` reuse that connection for queries and mutations.
 
-- creates a MongoDB client
-- connects to the local MongoDB server
-- performs one query or mutation
-- returns the result
+Database configuration comes from `Backend/.env`.
 
 Database name:
 
@@ -451,10 +448,10 @@ Database name:
 STOCKDATA
 ```
 
-Default MongoDB URL in the code:
+MongoDB connection variable:
 
 ```text
-mongodb://localhost:27017
+MONGODB_URI
 ```
 
 ### Collections Used
@@ -551,21 +548,16 @@ If you change backend host, frontend host, or cookie settings, the login flow an
 
 This README is intentionally aligned with the current codebase, including a few things worth knowing before you extend it.
 
-### 1. MongoDB is hardcoded
+### 1. MongoDB is environment-driven
 
-Most database helpers hardcode:
-
-```text
-mongodb://localhost:27017
-```
-
-and:
+The backend reads MongoDB settings from:
 
 ```text
-STOCKDATA
+MONGODB_URI
+MONGODB_DB_NAME
 ```
 
-So the backend is not yet environment-driven for database configuration.
+The shared connection is initialized by `server.js` before Express starts listening.
 
 ### 2. Helper modules are one-query-per-file
 
@@ -577,9 +569,9 @@ Route files and the server use ESM-style `import` syntax, while many database he
 
 That is an important implementation detail to keep in mind if you refactor or standardize the backend later.
 
-### 4. Some read helpers do not close the Mongo client
+### 4. Shared Mongo client lifecycle
 
-Several fetch helpers connect to MongoDB and return results without closing the client in a `finally` block. This is useful to know if you see connection-handling issues or want to improve the data layer.
+Database helpers call `getDb()` from `Backend/Database/db.js`. They do not close the client after each request because the backend keeps one shared MongoDB connection open for the server lifetime.
 
 ### 5. Update and delete routes are not auth-protected
 

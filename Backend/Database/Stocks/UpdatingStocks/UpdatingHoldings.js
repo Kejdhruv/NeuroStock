@@ -1,13 +1,9 @@
-const { MongoClient, ObjectId } = require('mongodb');
-
-const url = 'mongodb://localhost:27017';
-const dbName = 'STOCKDATA';
-const client = new MongoClient(url);
+const { ObjectId } = require('mongodb');
+const { getDb } = require("../../db.js");
 
 async function UpdatingHoldings(_id, value) {
   try {
-    await client.connect();
-    const db = client.db(dbName);
+    const db = await getDb();
     const collection = db.collection('Holdings');
 
     const result = await collection.updateOne(
@@ -22,8 +18,6 @@ async function UpdatingHoldings(_id, value) {
   } catch (err) {
     console.error("Error updating counter:", err);
     throw err;
-  } finally {
-    await client.close();  // ✅ Always close the client
   }
 }
 

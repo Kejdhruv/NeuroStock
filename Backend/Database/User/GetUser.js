@@ -1,13 +1,8 @@
-const { MongoClient } = require("mongodb");
-
-const url = 'mongodb://localhost:27017';
-const database = 'STOCKDATA';
-const client = new MongoClient(url);
+const { getDb } = require("../db.js");
 
 async function GetUser(email) {
     try {
-        await client.connect();
-        const db = client.db(database);
+        const db = await getDb();
         const collection = db.collection('Users');
         const user = await collection.findOne({ email });
         return user; 

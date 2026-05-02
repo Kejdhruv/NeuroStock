@@ -1,14 +1,9 @@
-const { MongoClient, ObjectId } = require('mongodb');
-
-const url = 'mongodb://localhost:27017';
-const dbName = 'STOCKDATA'; 
-const client = new MongoClient(url);
+const { ObjectId } = require('mongodb');
+const { getDb } = require("../../db.js");
 
 async function DeletingFundHoldings(_id) {
     try {
-        await client.connect(); 
-
-        const db = client.db(dbName);
+        const db = await getDb();
         const collection = db.collection('FundsHoldings'); 
 
     
@@ -24,8 +19,6 @@ async function DeletingFundHoldings(_id) {
     } catch (err) {
         console.error("Error deleting item:", err);
         throw err;
-    } finally {
-        await client.close(); 
     }
 }
 

@@ -7,9 +7,11 @@ import HistoryUser from "./Routes/User/HistoryUser.js";
 import PostingUser from "./Routes/User/PostingUser.js";
 import CounterRoutes from "./Routes/CounterRoute/CounterRoutes.js";
 import UpdatingUser from "./Routes/User/UpdatingUser.js";
+import database from "./Database/db.js";
 
 const app = express();
 const PORT = 3001;
+const { connectToDatabase } = database;
 
 app.use(cookieParser());
 app.use(express.json());
@@ -27,6 +29,13 @@ app.use("/", PostingUser);
 app.use("/", CounterRoutes);
 app.use("/", UpdatingUser);
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+connectToDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+    process.exit(1);
+  });
