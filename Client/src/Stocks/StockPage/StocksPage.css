@@ -2,9 +2,7 @@
   display: grid;
   grid-template-columns: 1.2fr 2fr;
   gap: 20px;
-  padding: 100px 40px 20px 40px; /* Top padding accounts for navbar height */
-  background-color: #f4f6f9;
-  min-height: 100vh;
+  padding: 20px 40px 20px 40px; /* Top padding accounts for navbar height */
   font-family: 'Poppins', sans-serif;
   color: #333;
   align-content: start;

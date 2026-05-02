@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import StocksABI from '../../abi/StocksABI.json';
 import { toast } from 'react-hot-toast';
 import StockLoader from '../../Components/Loaders/StockLoader';
+import NeuroFooter from '../../Components/Footer/footer';
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
@@ -362,6 +363,7 @@ function StocksPage() {
   };
 
   return (
+    <>
     <div className="dashboard-container">
 
       {/* Left Column */}
@@ -513,7 +515,8 @@ function StocksPage() {
       )}
       {loading && <StockLoader />}
 
-    </div>
+      </div>
+     <NeuroFooter/></>
   );
 }
 
