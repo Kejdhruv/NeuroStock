@@ -30,14 +30,34 @@
 }
 
 @keyframes fadeInLetters {
-  from {
+  0% {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-20px) scale(0.95);
+    filter: blur(4px);
   }
-  to {
+  100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
+    filter: blur(0);
   }
+}
+
+.home-hero-title span,
+.home-investments-title span,
+.home-card-content h3 span,
+.home-advantages-intro h2 span,
+.home-advantage-item h3 span {
+  opacity: 0;
+  display: inline-block;
+  animation: fadeInLetters 0.6s ease forwards;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+
+.home-investments-title,
+.home-card-content h3,
+.home-advantages-intro h2,
+.home-advantage-item h3 {
+  overflow: hidden;
 }
 
 .home-hero {
@@ -70,16 +90,6 @@
   line-height: 0.92;
   letter-spacing: 0;
 }
-
-.home-hero-title span {
-  display: inline-block;
-  opacity: 0;
-  animation: fadeInLetters 0.6s ease forwards;
-}
-
-.home-hero-title span:nth-child(1) { animation-delay: 0.1s; }
-.home-hero-title span:nth-child(2) { animation-delay: 0.25s; }
-.home-hero-title span:nth-child(3) { animation-delay: 0.4s; }
 
 .home-hero-copy {
   max-width: 610px;
