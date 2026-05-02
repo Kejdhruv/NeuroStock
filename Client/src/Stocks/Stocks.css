@@ -12,6 +12,7 @@
   background: #ffffff;
   border-radius: 20px;
   padding: 20px;
+  border: 0.01px solid black;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
