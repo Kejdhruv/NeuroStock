@@ -246,26 +246,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Section 2 — Trade in Real Time */}
-      <section className="home-extra-section reveal">
-        <div className="home-extra-container">
-          <div className="home-extra-left">
-            <div className="home-mini-card-wrap">
-              <div className="home-mini-card-accent"></div>
-              <img src={CardImage} alt="mini chart" className="home-mini-card-img" />
-            </div>
-          </div>
 
-          <div className="home-extra-text">
-            <h2>Trade in Real Time</h2>
-            <p>
-              No more waiting. Your orders are executed immediately, the price of your
-              securities is updated every second and NeuroStock always has the most
-              relevant information.
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
