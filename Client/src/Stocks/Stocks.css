@@ -3,9 +3,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
-  padding: 100px 40px 40px 40px; /* Top padding accounts for navbar */
-  background-color: #f0f2f5;
-  min-height: 100vh;
+  padding: 20px 40px 40px 40px; /* Top padding accounts for navbar */
   font-family: 'Poppins', sans-serif;
 }
 
