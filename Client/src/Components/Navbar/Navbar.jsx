@@ -5,13 +5,23 @@ import './Navbar.css'
 const Navbar = () => {
   return (
     <nav className="home-navbar">
+      <Link to="/" className="home-nav-brand">
+        NeuroStock
+        <span aria-hidden="true"></span>
+      </Link>
+
       <ul className="home-nav-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/Stocks">Stocks</Link></li>
-        <li><Link to="/Mutualfunds">Mutual Funds</Link></li>
+        <li><Link to="/MutualFunds">Mutual Funds</Link></li>
         <li><Link to="/MarketNews">News</Link></li>
         <li><Link to="/Dashboard">Dashboard</Link></li>
       </ul>
+
+      <div className="home-nav-actions">
+        <Link to="/Auth" className="home-nav-login">Log In</Link>
+        <Link to="/Auth" className="home-nav-download">Download App</Link>
+      </div>
     </nav>
   );
 };

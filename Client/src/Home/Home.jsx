@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import "./Home.css";
-import SideImage from "../assets/new imabe.webp";
 import SideImage3 from "../assets/undraw_metrics_5v8d.svg";
+import PhoneMarket from "../assets/image.png";
+import PhoneChart from "../assets/image2.png";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -19,32 +20,50 @@ const Home = () => {
 
   return (
     <div className="home-wrapper">
-      {/* Hero Section */}
       <section className="home-hero">
-        <div className="home-hero-bg"></div>
         <div className="home-hero-left">
-          <div className="home-hero-title">
-            <span>Master the Market, </span>
-            <span>Not Just the Theory.</span>
-          </div>
-          <div className="home-hero-quote">
-            "Risk comes from not knowing what you're doing." — Warren Buffett
-          </div>
+          <h1 className="home-hero-title">
+            Invest for
+            <span>the Future</span>
+          </h1>
+
+          <p className="home-hero-copy">
+            Work with all the necessary information and tools to boost money
+            flow from your capital investment using NeuroStock.
+          </p>
+
           <div className="home-hero-buttons">
-            <button className="home-btn-primary">Get Started</button>
-          <Link to="/auth" className="home-btn-secondary">
-  Already have an account? Login
-</Link>
+            <Link to="/auth" className="home-btn-primary">
+              Download App
+            </Link>
           </div>
+
+          <Link to="/MarketNews" className="home-find-more">
+            Find Out More
+            <span aria-hidden="true">↓</span>
+          </Link>
         </div>
+
         <div className="home-hero-right">
-          <img src={SideImage} alt="Hero" className="home-hero-image" />
-        </div>
-        {/* Floating icons */}
-        <div className="floating-icons">
-          <span className="icon btc">₿</span>
-          <span className="icon eth">Ξ</span>
-          <span className="icon dollar">$</span>
+          <div className="home-hero-star" aria-hidden="true">✦</div>
+          <svg className="home-hero-arrow" viewBox="0 0 300 300" aria-hidden="true">
+            <path d="M52 210 C126 196 196 222 199 257 C201 280 164 276 174 237 C191 171 270 120 238 36" />
+            <path d="M53 210 L86 189" />
+            <path d="M53 210 L83 229" />
+          </svg>
+
+          <div className="home-phone-stage">
+            <img
+              src={PhoneMarket}
+              alt="Market app screen"
+              className="home-phone home-phone-market"
+            />
+            <img
+              src={PhoneChart}
+              alt="Stock chart app screen"
+              className="home-phone home-phone-chart"
+            />
+          </div>
         </div>
       </section>
 
