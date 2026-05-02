@@ -6,8 +6,9 @@ const Navbar = () => {
   return (
     <nav className="home-navbar">
       <Link to="/" className="home-nav-brand">
+         <span aria-hidden="true"></span>
         NeuroStock
-        <span aria-hidden="true"></span>
+       
       </Link>
 
       <ul className="home-nav-links">

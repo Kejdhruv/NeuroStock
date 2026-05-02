@@ -10,8 +10,14 @@ const Home = () => {
       <section className="home-hero">
         <div className="home-hero-left">
           <h1 className="home-hero-title">
-            Invest for
-            <span>the Future</span>
+            {"Invest for the Future".split("").map((char, i) => (
+              <span
+                key={i}
+                style={{ "--i": i, whiteSpace: "pre" }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
           </h1>
 
           <p className="home-hero-copy">
@@ -147,23 +153,23 @@ const Home = () => {
 
             <article className="home-advantage-item">
               <div className="home-advantage-icon">✓</div>
-           <div>
-  <h3>Metamask</h3>
+              <div>
+                <h3>Metamask</h3>
 
-  <p>
-    Buy or sell simulated stocks quickly through a verified, safe
-    structure built for learning using{" "}
-    <b style={{ color: "black" }}>MetaMask Wallets</b>.
-  </p>
+                <p>
+                  Buy or sell simulated stocks quickly through a verified, safe
+                  structure built for learning using{" "}
+                  <b style={{ color: "black" }}>MetaMask Wallets</b>.
+                </p>
 
-  <a
-    href="https://metamask.io/en-GB"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Learn Metamask
-  </a>
-</div>
+                <a
+                  href="https://metamask.io/en-GB"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn Metamask
+                </a>
+              </div>
             </article>
           </div>
         </div>

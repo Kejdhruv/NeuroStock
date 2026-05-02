@@ -6,6 +6,40 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLetters {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .home-hero {
   position: relative;
   display: grid;
@@ -25,6 +59,7 @@
   position: relative;
   z-index: 5;
   max-width: 620px;
+  animation: slideUp 0.9s ease forwards;
 }
 
 .home-hero-title {
@@ -37,8 +72,14 @@
 }
 
 .home-hero-title span {
-  display: block;
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInLetters 0.6s ease forwards;
 }
+
+.home-hero-title span:nth-child(1) { animation-delay: 0.1s; }
+.home-hero-title span:nth-child(2) { animation-delay: 0.25s; }
+.home-hero-title span:nth-child(3) { animation-delay: 0.4s; }
 
 .home-hero-copy {
   max-width: 610px;
@@ -47,6 +88,7 @@
   font-size: clamp(1.15rem, 1.45vw, 1.72rem);
   line-height: 1.34;
   font-weight: 500;
+  animation: slideUp 1.2s ease forwards;
 }
 
 .home-hero-buttons {
@@ -54,6 +96,7 @@
   align-items: center;
   gap: 1rem;
   margin-top: clamp(2.35rem, 3.5vw, 4.1rem);
+  animation: slideUp 1.4s ease forwards;
 }
 
 .home-btn-primary,
@@ -168,6 +211,7 @@
   bottom: 7%;
   transform-origin: 100% 100%;
   transform: translateZ(90px) rotateY(22deg) rotateZ(-5deg);
+  animation: slideUp 1s ease forwards;
 }
 
 .home-phone-chart {
@@ -177,6 +221,7 @@
   width: clamp(220px, 19.8vw, 348px);
   transform-origin: 0 100%;
   transform: translateZ(45px) rotateY(-22deg) rotateZ(6deg);
+  animation: slideDown 1s ease forwards;
 }
 
 .home-investments {
@@ -213,6 +258,12 @@
   overflow: hidden;
   border-radius: 34px;
   background: #f7f7f7;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.home-investment-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
 .home-investment-card-analytics {
@@ -396,6 +447,12 @@
   gap: 1.05rem;
   min-height: 220px;
   padding: 0.9rem clamp(1.4rem, 2.6vw, 3.2rem) 2.6rem;
+  transition: all 0.4s ease;
+}
+
+.home-advantage-item:hover {
+  transform: translateY(-5px);
+  background: #fafafa;
 }
 
 .home-advantage-item:nth-child(1),
