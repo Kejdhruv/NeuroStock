@@ -4,6 +4,7 @@ import DarkMatterGlobe from "../../Components/Login/DarkMatter";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ConnectedPlexusGlobe from "../../Components/Login/Globe";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -179,7 +180,8 @@ const LoginPage = () => {
       {/* RIGHT SIDE (VISUAL) */}
       <section className="login-right">
         <div className="dark-core-container">
-          <DarkMatterGlobe />
+          <ConnectedPlexusGlobe/>
+          {/* <DarkMatterGlobe /> */} 
           <div className="scanline" />
           <div className="core-text">
             <div className="badge">NEUROSTOCK v1.0</div>
