@@ -1,209 +1,667 @@
-.holdings-container {
-  padding: 2rem 3rem;
+/* ============================================================
+   HOLDINGS PAGE — Dark Finance Theme
+   Matches: dashboard-root / sb-root aesthetic
+   Fonts: Syne (display) + DM Sans (body)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;700&display=swap');
+
+/* ── ROOT ────────────────────────────────────────────────── */
+.hp-root {
+  --hp-bg:           #f5f7fb;
+  --hp-surface:      #ffffff;
+  --hp-surface-2:    #f1f4ff;
+  --hp-border:       rgba(0,0,0,0.06);
+  --hp-border-h:     rgba(0,0,0,0.12);
+  --hp-blue:         #2f80ed;
+  --hp-blue-dim:     rgba(47,128,237,0.08);
+  --hp-blue-glow:    rgba(47,128,237,0.18);
+  --hp-red:          #eb5757;
+  --hp-red-dim:      rgba(235,87,87,0.08);
+  --hp-green:        #27ae60;
+  --hp-green-dim:    rgba(39,174,96,0.08);
+  --hp-amber:        #f2c94c;
+  --hp-text-1:       #0f172a;
+  --hp-text-2:       #475569;
+  --hp-text-3:       #94a3b8;
+  --hp-radius:       18px;
+  --hp-shadow:       0 4px 20px rgba(0,0,0,0.05);
+
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  color: #1a1a1a;
- 
+  background: #ffffff;
+  /* background-image:
+    radial-gradient(ellipse 70% 40% at 70% 0%, rgba(47,128,237,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 5% 90%, rgba(39,174,96,0.06) 0%, transparent 55%); */
+  padding: 32px 36px 56px 36px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--hp-text-1);
 }
 
-/* Wallet Button */
-.holdings-wallet-header {
+/* ── TOPBAR ──────────────────────────────────────────────── */
+.hp-topbar {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--hp-border);
 }
 
-.holdings-wallet-header button {
-  background-color: #23a55a;;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.holdings-wallet-header button:hover {
-  background-color: #15723c; 
-   transform: scale(1.01);
-}
-
-/* Page Title */
-.holdings-header-title {
+.hp-page-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 2rem;
+  gap: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--hp-text-1);
+}
+
+.hp-page-title__icon {
+  font-size: 20px;
+  color: var(--hp-blue);
+  filter: drop-shadow(0 0 8px var(--hp-blue-glow));
+}
+
+.hp-wallet-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--hp-blue-dim);
+  border: 1px solid rgba(79,158,255,0.25);
+  color: var(--hp-blue);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
   font-weight: 600;
-  margin-bottom: 2.5rem;
-  color: #1a2d47;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  letter-spacing: 0.1px;
 }
 
-.holdings-icon {
-  font-size: 2.3rem;
-  color: #6ca3f0;
+.hp-wallet-btn:hover {
+  background: rgba(79,158,255,0.2);
+  border-color: rgba(79,158,255,0.45);
+  box-shadow: 0 0 20px var(--hp-blue-glow);
+  transform: translateY(-1px);
 }
 
-/* Table Head */
-.holdings-table-header,
-.holdings-row {
+.hp-wallet-btn__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hp-green);
+  box-shadow: 0 0 8px var(--hp-green);
+  flex-shrink: 0;
+  animation: hp-pulse 2s ease-in-out infinite;
+}
+
+@keyframes hp-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.55; transform: scale(0.8); }
+}
+
+/* ── 3 TOP CARDS GRID ────────────────────────────────────── */
+.hp-cards-grid {
   display: grid;
-  grid-template-columns: 64px 1.6fr 1fr 1fr 1.2fr 1.3fr 1.3fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+/* ── CARD BASE ───────────────────────────────────────────── */
+.hp-card {
+  background: var(--hp-surface);
+  border: 0.5px solid rgba(47, 128, 237, 0.3);
+  border-radius: var(--hp-radius);
+  padding: 20px;
+  box-shadow: var(--hp-shadow);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hp-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+  pointer-events: none;
+}
+
+.hp-card:hover {
+  border-color: var(--hp-border-h);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.hp-card__label {
+  display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-.holdings-table-header {
+  gap: 7px;
+  font-size: 10.5px;
   font-weight: 700;
-  background-color: #3463b4c3;
-  padding: 1rem;
-  border-radius: 12px;
-  color: #223b5f;
-  font-size: 0.95rem;
-  margin-bottom: 1.2rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--hp-text-2);
 }
 
-/* Each Row */
-.holdings-row {
-  background: linear-gradient(135deg, #f1f5fa, #d9e6f5);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(36, 59, 85, 0.15);
-  border: 1px solid rgba(100, 130, 180, 0.2);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  transition: transform 0.2s ease, background 0.3s ease;
+.hp-card__label-icon {
+  font-size: 13px;
+  color: var(--hp-blue);
+  flex-shrink: 0;
 }
 
-.holdings-row:hover {
-  transform: scale(1.01);
-  background: linear-gradient(135deg, #e4edf8, #cfdff0);
+.hp-card__empty {
+  font-size: 13px;
+  color: var(--hp-text-3);
+  margin: auto 0;
 }
 
-.holdings-stock-image {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+/* ── CARD 1 — LONGEST HOLD ───────────────────────────────── */
+.hp-card--longest {
+  background: linear-gradient(135deg, #0d1a30 0%, #0a1220 100%);
+  border-color: rgba(79,158,255,0.18);
+}
+
+.hp-longest__body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.hp-longest__img {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   object-fit: cover;
+  border: 1px solid var(--hp-border-h);
+  background: var(--hp-surface-2);
+  flex-shrink: 0;
 }
 
-.holdings-stock-name {
-  font-weight: 500;
-  color: #1a1a1a;
+.hp-longest__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
 }
 
-.holdings-stock-symbol {
-  font-size: 0.92rem;
-  color: #4a6078;
+.hp-longest__name {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--hp-text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.holdings-meta {
-  font-weight: 500;
-  color: #1e2d4a;
+.hp-longest__symbol {
+  font-size: 11px;
+  color: var(--hp-blue);
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.holdings-buying-id {
-  font-size: 0.85rem;
-  color: #425d7e;
-  font-style: italic;
-  word-break: break-word;
+.hp-longest__qty {
+  font-size: 11px;
+  color: var(--hp-text-2);
 }
 
-.holdings-timestamp {
-  font-size: 0.85rem;
-  color: #4b6075;
+.hp-longest__timer {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--hp-blue);
+  text-shadow: 0 0 20px var(--hp-blue-glow);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+  animation: hp-timer-flicker 2.5s ease-in-out infinite;
 }
 
-.holdings-sell-button {
-  background-color: #e53935;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 8px;
+@keyframes hp-timer-flicker {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.78; }
+}
+
+/* ── CARD 2 — FILTER ─────────────────────────────────────── */
+.hp-card--filter {
+  gap: 12px;
+}
+
+.hp-filter__search-wrap {
+  position: relative;
+}
+
+.hp-filter__search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--hp-text-3);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.hp-filter__search {
+  width: 100%;
+  background: var(--hp-surface-2);
+  border: 1px solid var(--hp-border);
+  border-radius: 10px;
+  padding: 9px 12px 9px 34px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--hp-text-1);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.hp-filter__search::placeholder {
+  color: var(--hp-text-3);
+}
+
+.hp-filter__search:focus {
+  border-color: rgba(79,158,255,0.4);
+  box-shadow: 0 0 0 3px rgba(79,158,255,0.08);
+}
+
+.hp-filter__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hp-filter__chip {
+  background: var(--hp-surface-2);
+  border: 1px solid var(--hp-border);
+  color: var(--hp-text-2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  letter-spacing: 0.3px;
 }
 
-.holdings-sell-button:hover {
-  background-color: #b71c1c;
+.hp-filter__chip:hover {
+  border-color: var(--hp-border-h);
+  color: var(--hp-text-1);
 }
 
-/* Modal */
-.holdings-modal {
+.hp-filter__chip--active {
+  background: var(--hp-blue-dim);
+  border-color: rgba(79,158,255,0.35);
+  color: var(--hp-blue);
+}
+
+.hp-filter__count {
+  font-size: 11.5px;
+  color: var(--hp-text-3);
+  margin-top: auto;
+}
+
+.hp-filter__count strong {
+  color: var(--hp-text-2);
+}
+
+/* ── CARD 3 — SUMMARY ────────────────────────────────────── */
+.hp-card--summary {
+  gap: 12px;
+}
+
+.hp-summary__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.hp-summary__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--hp-surface-2);
+  border-radius: 10px;
+  border: 1px solid var(--hp-border);
+  transition: border-color 0.2s;
+}
+
+.hp-summary__row:hover {
+  border-color: var(--hp-border-h);
+}
+
+.hp-summary__img {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  object-fit: cover;
+  background: var(--hp-surface);
+  flex-shrink: 0;
+}
+
+.hp-summary__sym {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hp-text-1);
+  flex: 1;
+  letter-spacing: 0.3px;
+}
+
+.hp-summary__qty {
+  font-size: 11px;
+  color: var(--hp-text-2);
+  min-width: 36px;
+  text-align: right;
+}
+
+.hp-summary__val {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hp-green);
+  min-width: 56px;
+  text-align: right;
+}
+
+.hp-summary__more {
+  font-size: 11px;
+  color: var(--hp-text-3);
+  text-align: center;
+  padding: 4px 0;
+}
+
+.hp-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: var(--hp-green-dim);
+  border: 1px solid rgba(79,209,160,0.18);
+  border-radius: 10px;
+  margin-top: auto;
+}
+
+.hp-summary__total span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--hp-text-2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.hp-summary__total strong {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--hp-green);
+  letter-spacing: -0.3px;
+}
+
+/* ── TABLE ───────────────────────────────────────────────── */
+.hp-table-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hp-table-head {
+  display: grid;
+  grid-template-columns: 52px 1.6fr 0.9fr 0.7fr 1.1fr 1.3fr 1.4fr 0.8fr;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-border);
+  border-radius: 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--hp-text-3);
+}
+
+.hp-table-row {
+  display: grid;
+  grid-template-columns: 52px 1.6fr 0.9fr 0.7fr 1.1fr 1.3fr 1.4fr 0.8fr;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-border);
+  border-radius: 12px;
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  animation: hp-row-in 0.35s ease both;
+}
+
+@keyframes hp-row-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hp-table-row:hover {
+  border-color: var(--hp-border-h);
+  background: #f3f6ff;
+  transform: translateX(2px);
+}
+
+.hp-row__img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--hp-border);
+  background: var(--hp-surface-2);
+}
+
+.hp-row__name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--hp-text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hp-row__symbol {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hp-blue);
+  letter-spacing: 0.4px;
+}
+
+.hp-row__meta {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--hp-text-2);
+}
+
+.hp-row__id {
+  font-size: 11px;
+  color: var(--hp-text-3);
+  font-style: italic;
+  word-break: break-all;
+}
+
+.hp-row__date {
+  font-size: 11.5px;
+  color: var(--hp-text-2);
+}
+
+.hp-sell-btn {
+  background: var(--hp-red-dim);
+  border: 1px solid rgba(255,107,107,0.25);
+  color: var(--hp-red);
+  padding: 7px 16px;
+  border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.hp-sell-btn:hover {
+  background: rgba(255,107,107,0.2);
+  border-color: rgba(255,107,107,0.5);
+  box-shadow: 0 0 14px rgba(255,107,107,0.2);
+  transform: translateY(-1px);
+}
+
+.hp-table-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--hp-text-3);
+  font-size: 14px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-border);
+  border-radius: var(--hp-radius);
+}
+
+/* ── MODAL ───────────────────────────────────────────────── */
+.hp-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(20, 30, 48, 0.45);
-  backdrop-filter: blur(6px);
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
 }
 
-.holdings-modal-content {
-  background: #ffffff;
-  color: #1c1c1c;
-  padding: 2rem;
-  border-radius: 14px;
+.hp-modal__content {
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-border-h);
+  border-radius: 20px;
+  padding: 28px 32px;
   width: 420px;
-  max-width: 90%;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15),
+              inset 0 1px 0 rgba(0,0,0,0.03);
+  animation: hp-modal-in 0.25s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.holdings-modal-content h2 {
-  margin-bottom: 1rem;
-  color: #1f3c60;
+@keyframes hp-modal-in {
+  from { opacity: 0; transform: scale(0.93) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.holdings-modal-content p {
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+.hp-modal__content h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--hp-text-1);
+  margin: 0 0 14px;
+  letter-spacing: -0.3px;
 }
 
-.holdings-modal-content input {
+.hp-modal__content p {
+  font-size: 13.5px;
+  color: var(--hp-text-2);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.hp-modal__content label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--hp-text-2);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.hp-modal__content input {
   width: 100%;
-  padding: 0.6rem;
-  margin: 0.6rem 0 1.2rem;
-  border-radius: 8px;
-  border: 1px solid #bccde3;
-  font-size: 1rem;
-  background: #f4f7fb;
-  color: #1a1a1a;
+  background: var(--hp-surface-2);
+  border: 1px solid var(--hp-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--hp-text-1);
+  outline: none;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.holdings-modal-buttons {
+.hp-modal__content input:focus {
+  border-color: rgba(79,158,255,0.4);
+  box-shadow: 0 0 0 3px rgba(79,158,255,0.08);
+}
+
+.hp-modal__buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 10px;
 }
 
-.holdings-modal-buttons button {
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  border-radius: 8px;
+.hp-modal__buttons button {
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
   cursor: pointer;
   border: none;
+  transition: opacity 0.2s, transform 0.15s;
 }
 
-.holdings-modal-buttons button:first-child {
-  background-color: #243b55;
-  color: white;
+.hp-modal__buttons button:first-child {
+  background: var(--hp-blue);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--hp-blue-glow);
 }
 
-.holdings-modal-buttons button:last-child {
-  background-color: #dbe8f8;
-  color: #1c1c1c;
+.hp-modal__buttons button:first-child:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+.hp-modal__buttons button:last-child {
+  background: var(--hp-surface-2);
+  color: var(--hp-text-2);
+  border: 1px solid var(--hp-border);
+}
+
+.hp-modal__buttons button:last-child:hover {
+  border-color: var(--hp-border-h);
+  color: var(--hp-text-1);
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .hp-root { padding: 20px; }
+
+  .hp-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hp-table-head,
+  .hp-table-row {
+    grid-template-columns: 42px 1fr 1fr 1fr 1fr;
+  }
+
+  /* hide less-critical cols on tablet */
+  .hp-table-head > div:nth-child(6),
+  .hp-table-head > div:nth-child(7),
+  .hp-table-row .hp-row__id,
+  .hp-table-row .hp-row__date {
+    display: none;
+  }
 }
