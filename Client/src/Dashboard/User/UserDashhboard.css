@@ -1,149 +1,348 @@
-/* 1. WRAPPER */
-.userdash-wrapper {
-  padding: 50px;
-  font-family: 'Poppins', sans-serif;
-  background: #eef1f5;
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --bg-main: #fcfdfe;
+  --bg-card: #ffffff;
+  --text-main: #1a1d23;
+  --text-sub: #8e99a8;
+  --accent-blue: #2563eb;
+  --accent-red: #f43f5e;
+  --accent-green: #10b981;
+  --border-light: #edf2f7;
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+  --shadow-md: 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+}
+
+.db-container {
+  background-color: var(--bg-main);
   min-height: 100vh;
-  box-sizing: border-box;
-  width: 100%;
-  overflow-x: hidden;
+  padding: 40px 10%;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-main);
 }
 
-/* 2. TITLE */
-.userdash-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #222;
-  margin-bottom: 30px;
+/* --- HEADER --- */
+.db-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
 }
 
-/* 3. GRID: 2x2 Layout */
-.userdash-grid {
+.db-user-block {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.db-avatar-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  object-fit: cover;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.db-status-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-green);
+  border: 2.5px solid white;
+  border-radius: 50%;
+}
+
+.db-user-meta h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.db-user-meta p {
+  color: var(--text-sub);
+  margin: 0;
+  font-size: 13px;
+}
+
+.db-eth-card {
+  background: white;
+  padding: 14px 22px;
+  border-radius: 18px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.db-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--accent-blue);
+  font-weight: 800;
+  display: block;
+}
+
+.db-eth-info h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.db-eth-price {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* --- GRID LAYOUT --- */
+.db-main-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 50px;
-  margin-bottom: 50px;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
 }
 
-/* 4. CARD BASE STYLE */
-.userdash-card {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
-  border-radius: 22px;
-  padding: 25px;
-  color: #ffffff;
-  height: 200px;
-  max-width: 80%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+.db-card {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.db-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.db-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.db-card-head h3 {
+  font-family: 'Syne', sans-serif;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--text-sub);
+  margin: 0;
+}
+
+/* --- GRAPH (TOP LEFT) --- */
+.db-graph-area {
+  grid-column: span 1;
+}
+
+.db-graph-legend {
+  display: flex;
+  gap: 15px;
+}
+
+.db-graph-legend span {
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lg-buy::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+}
+
+.lg-sell::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-red);
+}
+
+/* --- HOLD (TOP RIGHT) --- */
+.db-hold-feature {
+  text-align: center;
+}
+
+.db-hold-icon {
+  width: 70px;
+  height: 70px;
+  background: #f8fafc;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.db-hold-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.db-hold-content h4 {
+  font-size: 18px;
+  margin: 0 0 4px 0;
+}
+
+.db-hold-content p {
+  color: var(--text-sub);
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.db-hold-timer-block {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+.db-hold-timer-block span {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--text-sub);
+  display: block;
+}
+
+.db-timer-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-blue);
+}
+
+/* --- SUMMARY (BOTTOM LEFT) --- */
+.db-summary-card {
+  grid-column: span 1;
+}
+
+.db-summary-grid {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
-  overflow: hidden;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
 }
 
-.userdash-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+.db-summary-item {
+  text-align: left;
 }
 
-/* 5. CARD-SPECIFIC BACKGROUNDS (Fintech Style) */
-.holdings-card {
-   background: linear-gradient(135deg, #141e30, #243b55);  /* Blue-cyan */
-}
-.buyings-card {
-  background: linear-gradient(155deg, #065d20, #ffffff); /* Fintech green */
-}
-.sellings-card {
-  background: linear-gradient(145deg, #d01919e2, #dcbfb8); /* Coral red */
-}
-.performance-card {
-  background: linear-gradient(135deg, #141e30, #243b55); /* Deep techy blue */
-}
-
-/* 6. ICON STYLING */
-.userdash-icon {
-  font-size: 36px;
-  margin-bottom: 12px;
-}
-
-/* Colored Icons */
-.holdings-card .userdash-icon {
-  color: #2b7ce6;
-  font-size: 55px;
-}
-.buyings-card .userdash-icon {
-  color: #ffe30f;
-   font-size: 55px;
-}
-.sellings-card .userdash-icon {
-     font-size: 55px;
-  color: #ffffff;
-}
-.performance-card .userdash-icon {
-  color: #c0c6ff;
-}
-
-/* 7. TEXT INSIDE CARDS */
-.userdash-card h3 {
-  margin: 0;
-  font-size: 22px;
-  color: #ffffff;
+.db-summary-label {
+  font-size: 11px;
+  color: var(--text-sub);
   font-weight: 600;
-}
-.userdash-card p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #e6e6e6;
+  margin-bottom: 4px;
+  display: block;
 }
 
-/* 8. RECENT ACTIVITY SECTION */
-.userdash-recent h2 {
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #333;
+.db-summary-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
 }
 
-.userdash-activity-list {
-  list-style: none;
-  padding: 0;
+.db-summary-value.profit {
+  color: var(--accent-green);
 }
 
-/* 9. ACTIVITY ITEMS */
-.activity-item {
+.db-summary-value.loss {
+  color: var(--accent-red);
+}
+
+.db-summary-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-light);
+}
+
+/* --- RECENT (BOTTOM RIGHT) --- */
+.db-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.db-activity-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(5px);
-  padding: 14px 20px;
+  padding: 10px;
+  background: #f8fafc;
   border-radius: 14px;
-  margin-bottom: 10px;
-  color: #333;
-  font-weight: 500;
-  transition: all 0.3s ease;
+  gap: 12px;
 }
 
-.activity-item.BOUGHT {
-  border-left: 5px solid #28c76f;
-}
-.activity-item.SOLD {
-  border-left: 5px solid #ea5455;
+.db-type-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
 }
 
-/* 10. ACTIVITY TEXT COLUMNS */
-.activity-type {
-  width: 80px;
-  font-weight: bold;
+.db-type-icon.buy {
+  background: #eef2ff;
+  color: var(--accent-blue);
 }
-.activity-stock {
+
+.db-type-icon.sell {
+  background: #fff1f2;
+  color: var(--accent-red);
+}
+
+.db-activity-info {
   flex: 1;
 }
-.activity-qty,
-.activity-price,
-.activity-time {
-  white-space: nowrap;
-  margin-left: 15px;
+
+.db-act-name {
+  display: block;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.db-act-date {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+
+.db-activity-val {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* --- RESPONSIVE FIXES --- */
+@media (max-width: 1024px) {
+  .db-container {
+    padding: 20px;
+  }
+
+  .db-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .db-summary-grid {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .db-summary-divider {
+    width: 100%;
+    height: 1px;
+  }
 }

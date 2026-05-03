@@ -1,100 +1,94 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Sidebar.css';
-import Avatar1 from "../../assets/Ballerina.png" 
-import Avatar2 from "../../assets/Brian.png" 
-import Avatar3 from "../../assets/Camila.png" 
-import Avatar4 from "../../assets/John.png"
-import Avatar5 from "../../assets/Lucia.png" 
-import Avatar6 from "../../assets/Roony.png" 
-const Sidebar = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-  const avatars = [
-  Avatar1 , Avatar2 , Avatar3 , Avatar4 , Avatar5 , Avatar6 
+
+import {
+  RiDashboardLine,
+  RiStackLine,
+  RiArrowDownCircleLine,
+  RiArrowUpCircleLine,
+  RiHome4Line,
+  RiLogoutCircleRLine,
+} from 'react-icons/ri';
+
+const NAV_ITEMS = [
+  { to: '/Dashboard',              end: true,  icon: <RiDashboardLine />,       label: 'Dashboard'    },
+  { to: '/Dashboard/holdings',     end: false, icon: <RiStackLine />,           label: 'Holdings'     },
+  { to: '/Dashboard/buy-history',  end: false, icon: <RiArrowDownCircleLine />, label: 'Buy History'  },
+  { to: '/Dashboard/sell-history', end: false, icon: <RiArrowUpCircleLine />,   label: 'Sell History' },
+  { to: '/',                       end: false, icon: <RiHome4Line />,           label: 'Home'         },
 ];
 
-const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-  useEffect(() => {
-  const fetchUserFromToken = async () => {
+const Sidebar = () => {
+  const navigate = useNavigate();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
     try {
-      const res = await fetch("http://localhost:3001/Auth/Me", {
-        credentials: "include", // ✅ send cookie automatically
+      const res = await fetch('http://localhost:3001/Auth/Logout', {
+        credentials: 'include',
       });
       const data = await res.json();
-
-      if (!data.loggedIn) {
-        toast.error("User not logged in!");
-        navigate("/");
-        return;
+      if (res.ok && data.success) {
+        toast.success('Logged out!');
+        setTimeout(() => navigate('/'), 1000);
+      } else {
+        toast.error(data.message || 'Logout failed');
       }
-      setUser(data.user);
     } catch (err) {
-      toast.error("Failed to authenticate user");
-      console.error("Auth error:", err);
+      toast.error('Server error during logout' , err);
+    } finally {
+      setLoggingOut(false);
     }
   };
 
-  fetchUserFromToken();
-}, [navigate]); 
-
- const handleLogout = async () => {
-  try {
-    const res = await fetch("http://localhost:3001/Auth/Logout", {
-      credentials: "include"
-    });
-
-    const data = await res.json();
-
-    if (res.ok && data.success) {
-      toast.success("Logged out!");
-      setTimeout(() => navigate("/"), 1000);
-    } else {
-      toast.error(data.message || "Logout failed");
-    }
-
-  } catch (err) {
-    console.error("Logout error:", err);
-    toast.error("Server error during logout");
-  }
-};
   return (
-    <div className="sidebar">
-      <ToastContainer />
-      <div className="user-profile">
-        <img src={randomAvatar} alt="User" className="user-avatar" />
-        {user && (
-          <>
-            <h3>{user.firstName} {user.lastName}</h3>
-            <h6 className='email'>{user.email}</h6>
-          </>
-        )}
-      </div>
+    <>
+      <ToastContainer theme="dark" position="bottom-left" />
 
-      <nav className="nav-menu">
-        <NavLink to={`/Dashboard`} end className={({ isActive }) => isActive ? 'active' : ''}>
-          Dashboard
-        </NavLink>
-        <NavLink to={`/Dashboard/holdings`} className={({ isActive }) => isActive ? 'active' : ''}>
-          Holdings
-        </NavLink>
-        <NavLink to={`/Dashboard/buy-history`} className={({ isActive }) => isActive ? 'active' : ''}>
-          Buy History
-        </NavLink>
-        <NavLink to={`/Dashboard/sell-history`} className={({ isActive }) => isActive ? 'active' : ''}>
-          Sell History
-        </NavLink>
-         <NavLink to={`/`} className={({ isActive }) => isActive ? 'active' : ''}>
-          Back to Home
-        </NavLink>
-      </nav>
+      <aside className="sb-root">
+        {/* Glow orbs — purely decorative */}
+        <span className="sb-glow sb-glow--top" aria-hidden="true" />
+        <span className="sb-glow sb-glow--bot" aria-hidden="true" />
 
-      <button className="logout-btn" onClick={handleLogout}>
-        Logout
-      </button>
-    </div>
+        {/* ── BRAND MARK ──────────────────────────── */}
+        <div className="sb-brand" aria-hidden="true">
+          <span className="sb-brand__dot" />
+          <span className="sb-brand__dot sb-brand__dot--2" />
+        </div>
+
+        {/* ── NAV ─────────────────────────────────── */}
+        <nav className="sb-nav" aria-label="Main navigation">
+          {NAV_ITEMS.map(({ to, end, icon, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className={({ isActive }) =>
+                `sb-nav__link${isActive ? ' sb-nav__link--active' : ''}`
+              }
+            >
+              <span className="sb-nav__icon">{icon}</span>
+              <span className="sb-nav__label">{label}</span>
+              <span className="sb-nav__indicator" aria-hidden="true" />
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* ── LOGOUT ──────────────────────────────── */}
+        <button
+          className={`sb-logout${loggingOut ? ' sb-logout--busy' : ''}`}
+          onClick={handleLogout}
+          disabled={loggingOut}
+        >
+          <RiLogoutCircleRLine className="sb-logout__icon" />
+          <span>{loggingOut ? 'Logging out…' : 'Logout'}</span>
+        </button>
+      </aside>
+    </>
   );
 };
 
