@@ -101,10 +101,10 @@ const UserDashboard = () => {
     ...boughts.map(b => ({ date: new Date(b.timestamp), buy: b.Boughtat })),
     ...solds.map(s => ({ date: new Date(s.timestamp), sell: s.Soldat }))
   ].sort((a, b) => a.date - b.date)
-   .map(item => ({
-     ...item,
-     displayDate: item.date.toLocaleDateString([], { month: 'short', day: 'numeric' })
-   }));
+    .map(item => ({
+      ...item,
+      displayDate: item.date.toLocaleDateString([], { month: 'short', day: 'numeric' })
+    }));
 
   const totalBuy = boughts.reduce((a, i) => a + i.Boughtat * i.Quantity, 0);
   const totalSell = solds.reduce((a, i) => a + i.Soldat * i.Quantity, 0);
@@ -152,19 +152,19 @@ const UserDashboard = () => {
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorBuy" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="colorSell" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#94a3b8'}} minTickGap={20} />
+                <XAxis dataKey="displayDate" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#94a3b8' }} minTickGap={20} />
                 <YAxis hide />
-                <Tooltip 
-                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                <Tooltip
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                 />
                 <Area type="monotone" dataKey="buy" stroke="#2563eb" strokeWidth={3} fillOpacity={1} fill="url(#colorBuy)" dot={{ r: 4, fill: '#2563eb' }} />
                 <Area type="monotone" dataKey="sell" stroke="#f43f5e" strokeWidth={3} fillOpacity={1} fill="url(#colorSell)" dot={{ r: 4, fill: '#f43f5e' }} />
@@ -191,7 +191,7 @@ const UserDashboard = () => {
               </div>
             </div>
           ) : (
-             <div className="db-empty">No active holdings</div>
+            <div className="db-empty">No active holdings</div>
           )}
         </section>
 
@@ -202,20 +202,20 @@ const UserDashboard = () => {
           </div>
           <div className="db-summary-grid">
             <div className="db-summary-item">
-                <span className="db-summary-label">Total Invested</span>
-                <div className="db-summary-value invest">${totalBuy.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+              <span className="db-summary-label">Total Invested</span>
+              <div className="db-summary-value invest">${totalBuy.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
             </div>
             <div className="db-summary-divider" />
             <div className="db-summary-item">
-                <span className="db-summary-label">Total Returned</span>
-                <div className="db-summary-value return">${totalSell.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+              <span className="db-summary-label">Total Returned</span>
+              <div className="db-summary-value return">${totalSell.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
             </div>
             <div className="db-summary-divider" />
             <div className="db-summary-item">
-                <span className="db-summary-label">Net Gain/Loss</span>
-                <div className={`db-summary-value ${netProfit >= 0 ? 'profit' : 'loss'}`}>
-                    {netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString(undefined, {minimumFractionDigits: 2})}
-                </div>
+              <span className="db-summary-label">Net Gain/Loss</span>
+              <div className={`db-summary-value ${netProfit >= 0 ? 'profit' : 'loss'}`}>
+                {netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </div>
             </div>
           </div>
         </section>
