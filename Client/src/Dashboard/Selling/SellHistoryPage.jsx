@@ -119,8 +119,8 @@ const SellHistoryPage = () => {
             <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="shGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2}/>
-                  <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                   <stop offset="5%"  stopColor="#2563eb" stopOpacity={0.18} />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.01} />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
@@ -130,18 +130,33 @@ const SellHistoryPage = () => {
               <Area
                 type="monotone"
                 dataKey="cumulative"
-                stroke="#22c55e"
+                stroke="#2563eb"
                 strokeWidth={2.5}
                 fill="url(#shGrad)"
               />
             </AreaChart>
           </ResponsiveContainer>
 
-          <div className="sh-stats">
-            <span>Transactions: {solds.length}</span>
-            <span>Stocks: {Object.keys(stockFreq).length}</span>
-            <span>Avg: ${avgPrice}</span>
-          </div>
+         <div className="bh-chart__stats">
+  <div className="bh-chart__stat">
+    <span>Total Transactions</span>
+    <strong>{solds.length}</strong>
+  </div>
+
+  <div className="bh-chart__divider" />
+
+  <div className="bh-chart__stat">
+    <span>Unique Stocks</span>
+    <strong>{Object.keys(stockFreq).length}</strong>
+  </div>
+
+  <div className="bh-chart__divider" />
+
+  <div className="bh-chart__stat">
+    <span>Avg Price</span>
+    <strong>${avgPrice}</strong>
+  </div>
+</div>
         </div>
 
       </div>

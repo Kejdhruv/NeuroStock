@@ -218,3 +218,27 @@ padding: 50px;
 text-align: center;
 color: #94a3b8;
 }
+
+/* ───────── CHART STATS ───────── */
+.sh-chart__stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.sh-chart__stat span {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.sh-chart__stat strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.sh-chart__divider {
+  width: 1px;
+  background: rgba(0,0,0,0.08);
+}
