@@ -1,116 +1,242 @@
-.buy-history-container {
-  padding: 2rem 3rem;
-
+/* ───────── ROOT (FLOATING PANEL) ───────── */
+.bh-root {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  color: #1c1c1c;
+  padding: 32px 44px;
+  font-family: 'DM Sans', sans-serif;
+  color: #0f172a;
+
+  border-radius: 32px;
+  box-shadow:
+    0 40px 120px rgba(37, 99, 235, 0.15),
+    0 15px 50px rgba(37, 99, 235, 0.08);
+
+  animation: bh-fade-in 0.6s ease;
 }
 
-.buy-history-header-title {
+@keyframes bh-fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ───────── TITLE ───────── */
+.bh-page-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 2.5rem;
-  color: #184e2f;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 30px;
 }
 
-.buy-icon {
-  font-size: 2.3rem;
-  color: #23a55a;
+.bh-page-title__icon {
+  color: #2563eb;
+  filter: drop-shadow(0 0 10px rgba(37,99,235,0.4));
 }
 
-/* Header Row */
-.buy-history-header,
-.buy-history-row {
+/* ───────── GRID ───────── */
+.bh-cards-grid {
   display: grid;
-  grid-template-columns: 64px 1.6fr 1fr 1fr 1.3fr 2fr 1.4fr;
-  align-items: center;
-  gap: 1rem;
+  grid-template-columns: 1fr 2.2fr;
+  gap: 22px;
+  margin-bottom: 34px;
 }
 
-.buy-history-header {
+/* ───────── CARD BASE (GLASS) ───────── */
+.bh-card {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(37, 99, 235, 0.25);
+  border-radius: 22px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.35s ease;
+}
+
+/* glow border */
+.bh-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg, rgba(37,99,235,0.25), transparent, rgba(37,99,235,0.25));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.bh-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow:
+    0 20px 50px rgba(37, 99, 235, 0.15),
+    0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* ───────── LABEL ───────── */
+.bh-card__label {
+  font-size: 11px;
   font-weight: 700;
-  background-color: #e8f5e9;
-  padding: 1rem;
-  border-radius: 12px;
-  color: #2c4e38;
-  font-size: 0.95rem;
-  margin-bottom: 1.2rem;
+  color: #64748b;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-/* Row Card */
-.buy-history-row {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(50, 150, 100, 0.1);
-  border: 1px solid #d3f4d5;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  transition: transform 0.2s ease, background 0.3s ease;
-}
-
-.buy-history-row:hover {
-  background: rgba(230, 255, 240, 0.8);
-  transform: scale(1.01);
-}
-
-.buy-image {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  object-fit: cover;
-}
-
-.buy-name {
-  font-weight: 500;
-}
-
-.buy-symbol {
-  font-size: 0.92rem;
-  color: #444;
-}
-
-.buy-meta {
-  font-weight: 500;
-  color: #222;
-}
-
-.buying-id {
-  font-size: 0.85rem;
-  color: #4a4a4a;
-  font-style: italic;
-  word-break: break-word;
-}
-
-.timestamp {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.etherscan-link-row {
-  grid-column: 1 / -1; /* Full width below the grid row */
-  text-align: right;
-  margin-top: -0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.etherscan-link {
-  display: inline-flex;
+/* ───────── STOCK LIST (ENHANCED) ───────── */
+.bh-stocks__row {
+  display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13.5px;
-  color: #23a55a;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  gap: 12px;
+  margin-bottom: 14px;
+  transition: 0.25s;
 }
 
-.etherscan-link:hover {
-  color: #1c7c47;
+.bh-stocks__row:hover {
+  transform: translateX(4px);
+}
+
+.bh-stocks__img {
+  width: 38px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.bh-stocks__name {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.bh-stocks__symbol {
+  font-size: 11px;
+  color: #2563eb;
+}
+
+.bh-stocks__bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: #eef2ff;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bh-stocks__bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  border-radius: 20px;
+  transition: width 0.6s ease;
+}
+
+.bh-stocks__meta {
+  font-size: 11px;
+  text-align: right;
+}
+
+/* ───────── TOTAL INVEST CARD ───────── */
+.bh-total-invest {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  color: white;
+}
+
+.bh-total-invest__value {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ───────── GRAPH CARD ───────── */
+.bh-card--chart {
+  position: relative;
+}
+
+.bh-card--chart::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -30%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(37,99,235,0.2), transparent 70%);
+  filter: blur(60px);
+}
+
+.bh-card--chart .recharts-responsive-container {
+  height: 280px !important;
+}
+
+/* ───────── CHART STATS ───────── */
+.bh-chart__stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.bh-chart__stat strong {
+  font-size: 18px;
+}
+
+/* ───────── TABLE (UPGRADED) ───────── */
+.bh-table-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+  border: 0.5px solid rgba(37, 99, 235, 0.2);
+}
+
+/* HEADER */
+.bh-table-head {
+  display: grid;
+  grid-template-columns: 50px 1.6fr 0.8fr 0.7fr 1fr 1fr 1.3fr 0.8fr;
+  padding: 14px 16px;
+  background: #f8fbff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* ROW */
+.bh-table-row {
+  display: grid;
+  grid-template-columns: 50px 1.6fr 0.8fr 0.7fr 1fr 1fr 1.3fr 0.8fr;
+  padding: 16px;
+  background: white;
+  transition: all 0.25s ease;
+}
+
+.bh-table-row:hover {
+  background: #f3f7ff;
+  transform: scale(1.01);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+/* IMAGE */
+.bh-row__img {
+  width: 42px;
+  border-radius: 12px;
+}
+
+/* TEXT */
+.bh-row__symbol {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* LINK */
+.bh-etherscan-link {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.bh-etherscan-link:hover {
   text-decoration: underline;
+}
+
+/* EMPTY */
+.bh-table-empty {
+  padding: 50px;
+  text-align: center;
+  color: #94a3b8;
 }
