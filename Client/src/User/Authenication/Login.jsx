@@ -67,7 +67,7 @@ const LoginPage = () => {
       if (res.ok) {
         toast.success(isSignUp ? "Sign up successful!" : "Login successful!");
         localStorage.setItem("isLoggedIn", "true");
-        setTimeout(() => navigate(`/Dashboard`), 1500);
+        setTimeout(() => navigate(`/`), 1500);
       } else {
         toast.error(data.message || "Authentication failed");
       }
