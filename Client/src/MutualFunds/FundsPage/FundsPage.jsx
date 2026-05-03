@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import "./FundsPage.css";
 import { toast } from "react-hot-toast";
-import StockLoader from "../../Components/Loaders/StockLoader";
+import { RiLoader4Line, RiHistoryLine, RiCalculatorLine, RiInformationLine, RiPulseLine } from "react-icons/ri";
+import NeuroFooter from "../../Components/Footer/footer";
 
 function FundsPage() {
   const { schemeCode } = useParams();
@@ -21,22 +21,20 @@ function FundsPage() {
   const [inrAmount, setInrAmount] = useState("");
   const [targetNav, setTargetNav] = useState("");
   const [units, setUnits] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFund = async () => {
-      setLoading(true);
       try {
         const res = await fetch(`https://api.mfapi.in/mf/${schemeCode}`);
         const json = await res.json();
-
         const m = json.meta || json?.Meta || null;
         const raw = json.data || [];
 
         const series = raw
           .map((r) => ({
             date: r.date,
-            nav: Number(parseFloat(r.nav || r.NAV || 0)),
+            nav: Number(parseFloat(r.nav || 0)),
           }))
           .sort((a, b) => {
             const [ad, am, ay] = a.date.split("-").map(Number);
@@ -47,13 +45,11 @@ function FundsPage() {
         setMeta(m);
         setNavSeries(series);
       } catch (err) {
-        console.error("Failed to fetch mutual fund data:", err);
-        toast.error("Could not fetch fund data");
+        toast.error("Market data unavailable" , err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchFund();
   }, [schemeCode]);
 
@@ -63,140 +59,167 @@ function FundsPage() {
       return;
     }
     const latestNav = navSeries[navSeries.length - 1]?.nav || 0;
-    const parsed = Number(inrAmount);
-    if (isNaN(parsed) || parsed <= 0 || latestNav <= 0) {
-      setUnits(0);
-      return;
-    }
-    const computedUnits = parsed / latestNav;
-    setUnits(computedUnits);
+    setUnits(Number(inrAmount) / latestNav);
   }, [inrAmount, navSeries]);
 
-  const latestNav = navSeries.length ? navSeries[navSeries.length - 1].nav : null;
-  const navDisplay = latestNav ? latestNav.toFixed(5) : "N/A";
-  const enteredAmount = Number(inrAmount) || 0;
-  const targetNavValue = Number(targetNav) || 0;
-  const estimatedCurrentValue = units && latestNav ? units * latestNav : 0;
-  const projectedValue = units && targetNavValue > 0 ? units * targetNavValue : 0;
-  const projectedReturn =
-    enteredAmount > 0 && projectedValue > 0
-      ? ((projectedValue - enteredAmount) / enteredAmount) * 100
-      : null;
+  if (loading) return (
+    <div className="fp-loader">
+      <RiLoader4Line className="fp-spin" />
+      <span>Analyzing Market Data...</span>
+    </div>
+  );
 
-  if (!meta || navSeries.length === 0) {
-    return (
-      <div className="loader-container">
-        <div className="emoji-loader">
-          <span>💼</span>
-          <span>➡️</span>
-          <span>📈</span>
-          <span>➡️</span>
-          <span>💳</span>
-        </div>
-      </div>
-    );
-  }
+  const latest = navSeries[navSeries.length - 1];
+  const targetNavValue = Number(targetNav) || 0;
+  const projectedReturn = (Number(inrAmount) > 0 && targetNavValue > 0)
+    ? ((units * targetNavValue - Number(inrAmount)) / Number(inrAmount)) * 100
+    : null;
 
   return (
-    <div className="mutual-dashboard">
+    <>
+    <div className="fp-root">
+      {/* --- HERO HEADER --- */}
+      <header className="fp-header">
+        <div className="fp-header-left">
+          <span className="fp-tag">{meta.scheme_category}</span>
+          <h1 className="fp-title">{meta.scheme_name}</h1>
+          <p className="fp-subtitle">{meta.fund_house} • {meta.scheme_type}</p>
+        </div>
+        <div className="fp-nav-hero">
+          <span className="fp-nav-label">Current NAV</span>
+          <div className="fp-nav-price">₹{latest.nav.toFixed(2)}</div>
+          <span className="fp-nav-date">Last updated: {latest.date}</span>
+        </div>
+      </header>
 
-      <div className="mutual-body">
-        <div className="left-col">
-          <div className="nav-card">
-            <div className="nav-top">
-              <div>
-                <h3>Latest NAV</h3>
-                <div className="nav-value">₹ {navDisplay}</div>
-                <div className="nav-date">
-                  {navSeries[navSeries.length - 1].date}
-                </div>
-              </div>
-
-              <div className="fund-status">
-                View-only
+      <div className="fp-grid">
+        {/* --- LEFT: CHART --- */}
+        <div className="fp-col-main">
+          <div className="fp-card fp-chart-card">
+            <div className="fp-card-head">
+              <h3><RiPulseLine /> Performance History</h3>
+              <div className="fp-chart-legend">
+                <span><i className="dot-buy" /> NAV Growth</span>
               </div>
             </div>
-
-            <div className="chart-visual">
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={navSeries}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-                  <YAxis domain={["auto", "auto"]} />
-                  <Tooltip formatter={(val) => `₹ ${val}`} />
-                  <Legend />
-                  <Line type="monotone" dataKey="nav" dot={false} stroke="#0b1e3f" strokeWidth={2} />
-                </LineChart>
+            <div className="fp-chart-container">
+              <ResponsiveContainer width="100%" height={350}>
+                <AreaChart data={navSeries}>
+                  <defs>
+                    <linearGradient id="navGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="date" hide />
+                  <YAxis domain={['auto', 'auto']} hide />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                    formatter={(val) => [`₹${val}`, 'NAV']}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="nav" 
+                    stroke="#2563eb" 
+                    strokeWidth={3} 
+                    fillOpacity={1} 
+                    fill="url(#navGradient)" 
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* list recent NAVs */}
-          <div className="recent-navs">
-            <h4>Recent NAVs</h4>
-            <ul>
-              {navSeries.slice(-5).reverse().map((n) => (
-                <li key={n.date}>
-                  <span>{n.date}</span>
-                  <span>₹ {n.nav.toFixed(5)}</span>
-                </li>
+          <div className="fp-card fp-history-card">
+            <div className="fp-card-head">
+              <h3><RiHistoryLine /> Recent Performance</h3>
+            </div>
+            <div className="fp-history-list">
+              {navSeries.slice(-6).reverse().map((n, i) => (
+                <div key={i} className="fp-history-row">
+                  <span className="fp-h-date">{n.date}</span>
+                  <div className="fp-h-line" />
+                  <span className="fp-h-val">₹{n.nav.toFixed(4)}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
 
-        <div className="right-col">
-          <div className="fund-info-card">
-            <h3>Fund Details</h3>
-            <ul>
-              <li><strong>Fund House:</strong> {meta.fund_house}</li>
-              <li><strong>Scheme Type:</strong> {meta.scheme_type}</li>
-              <li><strong>Category:</strong> {meta.scheme_category}</li>
-              <li><strong>ISIN (Growth):</strong> {meta.isin_growth || "N/A"}</li>
-              <li><strong>ISIN (Div Reinv.):</strong> {meta.isin_div_reinvestment || "N/A"}</li>
-            </ul>
-          </div>
+        {/* --- RIGHT: TOOLS --- */}
+        <div className="fp-col-side">
+          <div className="fp-card fp-calc-card">
+            <div className="fp-card-head">
+              <h3><RiCalculatorLine /> Worth Estimator</h3>
+            </div>
+            <div className="fp-input-group">
+              <label>Investment Amount</label>
+              <div className="fp-input-wrapper">
+                <span className="fp-input-prefix">₹</span>
+                <input 
+                  type="number" 
+                  value={inrAmount} 
+                  onChange={(e) => setInrAmount(e.target.value)}
+                  placeholder="0.00" 
+                />
+              </div>
+            </div>
+            <div className="fp-input-group">
+              <label>Projected Future NAV</label>
+              <div className="fp-input-wrapper">
+                <span className="fp-input-prefix">₹</span>
+                <input 
+                  type="number" 
+                  value={targetNav} 
+                  onChange={(e) => setTargetNav(e.target.value)}
+                  placeholder={latest.nav.toFixed(2)} 
+                />
+              </div>
+            </div>
 
-          <div className="calculator-card">
-            <h3>Worth Calculator</h3>
-            <label>
-              Investment amount:
-              <input
-                type="number"
-                min="1"
-                value={inrAmount}
-                onChange={(e) => setInrAmount(e.target.value)}
-                placeholder="e.g. 10000"
-              />
-            </label>
-            <label>
-              Future NAV:
-              <input
-                type="number"
-                min="1"
-                value={targetNav}
-                onChange={(e) => setTargetNav(e.target.value)}
-                placeholder={latestNav ? `e.g. ${(latestNav * 1.1).toFixed(2)}` : "e.g. 125.50"}
-              />
-            </label>
-
-            <div className="calc-rows">
-              <div><strong>Latest NAV:</strong> ₹ {navDisplay}</div>
-              <div><strong>Estimated Units:</strong> {units ? units.toFixed(5) : "0.00000"}</div>
-              <div><strong>Current Worth:</strong> ₹ {estimatedCurrentValue ? estimatedCurrentValue.toFixed(2) : "0.00"}</div>
-              <div><strong>Projected Worth:</strong> ₹ {projectedValue ? projectedValue.toFixed(2) : "0.00"}</div>
-              <div>
-                <strong>Projected Return:</strong>{" "}
-                {projectedReturn === null ? "N/A" : `${projectedReturn.toFixed(2)}%`}
+            <div className="fp-calc-results">
+              <div className="fp-res-row">
+                <span>Estimated Units</span>
+                <strong>{units.toFixed(4)}</strong>
+              </div>
+              <div className="fp-res-row">
+                <span>Projected Value</span>
+                <strong>₹{(units * targetNavValue).toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>
+              </div>
+              <div className={`fp-res-highlight ${projectedReturn >= 0 ? 'pos' : 'neg'}`}>
+                <span>Return Rate</span>
+                <div className="fp-res-val">
+                  {projectedReturn !== null ? `${projectedReturn.toFixed(2)}%` : '--'}
+                </div>
               </div>
             </div>
           </div>
 
+          <div className="fp-card fp-info-card">
+            <div className="fp-card-head">
+              <h3><RiInformationLine /> Specifications</h3>
+            </div>
+            <div className="fp-info-list">
+              <div className="fp-info-item">
+                <label>Fund House</label>
+                <p>{meta.fund_house}</p>
+              </div>
+              <div className="fp-info-item">
+                <label>ISIN Growth</label>
+                <p>{meta.isin_growth || "N/A"}</p>
+              </div>
+              <div className="fp-info-item">
+                <label>Scheme Code</label>
+                <p>{schemeCode}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {loading && <StockLoader />}
-    </div>
+      </div>
+      <NeuroFooter/>
+      </>
   );
 }
 

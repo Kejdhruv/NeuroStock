@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { RiLoader4Line, RiArrowRightUpLine, RiBankCardLine, RiFocus2Line } from "react-icons/ri";
 import './Funds.css';
+import NeuroFooter from '../Components/Footer/footer';
 
 function Funds() {
   const [funds, setFunds] = useState([]);
@@ -41,6 +42,7 @@ function Funds() {
   );
 
   return (
+    <>
     <div className="mf-root">
 
 
@@ -82,7 +84,9 @@ function Funds() {
           );
         })}
       </div>
-    </div>
+      </div>
+      <NeuroFooter/>
+      </>
   );
 }
 

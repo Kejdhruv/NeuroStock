@@ -2,7 +2,6 @@
 
 .mf-root {
   /* Aligns with the sidebar built in the previous step */
-
   background-color: #fcfdfe;
   font-family: 'DM Sans', sans-serif;
   color: #1a1d23;
@@ -256,7 +255,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-left: 240px;
   font-family: 'Syne', sans-serif;
   color: #2563eb;
   gap: 15px;
