@@ -16,10 +16,14 @@
 /* ── PAGE ───────────────────────────────────────────────── */
 .db-container {
   background-color: var(--bg-main);
-  min-height: 100vh;
-  padding: 40px 10%;
+  padding: 55px 10%;
   font-family: 'DM Sans', sans-serif;
   color: var(--text-main);
+  border-radius: 28px;
+  box-shadow: 
+    0 20px 60px rgba(37, 99, 235, 0.12),
+    0 8px 25px rgba(37, 99, 235, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 /* ── HEADER ─────────────────────────────────────────────── */
