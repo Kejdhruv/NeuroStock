@@ -1,141 +1,209 @@
-/* Page container */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap');
+
 .np-container {
-  min-height: 100vh;
-  padding: 50px 20px;
-  background-color: #f9f9f9;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
+  padding: 40px 120px;/* Offset for the sidebar we built earlier */
+  background-color: #fcfdfe;
+  font-family: 'DM Sans', sans-serif;
+  color: #1a1d23;
 }
 
-/* Page title */
+/* --- HEADER SECTION --- */
+.np-header {
+  margin-bottom: 60px;
+  max-width: 800px;
+}
+
+.np-pretitle {
+  display: block;
+  font-family: 'Syne', sans-serif;
+  text-transform: uppercase;
+  color: #2563eb;
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
 .np-title {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 50px;
-  color: #222;
-  font-weight: 600;
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.95;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+  letter-spacing: -2px;
 }
 
-/* Grid layout */
+.np-subtitle {
+  color: #8e99a8;
+  font-size: 18px;
+  max-width: 500px;
+}
+
+/* --- GRID SYSTEM --- */
 .np-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-  max-width: 1200px; /* Limit grid width */
-  width: 100%;
-  justify-content: center; /* Center the grid */
+  grid-template-columns: repeat(6, 1fr);
+  gap: 32px;
 }
 
-@media (min-width: 768px) {
-  .np-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 45px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .np-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
-    gap: 50px;
-  }
-}
-
-/* Card styling */
+/* --- CARD BASE --- */
 .np-card {
-  background: #ffffff;
-  border-radius: 15px;
-  overflow: hidden;
+  grid-column: span 2; /* Default: 3 cards per row */
+  background: white;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  max-width: 320px; /* Narrow card width */
-  margin: 0 auto; /* Center card in grid column */
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.np-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+/* --- HERO CARD (Featured Item) --- */
+.np-card--hero {
+  grid-column: span 6; /* Takes full width */
+  flex-direction: row;
+  height: 450px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 40px;
 }
 
-/* Card image */
+.np-card--hero .np-image-wrapper {
+  width: 60%;
+  height: 100%;
+}
+
+.np-card--hero .np-card-content {
+  width: 40%;
+  padding: 0 0 0 40px;
+  justify-content: center;
+}
+
+.np-card--hero .np-card-title {
+  font-size: 32px;
+  -webkit-line-clamp: 3;
+}
+
+/* --- CARD IMAGES --- */
+.np-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
 .np-card-image {
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
+  transition: transform 0.8s ease;
 }
 
-/* Card content */
-.np-card-content {
-  padding: 15px 20px;
+.np-card:hover .np-card-image {
+  transform: scale(1.05);
+}
+
+.np-source-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* --- CARD CONTENT --- */
+.np-meta {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #8e99a8;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
-/* Card title */
+.np-dot { color: #2563eb; }
+
 .np-card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #111;
-  line-height: 1.3;
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 0 0 12px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Card description */
 .np-card-description {
-  flex: 1;
-  font-size: 0.85rem;
-  margin-bottom: 12px;
-  color: #555;
-  line-height: 1.4;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Keywords / tags */
-.np-card-keywords {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.np-keyword {
-  background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
-  color: #555;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-/* Card footer */
+/* --- FOOTER & TAGS --- */
 .np-card-footer {
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.75rem;
-  color: #888;
 }
 
-.np-readmore {
-  color: #1a73e8;
+.np-tag {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.np-btn {
+  font-weight: 700;
+  font-size: 13px;
+  color: #1a1d23;
   text-decoration: none;
-  font-weight: 500;
+  border-bottom: 2px solid #2563eb;
+  padding-bottom: 2px;
+  transition: all 0.2s;
 }
 
-.np-readmore:hover {
-  text-decoration: underline;
+.np-btn:hover {
+  background: #2563eb;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+/* --- LOADER --- */
+.np-loader {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: #2563eb;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1400px) {
+  .np-card { grid-column: span 3; }
+  .np-card--hero .np-card-title { font-size: 28px; }
+}
+
+@media (max-width: 900px) {
+  .np-container { padding: 40px 20px; }
+  .np-grid { grid-template-columns: 1fr; }
+  .np-card { grid-column: span 1; }
+  .np-card--hero { flex-direction: column; height: auto; }
+  .np-card--hero .np-image-wrapper, .np-card--hero .np-card-content { width: 100%; padding: 0; }
 }
