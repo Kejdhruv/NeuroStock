@@ -8,8 +8,8 @@
 
   border-radius: 32px;
   box-shadow:
-    0 40px 120px rgba(37, 99, 235, 0.15),
-    0 15px 50px rgba(37, 99, 235, 0.08);
+    0 40px 120px rgba(190, 24, 93, 0.25),
+    0 15px 50px rgba(190, 24, 93, 0.18);
 
   animation: bh-fade-in 0.6s ease;
 }
@@ -30,8 +30,8 @@
 }
 
 .bh-page-title__icon {
-  color: #2563eb;
-  filter: drop-shadow(0 0 10px rgba(37,99,235,0.4));
+  color: #ec4899;
+  filter: drop-shadow(0 0 10px rgba(236,72,153,0.4));
 }
 
 /* ───────── GRID ───────── */
@@ -46,7 +46,7 @@
 .bh-card {
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(37, 99, 235, 0.25);
+  border: 0.5px solid rgba(236, 72, 153, 0.25);
   border-radius: 22px;
   padding: 22px;
   position: relative;
@@ -62,7 +62,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(120deg, rgba(37,99,235,0.25), transparent, rgba(37,99,235,0.25));
+  background: linear-gradient(120deg, rgba(236,72,153,0.25), transparent, rgba(236,72,153,0.25));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -71,7 +71,7 @@
 .bh-card:hover {
   transform: translateY(-6px) scale(1.01);
   box-shadow:
-    0 20px 50px rgba(37, 99, 235, 0.15),
+    0 20px 50px rgba(190, 24, 93, 0.22),
     0 10px 25px rgba(0,0,0,0.05);
 }
 
@@ -111,7 +111,7 @@
 
 .bh-stocks__symbol {
   font-size: 11px;
-  color: #2563eb;
+  color: #ec4899;
 }
 
 .bh-stocks__bar-wrap {
@@ -124,7 +124,7 @@
 
 .bh-stocks__bar {
   height: 100%;
-  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  background: linear-gradient(90deg, #ec4899, #f472b6);
   border-radius: 20px;
   transition: width 0.6s ease;
 }
@@ -139,7 +139,7 @@
   margin-top: 18px;
   padding: 14px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  background: linear-gradient(135deg, #ec4899, #f472b6);
   color: white;
 }
 
@@ -160,7 +160,7 @@
   right: -30%;
   width: 200px;
   height: 200px;
-  background: radial-gradient(circle, rgba(37,99,235,0.2), transparent 70%);
+  background: radial-gradient(circle, rgba(190,24,93,0.28), transparent 70%);
   filter: blur(60px);
 }
 
@@ -183,7 +183,7 @@
 .bh-table-wrap {
   border-radius: 20px;
   overflow: hidden;
-  border: 0.5px solid rgba(37, 99, 235, 0.2);
+  border: 0.5px solid rgba(236, 72, 153, 0.2);
 }
 
 /* HEADER */
@@ -220,13 +220,13 @@
 
 /* TEXT */
 .bh-row__symbol {
-  color: #2563eb;
+  color: #ec4899;
   font-weight: 700;
 }
 
 /* LINK */
 .bh-etherscan-link {
-  color: #2563eb;
+  color: #ec4899;
   font-weight: 600;
 }
 
