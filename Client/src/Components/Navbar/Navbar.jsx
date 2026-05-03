@@ -1,8 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
 import './Navbar.css'
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      navigate("/Dashboard");
+    } else {
+      navigate("/Auth");
+    }
+  };
+
   return (
     <nav className="home-navbar">
       <Link to="/" className="home-nav-brand">
@@ -16,11 +28,20 @@ const Navbar = () => {
         <li><Link to="/Stocks">Stocks</Link></li>
         <li><Link to="/MutualFunds">Mutual Funds</Link></li>
         <li><Link to="/MarketNews">News</Link></li>
-        <li><Link to="/Dashboard">Dashboard</Link></li>
       </ul>
 
       <div className="home-nav-actions">
-        <Link to="/Auth" className="home-nav-login">Log In</Link>
+        {isLoggedIn ? (
+          <button className="home-nav-login" onClick={handleAuthClick}>
+           <FaUser style={{ marginRight: "6px" }} />
+            Profile
+          </button>
+        ) : (
+          <button className="home-nav-login" onClick={handleAuthClick}>
+            Login
+          </button>
+        )}
+
         <Link to="/Auth" className="home-nav-download">Explore</Link>
       </div>
     </nav>

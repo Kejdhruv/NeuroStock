@@ -35,6 +35,7 @@ const Sidebar = () => {
       const data = await res.json();
       if (res.ok && data.success) {
         toast.success('Logged out!');
+        localStorage.removeItem("isLoggedIn");
         setTimeout(() => navigate('/'), 1000);
       } else {
         toast.error(data.message || 'Logout failed');
