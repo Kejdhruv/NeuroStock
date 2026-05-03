@@ -14,11 +14,12 @@ import {
 } from 'react-icons/ri';
 
 const NAV_ITEMS = [
-  { to: '/Dashboard',              end: true,  icon: <RiDashboardLine />,       label: 'Dashboard'    },
+  { to: '/Dashboard', end: true, icon: <RiDashboardLine />, label: 'Dashboard' },
+  { to: '/',                       end: false, icon: <RiHome4Line />,           label: 'Home'         },
   { to: '/Dashboard/holdings',     end: false, icon: <RiStackLine />,           label: 'Holdings'     },
   { to: '/Dashboard/buy-history',  end: false, icon: <RiArrowDownCircleLine />, label: 'Buy History'  },
   { to: '/Dashboard/sell-history', end: false, icon: <RiArrowUpCircleLine />,   label: 'Sell History' },
-  { to: '/',                       end: false, icon: <RiHome4Line />,           label: 'Home'         },
+
 ];
 
 const Sidebar = () => {
