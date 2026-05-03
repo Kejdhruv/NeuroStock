@@ -9,7 +9,7 @@
 /* ── VARIABLES ───────────────────────────────────────────── */
 .sb-root {
   --sb-w:            220px;
-  --sb-bg:           rgba(14, 17, 32, 0.72);
+  --sb-bg:           rgba(5, 10, 34, 0.797);
   --sb-border:       rgba(255, 255, 255, 0.07);
   --sb-border-hover: rgba(255, 255, 255, 0.14);
   --sb-blue:         #4f9eff;
