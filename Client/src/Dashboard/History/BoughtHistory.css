@@ -30,8 +30,8 @@
 }
 
 .bh-page-title__icon {
-  color: #ec4899;
-  filter: drop-shadow(0 0 10px rgba(236,72,153,0.4));
+  color: #e11d48;
+  filter: drop-shadow(0 0 10px rgba(225,29,72,0.45));
 }
 
 /* ───────── GRID ───────── */
@@ -46,7 +46,7 @@
 .bh-card {
   background: rgba(255,255,255,0.75);
   backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(236, 72, 153, 0.25);
+  border: 0.5px solid rgba(225, 29, 72, 0.28);
   border-radius: 22px;
   padding: 22px;
   position: relative;
@@ -62,7 +62,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(120deg, rgba(236,72,153,0.25), transparent, rgba(236,72,153,0.25));
+  background: linear-gradient(120deg, rgba(225,29,72,0.28), transparent, rgba(225,29,72,0.28));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -111,7 +111,7 @@
 
 .bh-stocks__symbol {
   font-size: 11px;
-  color: #ec4899;
+  color: #e11d48;
 }
 
 .bh-stocks__bar-wrap {
@@ -124,7 +124,7 @@
 
 .bh-stocks__bar {
   height: 100%;
-  background: linear-gradient(90deg, #ec4899, #f472b6);
+  background: linear-gradient(90deg, #e11d48, #fb7185);
   border-radius: 20px;
   transition: width 0.6s ease;
 }
@@ -139,7 +139,7 @@
   margin-top: 18px;
   padding: 14px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #ec4899, #f472b6);
+  background: linear-gradient(135deg, #e11d48, #fb7185);
   color: white;
 }
 
@@ -183,7 +183,7 @@
 .bh-table-wrap {
   border-radius: 20px;
   overflow: hidden;
-  border: 0.5px solid rgba(236, 72, 153, 0.2);
+  border: 0.5px solid rgba(225, 29, 72, 0.22);
 }
 
 /* HEADER */
@@ -220,13 +220,13 @@
 
 /* TEXT */
 .bh-row__symbol {
-  color: #ec4899;
+  color: #e11d48;
   font-weight: 700;
 }
 
 /* LINK */
 .bh-etherscan-link {
-  color: #ec4899;
+  color: #e11d48;
   font-weight: 600;
 }
 
