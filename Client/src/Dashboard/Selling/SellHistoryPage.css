@@ -1,121 +1,220 @@
-.sell-history-container {
-  padding: 2rem 3rem;
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
-  color: #1a1a1a;
+/* ───────── ROOT (FLOATING PANEL) ───────── */
+.sh-root {
+background: linear-gradient(180deg, #ffffff 0%, #f8fffb 100%);
+min-height: 100vh;
+padding: 32px 44px;
+font-family: 'DM Sans', sans-serif;
+color: #0f172a;
 
+border-radius: 32px;
+box-shadow:
+0 40px 120px rgba(22, 163, 74, 0.25),
+0 15px 50px rgba(22, 163, 74, 0.18);
+
+animation: sh-fade-in 0.6s ease;
 }
 
-.sell-history-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 2.5rem;
-  color: #c42f18;
+@keyframes sh-fade-in {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
-.sell-icon {
-  font-size: 2.3rem;
-  color: #830e0e;
+/* ───────── TITLE ───────── */
+.sh-page-title {
+display: flex;
+align-items: center;
+gap: 12px;
+font-size: 24px;
+font-weight: 800;
+margin-bottom: 30px;
 }
 
-/* Header Row */
-.sell-header,
-.sell-row {
-  display: grid;
-  grid-template-columns: 64px 1.6fr 1fr 1fr 1.2fr 1.5fr 1.5fr 1.2fr;
-  align-items: center;
-  gap: 1rem;
+.sh-page-title__icon {
+color: #16a34a;
+filter: drop-shadow(0 0 10px rgba(22,163,74,0.45));
 }
 
-.sell-header {
-  font-weight: 700;
-  background-color: #ffe0e0;
-  padding: 1rem;
-  border-radius: 12px;
-  color: #d00000;
-  font-size: 0.95rem;
-  margin-bottom: 1.2rem;
-  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.1);
+/* ───────── GRID ───────── */
+.sh-cards-grid {
+display: grid;
+grid-template-columns: 1fr 2.2fr;
+gap: 22px;
+margin-bottom: 34px;
 }
 
-/* Row */
-.sell-row {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(205, 9, 9, 0.3);
-  border-radius: 14px;
-  padding: 1rem;
-  margin-bottom: 1.2rem;
-  transition: transform 0.2s ease, background 0.3s ease;
-  border: 1px solid #ffdddd;
+/* ───────── CARD BASE (GLASS) ───────── */
+.sh-card {
+background: rgba(255,255,255,0.75);
+backdrop-filter: blur(12px);
+border: 0.5px solid rgba(22, 163, 74, 0.28);
+border-radius: 22px;
+padding: 22px;
+position: relative;
+overflow: hidden;
+
+transition: all 0.35s ease;
 }
 
-.sell-row:hover {
-  background: rgba(255, 245, 245, 0.85);
-  transform: scale(1.015);
+/* glow border */
+.sh-card::before {
+content: "";
+position: absolute;
+inset: 0;
+border-radius: inherit;
+padding: 1px;
+background: linear-gradient(120deg, rgba(22,163,74,0.28), transparent, rgba(22,163,74,0.28));
+-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+-webkit-mask-composite: xor;
+mask-composite: exclude;
 }
 
-.sell-image {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 1px solid #ddd;
+.sh-card:hover {
+transform: translateY(-6px) scale(1.01);
+box-shadow:
+0 20px 50px rgba(22, 163, 74, 0.22),
+0 10px 25px rgba(0,0,0,0.05);
 }
 
-.sell-name {
-  font-weight: 500;
-  font-size: 1rem;
+/* ───────── LABEL ───────── */
+.sh-card__label {
+font-size: 11px;
+font-weight: 700;
+color: #64748b;
+margin-bottom: 14px;
+letter-spacing: 1px;
+text-transform: uppercase;
 }
 
-.sell-symbol {
-  font-size: 0.95rem;
-  color: #444;
+/* ───────── STOCK LIST ───────── */
+.sh-stocks__row {
+display: flex;
+align-items: center;
+gap: 12px;
+margin-bottom: 14px;
+transition: 0.25s;
 }
 
-.sell-qty {
-  font-weight: 500;
-  color: #222;
+.sh-stocks__row:hover {
+transform: translateX(4px);
 }
 
-.sell-price {
-  font-weight: 500;
-  color: #1b1b1b;
+.sh-stocks__img {
+width: 38px;
+border-radius: 10px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-.sell-buying-id,
-.sell-selling-id,
-.sell-date {
-  font-size: 0.85rem;
-  color: #3a3a3a;
-  word-break: break-word;
-  font-style: italic;
+.sh-stocks__symbol {
+font-size: 11px;
+color: #16a34a;
 }
 
- .etherscan-link-row {
-  grid-column: 1 / -1; /* Span full card width */
-  text-align: right;
-  margin-top: -0.5rem;
-  margin-bottom: 0.3rem;
-  padding-right: 1rem;
+.sh-stocks__bar-wrap {
+flex: 1;
+height: 6px;
+background: #ecfdf5;
+border-radius: 20px;
+overflow: hidden;
 }
 
-.etherscan-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13.5px;
-  color: #1874c4;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s ease;
+.sh-stocks__bar {
+height: 100%;
+background: linear-gradient(90deg, #16a34a, #4ade80);
+border-radius: 20px;
+transition: width 0.6s ease;
 }
 
-.etherscan-link:hover {
-  color: #19318a;
-  text-decoration: underline;
+.sh-stocks__meta {
+font-size: 11px;
+text-align: right;
+}
+
+/* ───────── TOTAL CARD ───────── */
+.sh-total-invest {
+margin-top: 18px;
+padding: 14px;
+border-radius: 14px;
+background: linear-gradient(135deg, #16a34a, #4ade80);
+color: white;
+}
+
+.sh-total-invest__value {
+font-size: 20px;
+font-weight: 800;
+}
+
+/* ───────── GRAPH CARD ───────── */
+.sh-card--chart {
+position: relative;
+}
+
+.sh-card--chart::after {
+content: "";
+position: absolute;
+top: -40%;
+right: -30%;
+width: 200px;
+height: 200px;
+background: radial-gradient(circle, rgba(22,163,74,0.28), transparent 70%);
+filter: blur(60px);
+}
+
+.sh-card--chart .recharts-responsive-container {
+height: 280px !important;
+}
+
+/* ───────── TABLE ───────── */
+.sh-table-wrap {
+border-radius: 20px;
+overflow: hidden;
+border: 0.5px solid rgba(22, 163, 74, 0.22);
+}
+
+.sh-table-head {
+display: grid;
+grid-template-columns: 50px 1.6fr 0.8fr 0.7fr 1fr 1fr 1fr 1.3fr 0.8fr;
+padding: 14px 16px;
+background: #f8fffb;
+font-size: 11px;
+font-weight: 700;
+color: #94a3b8;
+}
+
+.sh-table-row {
+display: grid;
+grid-template-columns: 50px 1.6fr 0.8fr 0.7fr 1fr 1fr 1fr 1.3fr 0.8fr;
+padding: 16px;
+background: white;
+transition: all 0.25s ease;
+}
+
+.sh-table-row:hover {
+background: #f0fdf4;
+transform: scale(1.01);
+box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.sh-row__img {
+width: 42px;
+border-radius: 12px;
+}
+
+.sh-row__symbol {
+color: #16a34a;
+font-weight: 700;
+}
+
+.sh-etherscan-link {
+color: #16a34a;
+font-weight: 600;
+}
+
+.sh-etherscan-link:hover {
+text-decoration: underline;
+}
+
+.sh-table-empty {
+padding: 50px;
+text-align: center;
+color: #94a3b8;
 }
