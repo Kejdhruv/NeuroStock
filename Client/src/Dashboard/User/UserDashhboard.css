@@ -13,6 +13,7 @@
   --shadow-md: 0 20px 25px -5px rgba(0, 0, 0, 0.03), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
 }
 
+/* ── PAGE ───────────────────────────────────────────────── */
 .db-container {
   background-color: var(--bg-main);
   min-height: 100vh;
@@ -21,7 +22,7 @@
   color: var(--text-main);
 }
 
-/* --- HEADER --- */
+/* ── HEADER ─────────────────────────────────────────────── */
 .db-header {
   display: flex;
   justify-content: space-between;
@@ -99,13 +100,15 @@
   font-weight: 800;
 }
 
-/* --- GRID LAYOUT --- */
+/* ── GRID ───────────────────────────────────────────────── */
 .db-main-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  align-items: stretch;
 }
 
+/* ── CARDS — BASE ───────────────────────────────────────── */
 .db-card {
   background: var(--bg-card);
   border-radius: 24px;
@@ -113,10 +116,14 @@
   border: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .db-card:hover {
   box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
 }
 
 .db-card-head {
@@ -124,6 +131,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  flex-shrink: 0;
 }
 
 .db-card-head h3 {
@@ -135,9 +143,9 @@
   margin: 0;
 }
 
-/* --- GRAPH (TOP LEFT) --- */
+/* ── ROW 1: GRAPH (3) + HOLD (1) ────────────────────────── */
 .db-graph-area {
-  grid-column: span 1;
+  grid-column: span 3;
 }
 
 .db-graph-legend {
@@ -169,8 +177,11 @@
   background: var(--accent-red);
 }
 
-/* --- HOLD (TOP RIGHT) --- */
 .db-hold-feature {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
 }
 
@@ -222,35 +233,46 @@
   color: var(--accent-blue);
 }
 
-/* --- SUMMARY (BOTTOM LEFT) --- */
+/* ── ROW 2: SUMMARY (1) + RECENT (3) ───────────────────── */
 .db-summary-card {
   grid-column: span 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .db-summary-grid {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
 }
 
 .db-summary-item {
-  text-align: left;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 8px;
+}
+
+.db-summary-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .db-summary-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-sub);
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   margin-bottom: 4px;
   display: block;
 }
 
 .db-summary-value {
   font-family: 'Syne', sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 800;
 }
 
@@ -262,26 +284,24 @@
   color: var(--accent-red);
 }
 
-.db-summary-divider {
-  width: 1px;
-  height: 40px;
-  background: var(--border-light);
+.db-recent-activity {
+  grid-column: span 3;
 }
 
-/* --- RECENT (BOTTOM RIGHT) --- */
 .db-activity-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
 }
 
 .db-activity-row {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 12px 18px;
   background: #f8fafc;
-  border-radius: 14px;
-  gap: 12px;
+  border-radius: 16px;
+  gap: 16px;
 }
 
 .db-type-icon {
@@ -305,7 +325,10 @@
 }
 
 .db-activity-info {
+  display: flex;
   flex: 1;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .db-act-name {
@@ -325,24 +348,22 @@
   font-size: 13px;
 }
 
-/* --- RESPONSIVE FIXES --- */
-@media (max-width: 1024px) {
-  .db-container {
-    padding: 20px;
-  }
-
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 1200px) {
   .db-main-grid {
     grid-template-columns: 1fr;
   }
 
-  .db-summary-grid {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
+  .db-graph-area,
+  .db-hold-feature,
+  .db-summary-card,
+  .db-recent-activity {
+    grid-column: span 1;
   }
+}
 
-  .db-summary-divider {
-    width: 100%;
-    height: 1px;
+@media (max-width: 1024px) {
+  .db-container {
+    padding: 20px;
   }
 }
