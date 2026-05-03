@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./MarketNews.css";
 import { RiLoader4Line } from "react-icons/ri";
+import NeuroFooter from "../Components/Footer/footer";
 
 const MarketNews = () => {
   const [news, setNews] = useState([]);
@@ -38,6 +39,7 @@ const MarketNews = () => {
 }
 
   return (
+    <>
     <div className="np-container">
       <header className="np-header">
         <span className="np-pretitle">Intelligence</span>
@@ -95,7 +97,9 @@ const MarketNews = () => {
           );
         })}
       </div>
-    </div>
+      </div>
+      <NeuroFooter/>
+      </>
   );
 };
 
