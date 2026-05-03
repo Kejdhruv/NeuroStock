@@ -27,7 +27,7 @@ const Navbar = () => {
         <li><Link to="/">Home</Link></li>
         <li><Link to="/Stocks">Stocks</Link></li>
         <li><Link to="/MutualFunds">Mutual Funds</Link></li>
-        <li><Link to="/MarketNews">News</Link></li>
+        <li><Link to="/MarketNews">Market News</Link></li>
       </ul>
 
       <div className="home-nav-actions">

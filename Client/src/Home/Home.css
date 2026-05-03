@@ -524,6 +524,22 @@
   text-decoration: none;
 }
 
+.home-advantage-item button {
+  display: inline-flex;
+  align-items: center;
+  border-color: transparent ;
+  justify-content: center;
+  min-height: 40px;
+  margin-top: 1.55rem;
+  padding: 0 1.35rem;
+  border-radius: 11px;
+  background: #f0f0f0;
+  color: #151515;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
 @media (max-width: 1180px) {
   .home-hero {
     grid-template-columns: 1fr;

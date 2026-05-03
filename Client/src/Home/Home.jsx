@@ -4,7 +4,7 @@ import PhoneMarket from "../assets/image.png";
 import PhoneChart from "../assets/image2.png";
 import PhoneExtra from "../assets/image3.png";
 import CardImage from "../assets/image4.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NeuroFooter from "../Components/Footer/footer";
 
 const Home = () => {
@@ -32,6 +32,17 @@ const Home = () => {
     return () => observer.disconnect();
   }, []);
 
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+  const handleAuthRedirect = () => {
+    if (isLoggedIn) {
+      navigate("/Dashboard");
+    } else {
+      navigate("/Auth");
+    }
+  };
+
   return (
     <div className="home-wrapper">
       <section className="home-hero reveal">
@@ -53,9 +64,9 @@ const Home = () => {
           </p>
 
           <div className="home-hero-buttons">
-            <Link to="/auth" className="home-btn-primary">
+            <button className="home-btn-primary" onClick={handleAuthRedirect}>
               Start your Future Right Now
-            </Link>
+            </button>
           </div>
 
           <Link to="/MarketNews" className="home-find-more">
@@ -150,7 +161,7 @@ const Home = () => {
                   Your simulator balance follows live ETH pricing, so every
                   stock move starts from real market value
                 </p>
-                <Link to="/Auth">Open an Account</Link>
+                <button onClick={handleAuthRedirect}>Open an Account</button>
               </div>
             </article>
 
