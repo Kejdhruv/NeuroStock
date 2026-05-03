@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./MarketNews.css";
+import { RiLoader4Line } from "react-icons/ri";
 
 const MarketNews = () => {
   const [news, setNews] = useState([]);
@@ -19,7 +20,22 @@ const MarketNews = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  if (loading) return <div className="np-loader">Updating Market Feed...</div>;
+  if (loading) {
+  return (
+    <div className="np-loader-wrapper">
+      <div className="np-loader-content">
+        <RiLoader4Line className="np-loader-icon" />
+        <div className="np-loader-text-group">
+          <span className="np-loader-title">Updating Feed</span>
+          <span className="np-loader-subtitle">Syncing with global market desks...</span>
+        </div>
+      </div>
+      <div className="np-loader-bar">
+        <div className="np-loader-progress" />
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className="np-container">
