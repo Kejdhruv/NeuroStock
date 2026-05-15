@@ -16,9 +16,35 @@ const { connectToDatabase } = database;
 app.use(cookieParser());
 app.use(express.json());
 
-// ✅ FIXED CORS — no wildcard allowed for cookies
+const allowedOrigins = [
+  "http://localhost:3003",
+  "http://127.0.0.1:3003",
+];
+
+const isLocalNetworkFrontend = (origin) => {
+  if (!origin) return false;
+
+  try {
+    const { hostname, port, protocol } = new URL(origin);
+    return (
+      protocol === "http:" &&
+      port === "3003" &&
+      /^(10|127|192\.168|172\.(1[6-9]|2\d|3[0-1]))\./.test(hostname)
+    );
+  } catch {
+    return false;
+  }
+};
+
+// Allow credentials from localhost and LAN Vite dev URLs.
 app.use(cors({
-  origin: "http://localhost:3003",
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin) || isLocalNetworkFrontend(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error(`CORS blocked origin: ${origin}`));
+  },
   credentials: true
 }));
 
