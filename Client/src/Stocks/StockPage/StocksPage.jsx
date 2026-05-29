@@ -10,6 +10,7 @@ import StocksABI from '../../abi/StocksABI.json';
 import { toast } from 'react-hot-toast';
 import StockLoader from '../../Components/Loaders/StockLoader';
 import NeuroFooter from '../../Components/Footer/footer';
+import { apiUrl, predictionApiUrl } from '../../config/api';
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
@@ -60,7 +61,7 @@ function StocksPage() {
   useEffect(() => {
     const fetchCounter = async () => {
       try {
-        const response = await fetch("http://localhost:3001/Counter/buyingId");
+        const response = await fetch(apiUrl("/Counter/buyingId"));
         const data = await response.json();
         setCounter(data[0].value);  // ✅ set the counter
       } catch (error) {
@@ -150,7 +151,7 @@ function StocksPage() {
         accountid: account
       };
 
-      const res = await fetch('http://localhost:3001/Holdings', {
+      const res = await fetch(apiUrl('/Holdings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(BoughtData),
@@ -167,7 +168,7 @@ function StocksPage() {
       }
 
       // Increment counter
-      await fetch("http://localhost:3001/Counter/buyingId", {
+      await fetch(apiUrl("/Counter/buyingId"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value: counter + 1 })
@@ -279,7 +280,7 @@ function StocksPage() {
 
         console.log("Sending timeseries length:", timeseries.length); // should be 100
 
-        const resp = await fetch("http://localhost:8001/predict", {
+        const resp = await fetch(predictionApiUrl("/predict"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ timeseries }),

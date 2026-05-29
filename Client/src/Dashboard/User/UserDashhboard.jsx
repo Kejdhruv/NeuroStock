@@ -16,12 +16,13 @@ import Avatar3 from "../../assets/Camila.png";
 import Avatar4 from "../../assets/John.png";
 import Avatar5 from "../../assets/Lucia.png";
 import Avatar6 from "../../assets/Roony.png";
+import { apiUrl } from "../../config/api";
 
 const avatars = [Avatar1, Avatar2, Avatar3, Avatar4, Avatar5, Avatar6];
 
-const API_HOLD = "http://localhost:3001/Profile/Holdings";
-const API_BUY = "http://localhost:3001/Profile/Boughts";
-const API_SELL = "http://localhost:3001/Profile/SoldStocks";
+const API_HOLD = apiUrl("/Profile/Holdings");
+const API_BUY = apiUrl("/Profile/Boughts");
+const API_SELL = apiUrl("/Profile/SoldStocks");
 
 const UserDashboard = () => {
   const [user, setUser] = useState(null);
@@ -56,7 +57,7 @@ const UserDashboard = () => {
   }, [longestHold]);
 
   const fetchUser = async () => {
-    const res = await fetch("http://localhost:3001/Auth/Me", { credentials: "include" });
+    const res = await fetch(apiUrl("/Auth/Me"), { credentials: "include" });
     const data = await res.json();
     if (data.loggedIn) setUser(data.user);
   };

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "./Login.Css";
+import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ArcTransactionGlobe from "../../Components/Login/Globe";
+import { apiUrl } from "../../config/api";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -47,8 +48,8 @@ const LoginPage = () => {
     try {
       const res = await fetch(
         isSignUp
-          ? "http://localhost:3001/Auth/Signup"
-          : "http://localhost:3001/Auth/Login",
+          ? apiUrl("/Auth/Signup")
+          : apiUrl("/Auth/Login"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

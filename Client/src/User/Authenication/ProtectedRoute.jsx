@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { apiUrl } from "../../config/api";
 
 const ProtectedRoute = ({ children }) => {
   const [verified, setVerified] = useState(null); 
@@ -8,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        const res = await fetch("http://localhost:3001/Auth/Me", {
+        const res = await fetch(apiUrl("/Auth/Me"), {
           credentials: "include"
         });
         const data = await res.json();

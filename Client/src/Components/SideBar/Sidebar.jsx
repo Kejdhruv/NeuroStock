@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Sidebar.css';
+import { apiUrl } from '../../config/api';
 
 import {
   RiDashboardLine,
@@ -29,7 +30,7 @@ const Sidebar = () => {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      const res = await fetch('http://localhost:3001/Auth/Logout', {
+      const res = await fetch(apiUrl('/Auth/Logout'), {
         credentials: 'include',
       });
       const data = await res.json();

@@ -11,6 +11,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { apiUrl } from '../../config/api';
 
 const BoughtHistoryPage = () => {
   const [boughts, setBoughts] = useState([]);
@@ -19,7 +20,7 @@ const BoughtHistoryPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:3001/Profile/Boughts", { credentials: "include" });
+        const res = await fetch(apiUrl("/Profile/Boughts"), { credentials: "include" });
         const data = await res.json();
         const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setBoughts(Array.isArray(sorted) ? sorted : []);

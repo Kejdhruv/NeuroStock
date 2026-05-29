@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import StocksABI from '../../abi/StocksABI.json';
 import { toast } from 'react-hot-toast';
 import StockLoader from '../../Components/Loaders/StockLoader';
+import { apiUrl } from '../../config/api';
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 
@@ -47,7 +48,7 @@ const HoldingsPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await fetch("http://localhost:3001/Counter/sellingId");
+        const res = await fetch(apiUrl("/Counter/sellingId"));
         const data = await res.json();
         setCounter(Number(data[0].value));
       } catch (err) {
@@ -60,7 +61,7 @@ const HoldingsPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:3001/Profile/Holdings", { credentials: "include" });
+        const res = await fetch(apiUrl("/Profile/Holdings"), { credentials: "include" });
         const data = await res.json();
         const sorted = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setHoldings(Array.isArray(sorted) ? sorted : []);
@@ -89,7 +90,7 @@ const HoldingsPage = () => {
 
   const updateHoldingQuantity = async (stockId, quantity) => {
     try {
-      await fetch(`http://localhost:3001/Holdings/${stockId}`, {
+      await fetch(apiUrl(`/Holdings/${stockId}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Quantity: quantity })
@@ -101,7 +102,7 @@ const HoldingsPage = () => {
 
   const deleteHolding = async (stockId) => {
     try {
-      await fetch(`http://localhost:3001/Holdings/${stockId}`, { method: "DELETE" });
+      await fetch(apiUrl(`/Holdings/${stockId}`), { method: "DELETE" });
     } catch (error) {
       console.error("Failed to delete holding:", error);
     }
@@ -143,7 +144,7 @@ const HoldingsPage = () => {
         accountid: account
       };
 
-      const res = await fetch('http://localhost:3001/StocksSold', {
+      const res = await fetch(apiUrl('/StocksSold'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(SellingData),
@@ -158,7 +159,7 @@ const HoldingsPage = () => {
         toast.error(data.message || 'Error while saving data');
       }
 
-      await fetch("http://localhost:3001/Counter/sellingId", {
+      await fetch(apiUrl("/Counter/sellingId"), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value: counter + 1 })
@@ -171,7 +172,7 @@ const HoldingsPage = () => {
         await deleteHolding(selectedStock._id);
       }
 
-      const updated = await fetch("http://localhost:3001/Profile/Holdings", { credentials: "include" });
+      const updated = await fetch(apiUrl("/Profile/Holdings"), { credentials: "include" });
       const updatedData = await updated.json();
       setHoldings(updatedData);
 
