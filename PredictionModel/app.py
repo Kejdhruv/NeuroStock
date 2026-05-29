@@ -1,8 +1,9 @@
-# app.py
-from fastapi import FastAPI, HTTPException, Query
+from pathlib import Path
+from typing import List, Optional
+
+from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional
 import numpy as np
 import joblib
 import traceback
@@ -12,13 +13,23 @@ import tensorflow as tf
 tf.config.run_functions_eagerly(False)
 tf.get_logger().setLevel('ERROR')
 
-# ------------------------
-# App + CORS
-# ------------------------
-app = FastAPI(title="NeuroStock Predictor (FAST VERSION)")
+app = FastAPI(title="NeuroStock Predictor")
+
+default_origins = [
+    "http://localhost:3003",
+    "http://127.0.0.1:3003",
+    "https://neuro-stock.vercel.app",
+]
+
+configured_origins = [
+    origin.strip()
+    for origin in os.getenv("FRONTEND_ORIGINS", os.getenv("FRONTEND_ORIGIN", "")).split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=configured_origins or default_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,24 +52,41 @@ class PredictInput(BaseModel):
 # ------------------------
 # Load Model Once (FAST)
 # ------------------------
-MODEL_PATH = "model.pkl"
+MODEL_PATH = Path(__file__).with_name("model.pkl")
 model = None
 
 @app.on_event("startup")
 def load_model():
     global model
     try:
-        if os.path.exists(MODEL_PATH):
+        if MODEL_PATH.exists():
             model = joblib.load(MODEL_PATH)
-            # Speed boost: disable unnecessary TF overhead
-            model.compile(run_eagerly=False)
+            if hasattr(model, "compile"):
+                model.compile(run_eagerly=False)
             print("[INFO] Model loaded FAST mode.")
         else:
-            print("[WARN] Model not found.")
+            print(f"[WARN] Model not found at {MODEL_PATH}.")
             model = None
     except Exception:
         traceback.print_exc()
         model = None
+
+@app.get("/")
+def root():
+    return {"service": "neurostock-prediction", "status": "ok"}
+
+@app.get("/health")
+def health():
+    if model is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Model not loaded.",
+        )
+
+    return {
+        "status": "ok",
+        "model_loaded": True,
+    }
 
 @app.post("/predict")
 def predict(payload: PredictInput):
@@ -95,7 +123,7 @@ def predict(payload: PredictInput):
         next_scaled = []
         next_real = []
 
-        for _ in range(3):
+        for _ in range(10):
             X_roll = rolling.reshape(1, 100, 1)
 
             sp = float(model.predict(X_roll, verbose=0)[0][0])
@@ -118,6 +146,8 @@ def predict(payload: PredictInput):
             "status": "fast_mode_success",
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))

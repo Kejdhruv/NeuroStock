@@ -3,3 +3,13 @@
 Backend/.env
 Backend/.env.*
 !Backend/.env.example
+
+# Client environment files
+Client/.env
+Client/.env.*
+!Client/.env.example
+
+# Prediction service environment files
+PredictionModel/.env
+PredictionModel/.env.*
+!PredictionModel/.env.example

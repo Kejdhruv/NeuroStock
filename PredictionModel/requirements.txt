@@ -1,5 +1,6 @@
-fastapi
-uvicorn[standard]
-joblib
-numpy
-scikit-learn
+fastapi==0.124.2
+uvicorn[standard]==0.38.0
+joblib==1.5.2
+numpy==1.26.4
+scikit-learn==1.6.1
+tensorflow-cpu==2.16.2
