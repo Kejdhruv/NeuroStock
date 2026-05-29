@@ -7,6 +7,22 @@ import GetUser from "../../Database/User/GetUser.js";
 dotenv.config();
 const router = express.Router();
 
+const isProduction = process.env.NODE_ENV === "production";
+const authCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "strict",
+  maxAge: 60 * 60 * 1000,
+  path: "/",
+};
+
+const clearAuthCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "strict",
+  path: "/",
+};
+
 // User Signup
 router.post('/Auth/Signup', async (req, res) => {
   try {
@@ -79,13 +95,7 @@ router.post('/Auth/Login', async (req, res) => {
     const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: "1h" });
 
     // set JWT in httpOnly cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", 
-      sameSite: "strict",
-      maxAge: 60 * 60 * 1000, 
-      path: "/",
-    });
+    res.cookie("token", token, authCookieOptions);
 
     
     return res.status(200).json({
@@ -107,12 +117,7 @@ router.post('/Auth/Login', async (req, res) => {
 // User Logout 
 router.get('/Auth/Logout', async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-    });
+    res.clearCookie("token", clearAuthCookieOptions);
 
     return res.status(200).json({
       message: "Logout Successful",
@@ -127,14 +132,22 @@ router.get('/Auth/Logout', async (req, res) => {
 //User Information 
 router.get("/Auth/Me", (req, res) => {
   const token = req.cookies?.token;
-  const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-  res.json({ loggedIn: true, user: decoded });
+
+  if (!token) {
+    return res.status(401).json({ loggedIn: false });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    return res.json({ loggedIn: true, user: decoded });
+  } catch {
+    return res.status(401).json({ loggedIn: false });
+  }
 });
 
 
 
 export default router; 
-
 
 
 
