@@ -7,8 +7,15 @@ import GetUser from "../../Database/User/GetUser.js";
 dotenv.config();
 const router = express.Router();
 import crypto from "crypto";
-import { Resend } from "resend";
-const resend = new Resend(process.env.RESEND_API_KEY);
+import SibApiV3Sdk from "sib-api-v3-sdk";
+
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
+
+const apiKey = defaultClient.authentications["api-key"];
+
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi(); 
 
 const pendingSignups = new Map();
 
@@ -52,15 +59,22 @@ router.post("/Auth/Signup/InitiateOtp", async (req, res) => {
     pendingSignups.set(email, { otp, expiresAt });
 
     // Send OTP email
-  await resend.emails.send({
-  from: "NeuroStock <onboarding@resend.dev>",
-  to: email,
+await emailApi.sendTransacEmail({
+  sender: {
+    email: "nneurostock@gmail.com",
+    name: "NeuroStock",
+  },
+  to: [
+    {
+      email: email,
+    },
+  ],
   subject: "Your NeuroStock OTP",
-  html: `
+  htmlContent: `
     <h2>Verify your email</h2>
-    <p>Your one-time password is:</p>
-    <h1 style="letter-spacing: 8px;">${otp}</h1>
-    <p>This OTP expires in <strong>10 minutes</strong>.</p>
+    <p>Your OTP is:</p>
+    <h1>${otp}</h1>
+    <p>Expires in 10 minutes.</p>
   `,
 });
     return res.status(200).json({ message: "OTP sent to email" });
@@ -92,15 +106,22 @@ router.post("/Auth/Signup/ResendOtp", async (req, res) => {
     const otp = crypto.randomInt(100000, 999999).toString();
     pendingSignups.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  await resend.emails.send({
-  from: "NeuroStock <onboarding@resend.dev>",
-  to: email,
-  subject: "Your new NeuroStock OTP",
-  html: `
-    <h2>New OTP requested</h2>
-    <p>Your new one-time password is:</p>
-    <h1 style="letter-spacing: 8px;">${otp}</h1>
-    <p>This OTP expires in <strong>10 minutes</strong>.</p>
+ await emailApi.sendTransacEmail({
+  sender: {
+    email: "nneurostock@gmail.com",
+    name: "NeuroStock",
+  },
+  to: [
+    {
+      email: email,
+    },
+  ],
+  subject: "Your NeuroStock OTP",
+  htmlContent: `
+    <h2>Verify your email</h2>
+    <p>Your OTP is:</p>
+    <h1>${otp}</h1>
+    <p>Expires in 10 minutes.</p>
   `,
 });
 
