@@ -304,12 +304,131 @@ router.post('/Auth/Signup', async (req, res) => {
       createdAt: new Date()
     };
 
-    const result = await CreateUser([newUser]);
+   const result = await CreateUser([newUser]);
 
-    return res.status(201).json({
-      message: "User added successfully",
-      insertedId: result.insertedId
+if (result?.insertedId) {
+  try {
+    await emailApi.sendTransacEmail({
+      sender: {
+        email: "nneurostock@gmail.com",
+        name: "NeuroStock",
+      },
+      to: [
+        {
+          email,
+          name: `${firstName} ${lastName}`,
+        },
+      ],
+      subject: "🚀 Welcome to NeuroStock",
+      htmlContent: `
+<div style="background:linear-gradient(135deg,#f8fafc,#eef2ff);padding:60px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(15,23,42,.08);">
+
+    <div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);padding:48px;text-align:center;">
+      <h1 style="color:white;margin:0;font-size:34px;font-weight:800;">
+        Welcome to NeuroStock
+      </h1>
+
+      <p style="color:rgba(255,255,255,.92);margin-top:12px;font-size:16px;">
+        Smart Investing. Intelligent Decisions.
+      </p>
+    </div>
+
+    <div style="padding:48px;">
+
+      <h2 style="margin-top:0;color:#111827;">
+        Welcome aboard, ${firstName}! 🎉
+      </h2>
+
+      <p style="font-size:16px;color:#4b5563;line-height:1.8;">
+        Your NeuroStock account has been successfully created and you're now ready to explore a smarter way of tracking, analyzing, and understanding the market.
+      </p>
+
+      <div style="
+        background:linear-gradient(135deg,#f8faff,#eef4ff);
+        border:1px solid #dbeafe;
+        border-radius:18px;
+        padding:28px;
+        margin:32px 0;
+      ">
+
+        <h3 style="margin-top:0;color:#4338ca;">
+          Your Account Details
+        </h3>
+
+        <p style="margin:8px 0;color:#374151;">
+          <strong>Name:</strong> ${firstName} ${lastName}
+        </p>
+
+        <p style="margin:8px 0;color:#374151;">
+          <strong>Email:</strong> ${email}
+        </p>
+
+        <p style="margin:8px 0;color:#374151;">
+          <strong>Status:</strong> Active ✅
+        </p>
+
+      </div>
+
+      <div style="
+        background:#f9fafb;
+        border-radius:16px;
+        padding:24px;
+        margin:30px 0;
+      ">
+        <p style="margin:10px 0;color:#374151;">📈 Track Stocks & Market Trends</p>
+        <p style="margin:10px 0;color:#374151;">🤖 AI-Powered Predictions</p>
+        <p style="margin:10px 0;color:#374151;">💼 Portfolio Monitoring</p>
+        <p style="margin:10px 0;color:#374151;">⚡ Real-Time Insights</p>
+      </div>
+
+      <div style="text-align:center;margin:40px 0;">
+        <a href="https://neuro-stock.vercel.app"
+           style="
+             background:linear-gradient(135deg,#6366f1,#8b5cf6);
+             color:white;
+             text-decoration:none;
+             padding:16px 34px;
+             border-radius:14px;
+             display:inline-block;
+             font-weight:700;
+             font-size:15px;
+           ">
+          Launch NeuroStock →
+        </a>
+      </div>
+
+      <p style="font-size:15px;color:#6b7280;line-height:1.8;">
+        Thank you for joining NeuroStock. We are excited to be part of your investing journey and help you make better financial decisions with technology and data.
+      </p>
+
+    </div>
+
+    <div style="
+      border-top:1px solid #e5e7eb;
+      padding:24px;
+      text-align:center;
+      color:#64748b;
+      font-size:13px;
+    ">
+      © 2026 NeuroStock • Secure Investing Platform
+    </div>
+
+  </div>
+
+</div>
+`
     });
+  } catch (mailErr) {
+    console.error("Welcome email failed:", mailErr);
+  }
+}
+
+return res.status(201).json({
+  message: "User added successfully",
+  insertedId: result.insertedId
+});
 
   } catch (err) {
     console.error("Error Adding User", err);
