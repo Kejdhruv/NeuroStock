@@ -6,30 +6,11 @@ import CreateUser from "../../Database/User/CreatingUser.js";
 import GetUser from "../../Database/User/GetUser.js";
 dotenv.config();
 const router = express.Router();
-import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { Resend } from "resend";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const pendingSignups = new Map();
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP Error:", error);
-  } else {
-    console.log("SMTP Server Ready");
-  }
-});
 
 const isProduction = process.env.NODE_ENV === "production";
 const authCookieOptions = {
@@ -46,8 +27,6 @@ const clearAuthCookieOptions = {
   sameSite: isProduction ? "none" : "strict",
   path: "/",
 };
-
-
 
 //OTP VERIFICATION
 
@@ -73,18 +52,17 @@ router.post("/Auth/Signup/InitiateOtp", async (req, res) => {
     pendingSignups.set(email, { otp, expiresAt });
 
     // Send OTP email
-    await transporter.sendMail({
-      from: `"NeuroStock" <${process.env.MAIL_USER}>`,
-      to: email,
-      subject: "Your NeuroStock OTP",
-      html: `
-        <h2>Verify your email</h2>
-        <p>Your one-time password is:</p>
-        <h1 style="letter-spacing: 8px;">${otp}</h1>
-        <p>This OTP expires in <strong>10 minutes</strong>.</p>
-      `,
-    });
-
+  await resend.emails.send({
+  from: "NeuroStock <onboarding@resend.dev>",
+  to: email,
+  subject: "Your NeuroStock OTP",
+  html: `
+    <h2>Verify your email</h2>
+    <p>Your one-time password is:</p>
+    <h1 style="letter-spacing: 8px;">${otp}</h1>
+    <p>This OTP expires in <strong>10 minutes</strong>.</p>
+  `,
+});
     return res.status(200).json({ message: "OTP sent to email" });
 
   } catch (err) {
@@ -114,17 +92,17 @@ router.post("/Auth/Signup/ResendOtp", async (req, res) => {
     const otp = crypto.randomInt(100000, 999999).toString();
     pendingSignups.set(email, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-    await transporter.sendMail({
-      from: `"NeuroStock" <${process.env.MAIL_USER}>`,
-      to: email,
-      subject: "Your new NeuroStock OTP",
-      html: `
-        <h2>New OTP requested</h2>
-        <p>Your new one-time password is:</p>
-        <h1 style="letter-spacing: 8px;">${otp}</h1>
-        <p>This OTP expires in <strong>10 minutes</strong>.</p>
-      `,
-    });
+  await resend.emails.send({
+  from: "NeuroStock <onboarding@resend.dev>",
+  to: email,
+  subject: "Your new NeuroStock OTP",
+  html: `
+    <h2>New OTP requested</h2>
+    <p>Your new one-time password is:</p>
+    <h1 style="letter-spacing: 8px;">${otp}</h1>
+    <p>This OTP expires in <strong>10 minutes</strong>.</p>
+  `,
+});
 
     return res.status(200).json({ message: "New OTP sent" });
 
