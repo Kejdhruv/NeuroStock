@@ -306,9 +306,11 @@ router.post('/Auth/Signup', async (req, res) => {
 
    const result = await CreateUser([newUser]);
 
-if (result?.insertedId) {
+console.log("CREATE USER RESULT:", result);
+
+if (result?.insertedId || result?.insertedIds || result?.acknowledged) {
   try {
-    await emailApi.sendTransacEmail({
+    const mailResponse = await emailApi.sendTransacEmail({
       sender: {
         email: "nneurostock@gmail.com",
         name: "NeuroStock",
@@ -420,8 +422,10 @@ if (result?.insertedId) {
 </div>
 `
     });
+    console.log("WELCOME EMAIL RESPONSE:", mailResponse);
   } catch (mailErr) {
-    console.error("Welcome email failed:", mailErr);
+    console.error("WELCOME EMAIL FAILED:", mailErr);
+    console.error(JSON.stringify(mailErr, null, 2));
   }
 }
 
