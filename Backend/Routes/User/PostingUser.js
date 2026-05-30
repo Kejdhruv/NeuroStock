@@ -44,47 +44,115 @@ router.post("/Holdings", authMiddleware, async (req, res) => {
             email: Email,
           },
         ],
-        subject: `📈 Purchase Confirmation • ${stock.Stocksymbol || stock.Stockname}`,
-        htmlContent: `
-<div style="background:linear-gradient(135deg,#f8fafc,#eef2ff);padding:60px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+       subject: `Purchase Confirmation · ${stock.Stocksymbol || stock.Stockname} — NeuroStock`,
+htmlContent: `
+<div style="background:#f1f5f9;padding:48px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:620px;margin:auto;">
 
-  <div style="max-width:650px;margin:auto;background:white;border-radius:24px;overflow:hidden;box-shadow:0 12px 40px rgba(15,23,42,.08);">
-
-    <div style="background:linear-gradient(135deg,#10b981,#22c55e);padding:42px;text-align:center;">
-      <h1 style="margin:0;color:white;font-size:32px;">Purchase Successful 🎉</h1>
-      <p style="color:rgba(255,255,255,.92);margin-top:10px;">Your investment has been added to your NeuroStock portfolio.</p>
+    <!-- Brand -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <span style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:#0f172a;letter-spacing:-.3px;">
+        <span style="width:30px;height:30px;background:#0f172a;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </span>
+        NeuroStock
+      </span>
     </div>
 
-    <div style="padding:40px;">
+    <!-- Card -->
+    <div style="background:#ffffff;border-radius:20px;overflow:hidden;border:1px solid #e2e8f0;">
 
-      <div style="text-align:center;margin-bottom:24px;">
-        <img src="${stock.stockimage || ''}" alt="Stock" style="width:72px;height:72px;border-radius:16px;object-fit:contain;background:#fff;border:1px solid #e5e7eb;padding:8px;" />
+      <!-- Header -->
+      <div style="padding:36px 40px 28px;border-bottom:1px solid #f1f5f9;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:4px 10px;margin-bottom:14px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="#16a34a" stroke="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/></svg>
+              <span style="font-size:12px;font-weight:500;color:#15803d;letter-spacing:.3px;text-transform:uppercase;">Order Confirmed</span>
+            </div>
+            <h1 style="margin:0;font-size:24px;font-weight:600;color:#0f172a;line-height:1.3;letter-spacing:-.4px;">Your order has been<br>executed successfully.</h1>
+            <p style="margin:10px 0 0;font-size:14px;color:#64748b;line-height:1.6;">Your shares have been purchased at market price and added to your portfolio. A full record of this transaction has been logged to your account.</p>
+          </div>
+          <div style="flex-shrink:0;width:64px;height:64px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+            <img src="${stock.stockimage || ''}" alt="${stock.Stockname}" style="width:44px;height:44px;object-fit:contain;" />
+          </div>
+        </div>
       </div>
 
-      <h2 style="color:#111827;margin-top:0;">${stock.Stockname || 'Stock Purchase'}</h2>
-
-      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:24px;">
-        <p><strong>Symbol:</strong> ${stock.Stocksymbol}</p>
-        <p><strong>Quantity:</strong> ${stock.Quantity}</p>
-        <p><strong>Purchase Price:</strong> $${stock.Boughtat}</p>
-        <p><strong>Transaction ID:</strong> ${stock.Transactionid}</p>
-        <p><strong>Wallet:</strong> ${stock.accountid}</p>
-        <p><strong>Date:</strong> ${new Date(stock.timestamp).toLocaleString()}</p>
+      <!-- Summary -->
+      <div style="padding:24px 40px;background:#fafafa;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <p style="margin:0;font-size:12px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Stock</p>
+          <p style="margin:4px 0 0;font-size:20px;font-weight:600;color:#0f172a;letter-spacing:-.3px;">${stock.Stockname || 'N/A'}</p>
+          <p style="margin:2px 0 0;font-size:13px;color:#64748b;">${stock.Stocksymbol} · Market Order</p>
+        </div>
+        <div style="text-align:right;">
+          <p style="margin:0;font-size:12px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.5px;">Total Invested</p>
+          <p style="margin:4px 0 0;font-size:24px;font-weight:600;color:#0f172a;letter-spacing:-.5px;">$${(stock.Boughtat * stock.Quantity).toFixed(2)}</p>
+          <p style="margin:2px 0 0;font-size:12px;color:#16a34a;font-weight:500;">Funds settled</p>
+        </div>
       </div>
 
-      <div style="margin-top:28px;padding:20px;background:#ecfdf5;border-radius:14px;border:1px solid #bbf7d0;">
-        <strong style="color:#166534;">Portfolio Updated Successfully</strong>
-        <p style="margin-top:8px;color:#166534;">This stock is now reflected in your holdings dashboard.</p>
+      <!-- Details table -->
+      <div style="padding:28px 40px;">
+        <p style="margin:0 0 16px;font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;">Transaction Details</p>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;">Shares Purchased</td>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:14px;font-weight:500;color:#0f172a;">${stock.Quantity} shares</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;">Price per Share</td>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:14px;font-weight:500;color:#0f172a;">$${stock.Boughtat}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;">Wallet Used</td>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:13px;color:#64748b;font-family:monospace;">${stock.accountid}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;font-size:13px;color:#64748b;">Transaction ID</td>
+            <td style="padding:11px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:12px;color:#64748b;font-family:monospace;">${stock.Transactionid}</td>
+          </tr>
+          <tr>
+            <td style="padding:11px 0;font-size:13px;color:#64748b;">Executed At</td>
+            <td style="padding:11px 0;text-align:right;font-size:13px;color:#64748b;">${new Date(stock.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Portfolio note -->
+      <div style="margin:0 40px 28px;background:#f8fafc;border-radius:12px;padding:18px 20px;display:flex;align-items:flex-start;gap:12px;border:1px solid #e2e8f0;">
+        <div style="width:34px;height:34px;border-radius:9px;background:#0f172a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        </div>
+        <div>
+          <p style="margin:0;font-size:13px;font-weight:600;color:#0f172a;">Portfolio updated</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#64748b;line-height:1.5;">Your holdings dashboard now reflects this purchase. Track real-time performance, set price alerts, and review your cost basis directly from your NeuroStock account.</p>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div style="padding:0 40px 36px;text-align:center;">
+        <a href="#" style="display:inline-flex;align-items:center;gap:7px;background:#0f172a;color:#fff;text-decoration:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:500;">
+          View in Portfolio &rarr;
+        </a>
+        <p style="margin:14px 0 0;font-size:12px;color:#94a3b8;">Questions? Visit <a href="#" style="color:#64748b;text-decoration:underline;">support.neurostock.com</a></p>
       </div>
 
     </div>
 
-    <div style="border-top:1px solid #e5e7eb;padding:22px;text-align:center;color:#64748b;font-size:13px;">
-      © 2026 NeuroStock • Smart Investing. Secure Trading.
+    <!-- Footer -->
+    <div style="padding:24px 0 8px;text-align:center;">
+      <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.8;">
+        NeuroStock Technologies · Smart Investing. Secure Trading.<br>
+        <a href="#" style="color:#94a3b8;text-decoration:underline;">Unsubscribe</a> · 
+        <a href="#" style="color:#94a3b8;text-decoration:underline;">Privacy Policy</a> · 
+        <a href="#" style="color:#94a3b8;text-decoration:underline;">Terms</a>
+      </p>
+      <p style="margin:8px 0 0;font-size:11px;color:#cbd5e1;">© 2026 NeuroStock. All rights reserved.</p>
     </div>
 
   </div>
-
 </div>
 `
       });
