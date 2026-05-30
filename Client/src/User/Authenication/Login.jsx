@@ -17,6 +17,9 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [otpStep, setOtpStep] = useState(false);
+  const [otp, setOtp] = useState("");
+
 
   const toggleMode = () => {
     setIsSignUp((prev) => !prev);
@@ -42,43 +45,76 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setLoading(true);
 
     try {
-      const res = await fetch(
-        isSignUp
-          ? apiUrl("/Auth/Signup")
-          : apiUrl("/Auth/Login"),
-        {
+      if (isSignUp) {
+        // Step 1: just send OTP
+        const res = await fetch(apiUrl("/Auth/Signup/InitiateOtp"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: isSignUp
-            ? JSON.stringify(formData)
-            : JSON.stringify({
-                email: formData.email,
-                password: formData.password,
-              }),
+          body: JSON.stringify({ email: formData.email }),
           credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          toast.success("OTP sent to your email!");
+          setOtpStep(true); // show OTP box
+        } else {
+          toast.error(data.message || "Failed to send OTP");
         }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(isSignUp ? "Sign up successful!" : "Login successful!");
-        localStorage.setItem("isLoggedIn", "true");
-        setTimeout(() => navigate(`/`), 1500);
       } else {
-        toast.error(data.message || "Authentication failed");
+        // Login unchanged
+        const res = await fetch(apiUrl("/Auth/Login"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: formData.email, password: formData.password }),
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          toast.success("Login successful!");
+          localStorage.setItem("isLoggedIn", "true");
+          setTimeout(() => navigate("/"), 1500);
+        } else {
+          toast.error(data.message || "Authentication failed");
+        }
       }
     } catch (err) {
-      toast.error("Something went wrong" , err );
+      toast.error("Something went wrong", err);
     } finally {
       setLoading(false);
     }
   };
 
+
+
+  const handleOtpVerify = async (e) => {
+    e.preventDefault();
+    if (!otp) { toast.error("Please enter the OTP"); return; }
+    setLoading(true);
+
+    try {
+      const res = await fetch(apiUrl("/Auth/Signup"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, otp }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Sign up successful!");
+        localStorage.setItem("isLoggedIn", "true");
+        setTimeout(() => navigate("/"), 1500);
+      } else {
+        toast.error(data.message || "Invalid OTP");
+      }
+    } catch (err) {
+      toast.error("Something went wrong", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="login-container">
       <div className="ambient-glow" />
@@ -95,82 +131,63 @@ const LoginPage = () => {
                 : "Access your NeuroStock dashboard"}
             </p>
           </header>
-
-          <form onSubmit={handleSubmit} className="login-form">
-            {isSignUp && (
-              <>
-                <div className="input-group">
-                  <label>First Name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="input-group">
-                  <label>Last Name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="input-group">
-              <label>Identification</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="email@neurostock.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label>Security Key</label>
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="form-actions">
-              <button
-                type="submit"
-                className={`login-button ${loading ? "loading" : ""}`}
-                disabled={loading}
-              >
-                {loading
-                  ? "PROCESSING..."
-                  : isSignUp
-                  ? "CREATE ACCOUNT"
-                  : "AUTHORIZE"}
-              </button>
-
-              <button
-                type="button"
-                className="toggle-btn"
-                onClick={toggleMode}
-              >
-                {isSignUp
-                  ? "Already have an account? Login"
-                  : "Don't have an account? Sign up"}
-              </button>
-            </div>
-          </form>
+          {otpStep ? (
+            <form onSubmit={handleOtpVerify} className="login-form">
+              <div className="input-group">
+                <label>One-Time Password</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="------"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                  required
+                  style={{ letterSpacing: "0.4em", textAlign: "center", fontSize: "1.4rem" }}
+                />
+              </div>
+              <div className="form-actions">
+                <button type="submit" className={`login-button ${loading ? "loading" : ""}`} disabled={loading}>
+                  {loading ? "VERIFYING..." : "VERIFY & COMPLETE SIGNUP"}
+                </button>
+                <button type="button" className="toggle-btn" onClick={() => { setOtpStep(false); setOtp(""); }}>
+                  ← Back
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="login-form">
+              {/* your entire existing form JSX, completely unchanged */}
+              {isSignUp && (
+                <>
+                  <div className="input-group">
+                    <label>First Name</label>
+                    <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                  </div>
+                  <div className="input-group">
+                    <label>Last Name</label>
+                    <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+                  </div>
+                </>
+              )}
+              <div className="input-group">
+                <label>Identification</label>
+                <input type="email" name="email" placeholder="email@neurostock.com" value={formData.email} onChange={handleChange} required />
+              </div>
+              <div className="input-group">
+                <label>Security Key</label>
+                <input type="password" name="password" placeholder="••••••••" value={formData.password} onChange={handleChange} required />
+              </div>
+              <div className="form-actions">
+                <button type="submit" className={`login-button ${loading ? "loading" : ""}`} disabled={loading}>
+                  {loading ? "PROCESSING..." : isSignUp ? "SEND OTP & CONTINUE" : "AUTHORIZE"}
+                </button>
+                <button type="button" className="toggle-btn" onClick={toggleMode}>
+                  {isSignUp ? "Already have an account? Login" : "Don't have an account? Sign up"}
+                </button>
+              </div>
+            </form>
+          )}
 
           <footer className="login-footer">
             <p>Secured with Blockchain Authentication</p>
@@ -181,7 +198,7 @@ const LoginPage = () => {
       {/* RIGHT SIDE (VISUAL) */}
       <section className="login-right">
         <div className="dark-core-container">
-          <ArcTransactionGlobe/>
+          <ArcTransactionGlobe />
           <div className="scanline" />
           <div className="core-text">
             <div className="badge">NEUROSTOCK v1.0</div>
