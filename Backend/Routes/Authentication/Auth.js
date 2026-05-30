@@ -12,13 +12,24 @@ import crypto from "crypto";
 const pendingSignups = new Map();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.MAIL_USER,   // your Gmail address
-    pass: process.env.MAIL_PASS,   // Gmail App Password (not your real password)
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
-
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP Error:", error);
+  } else {
+    console.log("SMTP Server Ready");
+  }
+});
 
 const isProduction = process.env.NODE_ENV === "production";
 const authCookieOptions = {
